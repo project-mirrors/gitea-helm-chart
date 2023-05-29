@@ -20,6 +20,9 @@ stringData:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # ensure a clean start
+    rm $GITEA_APP_INI
+
     function env2ini::log() {
       printf "${1}\n"
     }
