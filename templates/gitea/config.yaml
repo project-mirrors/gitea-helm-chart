@@ -21,7 +21,9 @@ stringData:
     set -euo pipefail
 
     # ensure a clean start
-    rm $GITEA_APP_INI
+    if [ -f ${GITEA_APP_INI} ]; then
+      rm $GITEA_APP_INI
+    fi
 
     function env2ini::log() {
       printf "${1}\n"
