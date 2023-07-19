@@ -130,7 +130,7 @@ stringData:
 
       if [[ $section == '_generals_' ]]; then
         env2ini::log "  [ini root]"
-        section=''
+        section='DEFAULT'
       else
         env2ini::log "  ${section}"
       fi
@@ -197,3 +197,7 @@ stringData:
     fi
 
     environment-to-ini -o $GITEA_APP_INI
+
+    env
+
+    cat /data/gitea/conf/app.ini

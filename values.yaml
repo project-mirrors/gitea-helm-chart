@@ -494,6 +494,7 @@ postgresql-ha:
   global:
     postgresql:
       database: gitea
+      password: gitea
       username: gitea
   enabled: true
   postgresql:
