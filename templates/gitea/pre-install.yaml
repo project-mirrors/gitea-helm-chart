@@ -1,0 +1,88 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/resource-policy: keep"
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      volumes:
+      - name: app-ini-secrets-volume
+        configMap:
+          name: app-ini-secrets
+      containers:
+      - name: post-install-job
+        image: "bitnami/kubectl:1.28.2"
+        volumeMounts:
+          - mountPath: /app-ini-secrets
+            name: app-ini-secrets-volume
+          - name: data
+            mountPath: /data
+        env:
+          - name: HOME
+            value: /tmp
+          - name: GITEA_APP_INI
+            value: /data/gitea/conf/app.ini
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "scripts in /app-ini-secrets"
+          ls -lh /app-ini-secrets
+          echo "copy scripts to /tmp"
+          cp /app-ini-secrets/*.sh /tmp
+          echo "apply 'chmod +x' to /tmp/*.sh"
+          chmod +x /tmp/*.sh
+          echo "execute configure-app-ini-secrets.sh now"
+          /tmp/configure-app-ini-secrets.sh
+---
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    configure-app-ini-secrets.sh: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      echo "configure-app-ini-secrets.sh"
+      # check if secret already exists
+      if $(kubectl get secrets -n {{ $.Release.Namespace }} | grep -q app-ini-secrets); then 
+        echo "found existing app-ini-secret, skipping creation"
+      else 
+        echo "creating app-ini-secrets"
+        # case 1: create secrets if none exist yet (during first install)
+
+        # case 2: read existing secrets from app.ini
+        if [ -f ${GITEA_APP_INI} ]; then
+          kubectl create secret generic app-ini-secrets --from-literal=LFS_JWT_SECRET=$(cat ${GITEA_APP_INI} | grep ^LFS_JWT_SECRET | cut -d "=" -f2 | awk '{$1=$1};1') --from-literal=SECRET_KEY=$(cat ${GITEA_APP_INI} | grep ^SECRET_KEY | cut -d "=" -f2 | awk '{$1=$1};1') --from-literal=JWT_SECRET=$(cat ${GITEA_APP_INI} | grep ^JWT_SECRET | cut -d "=" -f2 | awk '{$1=$1};1') --from-literal=INTERNAL_TOKEN=$(cat ${GITEA_APP_INI} | grep ^INTERNAL_TOKEN | cut -d "=" -f2 | awk '{$1=$1};1')
+        fi
+
+        # case 3: read secrets from user input (env vars?)
+      fi
+
+
+
+
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: app-ini-secrets
+kind: List
+metadata: {}
