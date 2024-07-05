@@ -161,15 +161,14 @@ ingress:
   enabled: false
   # className: nginx
   className:
+  pathType: Prefix
   annotations:
     {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: git.example.com
-      paths:
-        - path: /
-          pathType: Prefix
+      paths: []
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
