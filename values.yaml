@@ -151,10 +151,10 @@ service:
 ## @section Ingress
 ## @param ingress.enabled Enable ingress
 ## @param ingress.className Ingress class name
+## @param ingress.pathType Ingress Path Type
 ## @param ingress.annotations Ingress annotations
 ## @param ingress.hosts[0].host Default Ingress host
-## @param ingress.hosts[0].paths[0].path Default Ingress path
-## @param ingress.hosts[0].paths[0].pathType Ingress path type
+## @param ingress.hosts[0].paths Default Ingress path
 ## @param ingress.tls Ingress tls settings
 ## @extra ingress.apiVersion Specify APIVersion of ingress object. Mostly would only be used for argocd.
 ingress:
