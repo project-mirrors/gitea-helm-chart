@@ -905,16 +905,15 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Ingress
 
-| Name                     | Description                                                                 | Value             |
-| ------------------------ | --------------------------------------------------------------------------- | ----------------- |
-| `ingress.enabled`        | Enable ingress                                                              | `false`           |
-| `ingress.className`      | Ingress class name                                                          | `nil`             |
-| `ingress.pathType`       | Ingress Path Type                                                           | `Prefix`          |
-| `ingress.annotations`    | Ingress annotations                                                         | `{}`              |
-| `ingress.hosts[0].host`  | Default Ingress host                                                        | `git.example.com` |
-| `ingress.hosts[0].paths` | Default Ingress path                                                        | `[]`              |
-| `ingress.tls`            | Ingress tls settings                                                        | `[]`              |
-| `ingress.apiVersion`     | Specify APIVersion of ingress object. Mostly would only be used for argocd. |                   |
+| Name                     | Description          | Value             |
+| ------------------------ | -------------------- | ----------------- |
+| `ingress.enabled`        | Enable ingress       | `false`           |
+| `ingress.className`      | Ingress class name   | `nil`             |
+| `ingress.pathType`       | Ingress Path Type    | `Prefix`          |
+| `ingress.annotations`    | Ingress annotations  | `{}`              |
+| `ingress.hosts[0].host`  | Default Ingress host | `git.example.com` |
+| `ingress.hosts[0].paths` | Default Ingress path | `[]`              |
+| `ingress.tls`            | Ingress tls settings | `[]`              |
 
 ### deployment
 
