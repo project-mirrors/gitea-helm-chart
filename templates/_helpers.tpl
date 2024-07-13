@@ -404,3 +404,15 @@ https
     {{- end }}
   {{- end }}
 {{- end -}}
+
+{{- /* Deprecations */ -}}
+{{- /* 10.4.0 (2024-07) */ -}}
+{{- define "deprecations" -}}
+  {{- if ne .Values.ingress.className "" }}
+    {{- printf "# WARNING: 'ingress.className' is deprecated and will be removed in a future release. Use 'ingress.ingressClassName' instead.\n" -}}
+  {{- end -}}
+  
+  {{- if and (ne .Values.ingress.className "" ) (ne .Values.ingress.ingressClassName "") -}}
+  {{- fail "ingress.ingressClassName and ingress.className cannot be defined at the same time. Please only choose one." -}}
+  {{- end -}}
+{{- end -}}

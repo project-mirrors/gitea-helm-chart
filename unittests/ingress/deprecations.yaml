@@ -1,0 +1,43 @@
+suite: Test ingress.yaml
+templates:
+  - templates/gitea/ingress.yaml
+tests:
+  - it: should fail when both ingress.className and ingress.ingressClassName are defined
+    set:
+      ingress.enabled: true
+      ingress.className: "ingress-class"
+      ingress.ingressClassName: "ingress-class"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.ingressClassName and ingress.className cannot be defined at the same time. Please only choose one."
+
+  - it: should succeed when only ingress.className is defined
+    set:
+      ingress.enabled: true
+      ingress.ingressClassName: "ingress-class"
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: should succeed when only ingress.ingressClassName is defined
+    set:
+      ingress.enabled: true
+      ingress.ingressClassName: "ingress-class"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.ingressClassName
+          value: ingress-class
+
+  - it: should succeed when neither ingress.className nor ingress.ingressClassName are defined
+    set:
+      ingress.enabled: true
+      ingress.className: "ingress-class"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.ingressClassName
+          value: ingress-class
+

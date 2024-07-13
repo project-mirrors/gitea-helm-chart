@@ -1,3 +1,4 @@
+{{- include "deprecations" . -}}
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "gitea.fullname" . -}}
 {{- $httpPort := .Values.service.http.port -}}
@@ -10,8 +11,10 @@ metadata:
     {{- include "gitea.labels" . | nindent 4 }}
   {{- template "ingress.annotations" . }}
 spec:
-{{- if .Values.ingress.className }}
+{{- if ne .Values.ingress.className "" }}
   ingressClassName: {{ tpl .Values.ingress.className . }}
+{{- else }}
+  ingressClassName: {{ tpl .Values.ingress.ingressClassName . }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:
