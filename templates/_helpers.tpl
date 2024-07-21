@@ -413,22 +413,24 @@ https
   {{- end }}
 {{- end -}}
 
+{{- define "ingress.ingressClassName" -}}
+{{- if ne .Values.ingress.className "" -}}
+# WARNING: 'ingress.className' is deprecated and will be removed in a future release. Use 'ingress.ingressClassName' instead."
+{{ end -}}
+{{- if and (ne .Values.ingress.className "" ) (ne .Values.ingress.ingressClassName "") -}}
+{{- fail "ingress.ingressClassName and ingress.className cannot be defined at the same time. Please only choose one." -}}
+{{- end -}}
+{{- if ne .Values.ingress.className "" -}}
+ingressClassName: {{ tpl .Values.ingress.className . }}
+{{- else if ne .Values.ingress.ingressClassName "" -}}
+ingressClassName: {{ tpl .Values.ingress.ingressClassName . }}
+{{- end -}}
+{{- end -}}
+
 {{- define "gitea.admin.passwordMode" -}}
 {{- if has .Values.gitea.admin.passwordMode (tuple "keepUpdated" "initialOnlyNoReset" "initialOnlyRequireReset") -}}
 {{ .Values.gitea.admin.passwordMode }}
 {{- else -}}
 {{ printf "gitea.admin.passwordMode must be set to one of 'keepUpdated', 'initialOnlyNoReset', or 'initialOnlyRequireReset'. Received: '%s'" .Values.gitea.admin.passwordMode | fail }}
 {{- end -}}
-{{- end -}}
-
-{{- /* Deprecations */ -}}
-{{- /* 10.4.0 (2024-07) */ -}}
-{{- define "deprecations" -}}
-  {{- if ne .Values.ingress.className "" }}
-    {{- printf "# WARNING: 'ingress.className' is deprecated and will be removed in a future release. Use 'ingress.ingressClassName' instead.\n" -}}
-  {{- end -}}
-  
-  {{- if and (ne .Values.ingress.className "" ) (ne .Values.ingress.ingressClassName "") -}}
-  {{- fail "ingress.ingressClassName and ingress.className cannot be defined at the same time. Please only choose one." -}}
-  {{- end -}}
 {{- end -}}
