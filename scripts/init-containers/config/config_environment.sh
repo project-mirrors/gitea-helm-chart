@@ -73,9 +73,9 @@ function env2ini::reload_preset_envs() {
     env2ini::log "  + '${setting}'"
 
     export "${setting^^}=${value}"                           # '^^' makes the variable content uppercase
-  done < "/tmp/existing-envs"
+  done < "$TMP_EXISTING_ENVS_FILE"
 
-  rm /tmp/existing-envs
+  rm $TMP_EXISTING_ENVS_FILE
 }
 
 
@@ -124,13 +124,13 @@ function env2ini::generate_initial_secrets() {
 }
 
 # save existing envs prior to script execution. Necessary to keep order of preexisting and custom envs
-env | (grep -e '^GITEA__' || [[ $? == 1 ]]) > /tmp/existing-envs
+env | (grep -e '^GITEA__' || [[ $? == 1 ]]) > $TMP_EXISTING_ENVS_FILE
 
 # MUST BE CALLED BEFORE OTHER CONFIGURATION
 env2ini::generate_initial_secrets
 
-env2ini::load_config_sources '/env-to-ini-mounts/inlines/'
-env2ini::load_config_sources '/env-to-ini-mounts/additionals/'
+env2ini::load_config_sources "$ENV_TO_INI_MOUNT_POINT/inlines/"
+env2ini::load_config_sources "$ENV_TO_INI_MOUNT_POINT/additionals/"
 
 # load existing envs to override auto generated envs
 env2ini::reload_preset_envs
