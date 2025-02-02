@@ -45,3 +45,31 @@ tests:
           content:
             name: ENV_TO_INI_MOUNT_POINT
             value: /env-to-ini-mounts
+  - it: CPU resources are defined as well as GOMAXPROCS
+    template: templates/gitea/deployment.yaml
+    set:
+      resources:
+        limits:
+          cpu: 200ms
+          memory: 200Mi
+        requests:
+          cpu: 100ms
+          memory: 100Mi
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                divisor: "1"
+                resource: limits.cpu
+      - equal:
+          path: spec.template.spec.containers[0].resources
+          value:
+            limits:
+              cpu: 200ms
+              memory: 200Mi
+            requests:
+              cpu: 100ms
+              memory: 100Mi

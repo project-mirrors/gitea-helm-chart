@@ -8,6 +8,7 @@
   - [Dependency Versioning](#dependency-versioning)
 - [Installing](#installing)
 - [High Availability](#high-availability)
+- [Limit resources](#limit-resources)
 - [Configuration](#configuration)
   - [Default Configuration](#default-configuration)
     - [Database defaults](#database-defaults)
@@ -148,6 +149,42 @@ Care must be taken for production use as not all implementation details of Gitea
 
 Deploying a HA-ready Gitea instance requires some effort including using HA-ready dependencies.
 See the [HA Setup](docs/ha-setup.md) document for more details.
+
+## Limit resources
+
+If the application is deployed with a CPU resource limit, Prometheus may throw a CPU throttling warning for the
+application. This has more or less to do with the fact that the application finds the number of CPUs of the host, but
+cannot use the available CPU time to perform computing operations.
+
+The application must be informed that despite several CPUs only a part (limit) of the available computing time is
+available. As this is a Golang application, this can be implemented using `GOMAXPROCS`. The following example is one way
+of defining `GOMAXPROCS` automatically based on the defined CPU limit like `100m`. Please keep in mind, that the CFS
+rate of `100ms` - default on each kubernetes node, is also very important to avoid CPU throttling.
+
+Further information about this topic can be found [here](https://kanishk.io/posts/cpu-throttling-in-containerized-go-apps/).
+
+> [!NOTE]
+> The environment variable `GOMAXPROCS` is set automatically, when a CPU limit is defined. An explicit configuration is
+> not anymore required.
+
+```yaml
+deployment:
+  env:
+  # Will be automatically defined!
+  - name: GOMAXPROCS
+    valueFrom:
+      resourceFieldRef:
+        divisor: "1" # Is required for GitDevOps systems like ArgoCD/Flux. Otherwise throw the system a diff error. (k8s-default=1)
+        resource: limits.cpu
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 512Mi
+```
 
 ## Configuration
 
@@ -1203,11 +1240,11 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 **Breaking changes**
 <!-- prettier-ignore-end -->
 
-- Update Redis sub-chart to version 20.x (appVersion 7.4)  
+- Update Redis sub-chart to version 20.x (appVersion 7.4)
   Although there are no breaking changes in the Redis Chart itself, it updates Redis from `7.2` to `7.4`. We recommend checking the release notes:
   - [Redis Chart release notes (starting with v20.0.0)](https://github.com/bitnami/charts/blob/HEAD/bitnami/redis/CHANGELOG.md#2000-2024-08-09).
   - [Redis 7.4 release notes](https://raw.githubusercontent.com/redis/redis/7.4/00-RELEASENOTES).
-- Update Redis Cluster sub-chart to version 11.x (appVersion 7.4)  
+- Update Redis Cluster sub-chart to version 11.x (appVersion 7.4)
   Although there are no breaking changes in the Redis Chart itself, it updates Redis from `7.2` to `7.4`. We recommend checking the release notes:
   - [Redis Chart release notes (starting with v11.0.0)](https://github.com/bitnami/charts/blob/HEAD/bitnami/redis-cluster/CHANGELOG.md#1100-2024-08-09).
   - [Redis 7.4 release notes](https://raw.githubusercontent.com/redis/redis/7.4/00-RELEASENOTES).
