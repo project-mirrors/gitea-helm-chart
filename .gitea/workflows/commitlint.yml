@@ -8,7 +8,7 @@ on:
 jobs:
   check-and-test:
     runs-on: ubuntu-latest
-    container: commitlint/commitlint:v19.7.1
+    container: commitlint/commitlint:19.7.1
     steps:
       - name: check PR title
         run: |
