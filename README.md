@@ -576,7 +576,7 @@ You can interact with the postgres settings as displayed in the following exampl
 postgresql:
   persistence:
     enabled: true
-    claimName: MyAwesomeGiteaPostgresClaim
+    existingClaim: MyAwesomeGiteaPostgresClaim
 ```
 
 ### Admin User
