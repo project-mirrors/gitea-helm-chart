@@ -1,0 +1,15 @@
+name: commitlint
+
+on:
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+    container: commitlint/commitlint:v19.7.1
+    steps:
+      - name: check PR title
+        run: |
+          echo "${{ gitea.event.pull_request.title }}" | npx commitlint
