@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: check PR title
         run: |
-          echo "${{ gitea.event.pull_request.title }}" | npx commitlint
+          echo "${{ gitea.event.pull_request.title }}" | commitlint --config .commitlintrc.json
