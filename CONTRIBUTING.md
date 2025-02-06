@@ -29,6 +29,7 @@ When submitting or updating a PR:
 - try to avoid rebases. They make code reviews for large PRs and comments much harder.
 - if applicable, use the PR template for a well-defined PR description.
 - clearly mark breaking changes.
+- format the PR title following the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) schema
 
 ## Local development & testing
 
