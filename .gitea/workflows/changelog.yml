@@ -19,7 +19,6 @@ jobs:
           export ISSUE_NUMBER=$(curl -s "${{ gitea.event.repository.html_url }}/api/v1/repos/${{ gitea.repository }}/issues?state=open&q=Changelog%20for%20upcoming%20version" | jq '.[].number')
 
           echo $RELEASE_NOTES
-
           JSON_DATA=$(echo "" | jq -Rs --arg title 'Changelog for upcoming version' --arg body "$(cat changelog.md)" '{title: $title, body: $body}')
 
           if [ -z "$ISSUE_NUMBER" ]; then
