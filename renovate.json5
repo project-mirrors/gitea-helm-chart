@@ -9,6 +9,9 @@
   labels: [
     'kind/dependency',
   ],
+  "digest": {
+    "automerge": true
+  },
   automergeStrategy: 'squash',
   'git-submodules': {
     'enabled': true
