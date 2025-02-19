@@ -96,9 +96,9 @@ spec:
             {{- with .Values.actions.statefulset.dind.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-      {{- with .Values.actions.statefulset.nodeSelector }}
+      {{- range $key, $value := .Values.actions.statefulset.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+        {{ $key }}: {{ $value | quote }}
       {{- end }}
       {{- with .Values.actions.statefulset.affinity }}
       affinity:

@@ -86,9 +86,9 @@ spec:
               {{- if .Values.persistence.subPath }}
               subPath: {{ .Values.persistence.subPath }}
               {{- end }}
-      {{- with .Values.actions.provisioning.nodeSelector }}
+      {{- range $key, $value := .Values.actions.provisioning.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+        {{ $key }}: {{ $value | quote }}
       {{- end }}
       {{- with .Values.actions.provisioning.affinity }}
       affinity:
