@@ -15,7 +15,7 @@ jobs:
           apk add -q --update --no-cache nodejs curl jq sed
       - uses: actions/checkout@v4
         with:
-          fetch-tags: true
+          fetch-depth: 0
       - name: Generate upcoming changelog
         run: |
           git sv rn -o changelog.md
