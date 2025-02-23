@@ -37,3 +37,5 @@ unittests/
 .yamllint
 CODEOWNERS
 renovate.json5
+.commitlintrc.json
+.gitsv/
