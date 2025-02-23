@@ -96,5 +96,12 @@
       ],
       changelogUrl: 'https://github.com/helm/helm',
     },
+    {
+      description: 'Bump Gitea as fast as possible - not only on weekends',
+      matchDepNames: [
+        'go-gitea/gitea',
+      ],
+      schedule: ['at any time'],
+    },
   ],
 }
