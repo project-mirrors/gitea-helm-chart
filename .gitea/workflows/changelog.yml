@@ -10,10 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/thegeeklab/git-sv:1.0.11
     steps:
+      - name: install tools
+        run: |
+          apk add -q --update --no-cache nodejs curl jq sed
       - uses: actions/checkout@v4
       - name: Generate upcoming changelog
         run: |
-          apk add -q --no-cache curl jq sed
           git sv rn -o changelog.md
           export RELEASE_NOTES=$(cat changelog.md)
           export ISSUE_NUMBER=$(curl -s "${{ gitea.event.repository.html_url }}/api/v1/repos/${{ gitea.repository }}/issues?state=open&q=Changelog%20for%20upcoming%20version" | jq '.[].number')
