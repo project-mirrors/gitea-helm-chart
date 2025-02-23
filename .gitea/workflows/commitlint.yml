@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - "*"
+    types:
+      - opened
+      - edited
 
 jobs:
   check-and-test:
