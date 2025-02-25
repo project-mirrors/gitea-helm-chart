@@ -38,7 +38,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "example.com/docker.gitea.com/gitea:1.19.3-rootless"
+          value: "example.com/gitea:1.19.3-rootless"
   - it: global registry
     template: templates/gitea/deployment.yaml
     set:
