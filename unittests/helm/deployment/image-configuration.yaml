@@ -46,7 +46,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "global.example.com/docker.gitea.com/gitea:1.19.3-rootless"
+          value: "global.example.com/gitea:1.19.3-rootless"
   - it: digest for rootless image
     template: templates/gitea/deployment.yaml
     set:
@@ -90,7 +90,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "global.example.com/docker.gitea.com/gitea:1.19.3-rootless@sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
+          value: "global.example.com/gitea:1.19.3-rootless@sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
   - it: correctly renders floating tag references
     template: templates/gitea/deployment.yaml
     set:
