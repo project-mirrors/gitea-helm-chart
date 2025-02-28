@@ -30,7 +30,7 @@ tests:
   - it: supports overriding SSH log level (even when image.fullOverride set)
     template: templates/gitea/deployment.yaml
     set:
-      image.fullOverride: gitea/gitea:1.19.3
+      image.fullOverride: docker.gitea.com/gitea:1.19.3
       image.rootless: false
       gitea.ssh.logLevel: "DEBUG"
     asserts:
@@ -53,7 +53,7 @@ tests:
   - it: skips SSH_LOG_LEVEL for rootless image (even when image.fullOverride set)
     template: templates/gitea/deployment.yaml
     set:
-      image.fullOverride: gitea/gitea:1.19.3
+      image.fullOverride: docker.gitea.com/gitea:1.19.3
       image.rootless: true
       gitea.ssh.logLevel: "DEBUG" # explicitly defining a non-standard level here
     asserts:
