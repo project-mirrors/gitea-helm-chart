@@ -129,6 +129,7 @@ MD041:
 MD044:
   # List of proper names
   names:
+    - docker.gitea.com
     - Gitea
     - PostgreSQL
     - Memcached

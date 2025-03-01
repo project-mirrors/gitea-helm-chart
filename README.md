@@ -140,6 +140,12 @@ Alternatively, the chart can also be installed from Dockerhub (since v9.6.0)
 helm install gitea oci://registry-1.docker.io/giteacharts/gitea
 ```
 
+To avoid potential Dockerhub rate limits, the chart can also be installed via [docker.gitea.com](https://blog.gitea.com/docker-registry-update/) (since v9.6.0)
+
+```sh
+helm install gitea oci://docker.gitea.com/charts/gitea
+```
+
 When upgrading, please refer to the [Upgrading](#upgrading) section at the bottom of this document for major and breaking changes.
 
 ## High Availability
