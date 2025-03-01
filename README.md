@@ -1248,6 +1248,8 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 **Breaking changes**
 <!-- prettier-ignore-end -->
 
+- Update Gitea to 1.23.x (review the [1.23 release blog post](https://blog.gitea.com/release-of-1.23.0/) for all application breaking changes)
+- Update PostgreSQL sub-chart dependencies to appVersion 17.x
 - Update Redis sub-chart to version 20.x (appVersion 7.4)
   Although there are no breaking changes in the Redis Chart itself, it updates Redis from `7.2` to `7.4`. We recommend checking the release notes:
   - [Redis Chart release notes (starting with v20.0.0)](https://github.com/bitnami/charts/blob/HEAD/bitnami/redis/CHANGELOG.md#2000-2024-08-09).
