@@ -15,9 +15,9 @@ keywords:
   - gitea
   - gogs
 sources:
-  - https://gitea.com/gitea/helm-chart
+  - https://gitea.com/gitea/helm-gitea
   - https://github.com/go-gitea/gitea
-  - https://hub.docker.com/r/gitea/gitea/
+  - https://docker.gitea.com/gitea
 maintainers:
   - name: Charlie Drage
     email: charlie@charliedrage.com

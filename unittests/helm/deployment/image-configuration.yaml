@@ -94,7 +94,7 @@ tests:
   - it: correctly renders floating tag references
     template: templates/gitea/deployment.yaml
     set:
-      image.tag: 1.21 # use non-quoted value on purpose. See: https://gitea.com/gitea/helm-chart/issues/631
+      image.tag: 1.21 # use non-quoted value on purpose. See: https://gitea.com/gitea/helm-gitea/issues/631
     asserts:
       - equal:
           path: spec.template.spec.initContainers[0].image

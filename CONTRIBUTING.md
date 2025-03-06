@@ -38,7 +38,7 @@ be used:
 
 1. Install `minikube` and `helm`.
 1. Start a `minikube` cluster via `minikube start`.
-1. From the `gitea/helm-chart` directory execute the following command.
+1. From the `gitea/helm-gitea` directory execute the following command.
    This will install the dependencies listed in `Chart.yml` and deploy the current state of the helm chart found locally.
    If you want to test a branch, make sure to switch to the respective branch first.
    `helm install --dependency-update gitea . -f values.yaml`.
