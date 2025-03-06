@@ -1,5 +1,5 @@
 {
-  "name": "gitea-helm-gitea",
+  "name": "gitea-helm",
   "homepage": "https://gitea.com/gitea/helm-gitea.git",
   "license": "MIT",
   "private": true,

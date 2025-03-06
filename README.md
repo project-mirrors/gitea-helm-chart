@@ -65,7 +65,7 @@ It is published under the MIT license.
 
 ## Introduction
 
-This helm chart has taken some inspiration from [jfelten's helm chart](https://github.com/jfelten/gitea-helm-gitea).
+This helm chart has taken some inspiration from [jfelten's helm chart](https://github.com/jfelten/gitea-helm-chart).
 Yet it takes a completely different approach in providing a database and cache with dependencies.
 Additionally, this chart allows to provide LDAP and admin user configuration with values.
 
