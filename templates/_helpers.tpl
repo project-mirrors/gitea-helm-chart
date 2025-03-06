@@ -345,9 +345,6 @@ https
   {{- if not .Values.gitea.config.indexer.ISSUE_INDEXER_TYPE -}}
      {{- $_ := set .Values.gitea.config.indexer "ISSUE_INDEXER_TYPE" "db" -}}
   {{- end -}}
-  {{- if not .Values.gitea.config.actions.ENABLED -}}
-     {{- $_ := set .Values.gitea.config.actions "ENABLED" (ternary "true" "false" .Values.actions.enabled) -}}
-  {{- end -}}
 {{- end -}}
 
 {{- define "gitea.inline_configuration.defaults.server" -}}
@@ -366,9 +363,6 @@ https
   {{- end -}}
   {{- if not .Values.gitea.config.server.ROOT_URL -}}
     {{- $_ := set .Values.gitea.config.server "ROOT_URL" (printf "%s://%s" (include "gitea.public_protocol" .) .Values.gitea.config.server.DOMAIN) -}}
-  {{- end -}}
-  {{- if .Values.actions.enabled -}}
-     {{- $_ := set .Values.gitea.config.server "LOCAL_ROOT_URL" (include "gitea.act_runner.local_root_url" .) -}}
   {{- end -}}
   {{- if not .Values.gitea.config.server.SSH_DOMAIN -}}
     {{- $_ := set .Values.gitea.config.server "SSH_DOMAIN" .Values.gitea.config.server.DOMAIN -}}
