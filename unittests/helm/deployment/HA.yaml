@@ -20,14 +20,14 @@ tests:
               ENABLED: true
     asserts:
       - failedTemplate:
-          errorMessage: "Invoking the garbage collector via CRON is not yet supported when running with multiple replicas. Please set 'cron.GIT_GC_REPOS.enabled = false'."
+          errorMessage: "Invoking the garbage collector via CRON is not yet supported when running with multiple replicas. Please set 'gitea.config.cron.GIT_GC_REPOS.enabled = false'."
   - it: fails with multiple replicas and RWX file system not set
     template: templates/gitea/deployment.yaml
     set:
       replicaCount: 2
     asserts:
       - failedTemplate:
-          errorMessage: "When using multiple replicas, a RWX file system is required and gitea.persistence.accessModes[0] must be set to ReadWriteMany."
+          errorMessage: "When using multiple replicas, a RWX file system is required and persistence.accessModes[0] must be set to ReadWriteMany."
   - it: fails with multiple replicas and bleve issue indexer
     template: templates/gitea/deployment.yaml
     set:
