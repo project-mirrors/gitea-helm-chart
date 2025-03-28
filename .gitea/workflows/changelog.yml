@@ -8,7 +8,7 @@ on:
 jobs:
   changelog:
     runs-on: ubuntu-latest
-    container: docker.io/thegeeklab/git-sv:1.0.12
+    container: docker.io/thegeeklab/git-sv:1.0.13
     steps:
       - name: install tools
         run: |
