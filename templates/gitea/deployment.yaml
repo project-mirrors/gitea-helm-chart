@@ -115,7 +115,7 @@ spec:
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}
             {{- if .Values.gitea.additionalConfigFromEnvs }}
-            {{- toYaml .Values.gitea.additionalConfigFromEnvs | nindent 12 }}
+            {{- tpl (toYaml .Values.gitea.additionalConfigFromEnvs) $ | nindent 12 }}
             {{- end }}
           volumeMounts:
             - name: config
