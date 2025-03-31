@@ -256,7 +256,7 @@ https
   {{- end }}
 
   {{- $_ := set $inlines "_generals_" (join "\n" $generals) -}}
-  {{- tpl (toYaml $inlines) $ -}}
+  {{- toYaml $inlines -}}
 {{- end -}}
 
 {{- define "gitea.inline_configuration.init" -}}
