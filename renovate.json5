@@ -58,6 +58,17 @@
       ],
     },
     {
+      groupName: 'bats testing framework',
+      matchManagers: [
+        'git-submodules',
+      ],
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+        'digest',
+      ],
+    },
+    {
       groupName: 'workflow dependencies (minor & patch)',
       matchManagers: [
         'github-actions',
