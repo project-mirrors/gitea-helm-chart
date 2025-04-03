@@ -73,3 +73,23 @@ tests:
             requests:
               cpu: 100ms
               memory: 100Mi
+  - it: Init containers have correct volumeMount path
+    template: templates/gitea/deployment.yaml
+    set:
+      initContainersScriptsVolumeMountPath: "/custom/init/path"
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="init")].mountPath
+          value: "/custom/init/path"
+      - equal:
+          path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="config")].mountPath
+          value: "/custom/init/path"
+  - it: Init containers have correct volumeMount path if there is no override
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="init")].mountPath
+          value: "/usr/sbinx"
+      - equal:
+          path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="config")].mountPath
+          value: "/usr/sbinx"

@@ -18,7 +18,7 @@ tests:
           value: configure-gpg
       - equal:
           path: spec.template.spec.initContainers[2].command
-          value: ["/usr/sbin/configure_gpg_environment.sh"]
+          value: ["/usr/sbinx/configure_gpg_environment.sh"]
       - equal:
           path: spec.template.spec.initContainers[2].securityContext
           value:
@@ -34,7 +34,7 @@ tests:
           path: spec.template.spec.initContainers[2].volumeMounts
           value:
             - name: init
-              mountPath: /usr/sbin
+              mountPath: /usr/sbinx
             - name: data
               mountPath: /data
             - name: gpg-private-key
