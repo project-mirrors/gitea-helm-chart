@@ -220,15 +220,6 @@ https
 {{- end -}}
 {{- end -}}
 
-{{- define "gitea.act_runner.local_root_url" -}}
-{{- if not .Values.gitea.config.server.LOCAL_ROOT_URL -}}
-    {{- printf "http://%s-http:%.0f" (include "gitea.fullname" .) .Values.service.http.port -}}
-{{- else -}}
-  {{/* fallback for allowing to overwrite this value via inline config */}}
-  {{- .Values.gitea.config.server.LOCAL_ROOT_URL -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "gitea.inline_configuration" -}}
   {{- include "gitea.inline_configuration.init" . -}}
   {{- include "gitea.inline_configuration.defaults" . -}}
