@@ -157,8 +157,7 @@ service:
 
 ## @section Ingress
 ## @param ingress.enabled Enable ingress
-## @param ingress.className DEPRECATED: Use `ingress.ingressClassName` instead.
-## @param ingress.ingressClassName Ingress class name
+## @param ingress.className DEPRECATED: Ingress class name
 ## @param ingress.pathType Ingress Path Type
 ## @param ingress.annotations Ingress annotations
 ## @param ingress.hosts[0].host Default Ingress host
@@ -166,9 +165,7 @@ service:
 ## @param ingress.tls Ingress tls settings
 ingress:
   enabled: false
-  # DEPRECATED: Use `ingress.ingressClassName` instead.
   className: ""
-  ingressClassName: ""
   pathType: Prefix
   annotations: {}
   # kubernetes.io/tls-acme: "true"
