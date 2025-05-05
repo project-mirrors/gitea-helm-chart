@@ -168,7 +168,6 @@ ingress:
   className: ""
   pathType: Prefix
   annotations: {}
-  # kubernetes.io/tls-acme: "true"
   hosts:
     - host: git.example.com
       paths: []
