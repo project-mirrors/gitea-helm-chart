@@ -157,7 +157,7 @@ service:
 
 ## @section Ingress
 ## @param ingress.enabled Enable ingress
-## @param ingress.className Ingress class name
+## @param ingress.className DEPRECATED: Use `ingress.ingressClassName` instead.
 ## @param ingress.ingressClassName Ingress class name
 ## @param ingress.pathType Ingress Path Type
 ## @param ingress.annotations Ingress annotations
