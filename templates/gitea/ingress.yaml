@@ -33,6 +33,7 @@ spec:
     - host: {{ tpl .host $ | quote }}
       http:
         paths:
+          {{- if .paths }}
           {{- range .paths }}
           {{- if kindIs "string" . }}
           - path: {{ . }}
@@ -51,6 +52,15 @@ spec:
                 port:
                   number: {{ $httpPort }}
           {{- end }}
+          {{- end }}
+          {{- else }}
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: {{ $fullName }}-http
+                port:
+                  number: {{ $httpPort }}
           {{- end }}
     {{- end }}
 {{- end }}
