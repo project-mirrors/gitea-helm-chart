@@ -51,8 +51,8 @@
   - [LivenessProbe](#livenessprobe)
   - [ReadinessProbe](#readinessprobe)
   - [StartupProbe](#startupprobe)
-  - [redis-cluster](#redis-cluster)
-  - [redis](#redis)
+  - [valkey-cluster](#valkey-cluster)
+  - [valkey](#valkey)
   - [PostgreSQL HA](#postgresql-ha)
   - [PostgreSQL](#postgresql)
   - [Advanced](#advanced)
@@ -95,14 +95,14 @@ Users can also configure their own external providers via the configuration.
 These dependencies are enabled by default:
 
 - PostgreSQL HA ([Bitnami PostgreSQL-HA](https://github.com/bitnami/charts/blob/main/bitnami/postgresql-ha/Chart.yaml))
-- Redis-Cluster ([Bitnami Redis-Cluster](https://github.com/bitnami/charts/blob/main/bitnami/redis-cluster/Chart.yaml))
+- Valkey-Cluster ([Bitnami Valkey-Cluster](https://github.com/bitnami/charts/blob/main/bitnami/valkey-cluster/Chart.yaml))
 
 ### Non-HA Dependencies
 
 Alternatively, the following non-HA replacements are available:
 
 - PostgreSQL ([Bitnami PostgreSQL](<Postgresql](https://github.com/bitnami/charts/blob/main/bitnami/postgresql/Chart.yaml)>))
-- Redis ([Bitnami Redis](<Redis](https://github.com/bitnami/charts/blob/main/bitnami/redis/Chart.yaml)>))
+- Valkey ([Bitnami Valkey](<Valkey](https://github.com/bitnami/charts/blob/main/bitnami/valkey/Chart.yaml)>))
 
 ### Dependency Versioning
 
@@ -120,8 +120,8 @@ Please double-check the image repository and available tags in the sub-chart:
 
 - [PostgreSQL-HA](https://hub.docker.com/r/bitnami/postgresql-repmgr/tags)
 - [PostgreSQL](https://hub.docker.com/r/bitnami/postgresql/tags)
-- [Redis Cluster](https://hub.docker.com/r/bitnami/redis-cluster/tags)
-- [Redis](https://hub.docker.com/r/bitnami/redis/tags)
+- [Valkey Cluster](https://hub.docker.com/r/bitnami/valkey-cluster/tags)
+- [Valkey](https://hub.docker.com/r/bitnami/valkey/tags)
 
 and look up the image tag which fits your needs on Dockerhub.
 
@@ -177,12 +177,12 @@ Further information about this topic can be found [here](https://kanishk.io/post
 ```yaml
 deployment:
   env:
-  # Will be automatically defined!
-  - name: GOMAXPROCS
-    valueFrom:
-      resourceFieldRef:
-        divisor: "1" # Is required for GitDevOps systems like ArgoCD/Flux. Otherwise throw the system a diff error. (k8s-default=1)
-        resource: limits.cpu
+    # Will be automatically defined!
+    - name: GOMAXPROCS
+      valueFrom:
+        resourceFieldRef:
+          divisor: "1" # Is required for GitDevOps systems like ArgoCD/Flux. Otherwise throw the system a diff error. (k8s-default=1)
+          resource: limits.cpu
 
 resources:
   limits:
@@ -281,28 +281,28 @@ If `.Values.image.rootless: true`, then the following will occur. In case you us
 
 #### Session, Cache and Queue
 
-The session, cache and queue settings are set to use the built-in Redis Cluster sub-chart dependency.
-If Redis Cluster is disabled, the chart will fall back to the Gitea defaults which use "memory" for `session` and `cache` and "level" for `queue`.
+The session, cache and queue settings are set to use the built-in Valkey Cluster sub-chart dependency.
+If Valkey Cluster is disabled, the chart will fall back to the Gitea defaults which use "memory" for `session` and `cache` and "level" for `queue`.
 
 While these will work and even not cause immediate issues after startup, **they are not recommended for production use**.
 Reasons being that a single pod will take on all the work for `session` and `cache` tasks in its available memory.
 It is likely that the pod will run out of memory or will face substantial memory spikes, depending on the workload.
-External tools such as `redis-cluster` or `memcached` handle these workloads much better.
+External tools such as `valkey-cluster` or `memcached` handle these workloads much better.
 
 ### Single-Pod Configurations
 
 If HA is not needed/desired, the following configurations can be used to deploy a single-pod Gitea instance.
 
-1. For a production-ready single-pod Gitea instance without external dependencies (using the chart dependency `postgresql` and `redis`):
+1. For a production-ready single-pod Gitea instance without external dependencies (using the chart dependency `postgresql` and `valkey`):
 
    <details>
 
    <summary>values.yml</summary>
 
    ```yaml
-   redis-cluster:
+   valkey-cluster:
      enabled: false
-   redis:
+   valkey:
      enabled: true
    postgresql:
      enabled: true
@@ -333,9 +333,9 @@ If HA is not needed/desired, the following configurations can be used to deploy 
    <summary>values.yml</summary>
 
    ```yaml
-   redis-cluster:
+   valkey-cluster:
      enabled: false
-   redis:
+   valkey:
      enabled: false
    postgresql:
      enabled: false
@@ -537,17 +537,17 @@ More about this issue [here](https://gitea.com/gitea/helm-gitea/issues/161).
 
 ### Cache
 
-The cache handling is done via `redis-cluster` (via the `bitnami` chart) by default.
+The cache handling is done via `valkey-cluster` (via the `bitnami` chart) by default.
 This deployment is HA-ready but can also be used for single-pod deployments.
-By default, 6 replicas are deployed for a working `redis-cluster` deployment.
-Many cloud providers offer a managed redis service, which can be used instead of the built-in `redis-cluster`.
+By default, 6 replicas are deployed for a working `valkey-cluster` deployment.
+Many cloud providers offer a managed valkey service, which can be used instead of the built-in `valkey-cluster`.
 
 ```yaml
-redis-cluster:
+valkey-cluster:
   enabled: true
 ```
 
-⚠️ The redis charts [do not work well with special characters in the password](https://gitea.com/gitea/helm-gitea/issues/690).
+⚠️ The valkey charts [do not work well with special characters in the password](https://gitea.com/gitea/helm-chart/issues/690).
 Consider omitting such or open an issue in the Bitnami repo and let us know once this got fixed.
 
 ### Persistence
@@ -1131,27 +1131,30 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gitea.startupProbe.successThreshold`    | Success threshold for startup probe             | `1`     |
 | `gitea.startupProbe.failureThreshold`    | Failure threshold for startup probe             | `10`    |
 
-### redis-cluster
+### valkey-cluster
 
-Redis cluster and [Redis](#redis) cannot be enabled at the same time.
+Valkey cluster and [Valkey](#valkey) cannot be enabled at the same time.
 
-| Name                             | Description                                  | Value   |
-| -------------------------------- | -------------------------------------------- | ------- |
-| `redis-cluster.enabled`          | Enable redis cluster                         | `true`  |
-| `redis-cluster.usePassword`      | Whether to use password authentication       | `false` |
-| `redis-cluster.cluster.nodes`    | Number of redis cluster master nodes         | `3`     |
-| `redis-cluster.cluster.replicas` | Number of redis cluster master node replicas | `0`     |
+| Name                                  | Description                                                          | Value   |
+| ------------------------------------- | -------------------------------------------------------------------- | ------- |
+| `valkey-cluster.enabled`              | Enable valkey cluster                                                | `true`  |
+| `valkey-cluster.usePassword`          | Whether to use password authentication                               | `false` |
+| `valkey-cluster.usePasswordFiles`     | Whether to mount passwords as files instead of environment variables | `false` |
+| `valkey-cluster.cluster.nodes`        | Number of valkey cluster master nodes                                | `3`     |
+| `valkey-cluster.cluster.replicas`     | Number of valkey cluster master node replicas                        | `0`     |
+| `valkey-cluster.service.ports.valkey` | Port of Valkey service                                               | `6379`  |
 
-### redis
+### valkey
 
-Redis and [Redis cluster](#redis-cluster) cannot be enabled at the same time.
+Valkey and [Valkey cluster](#valkey-cluster) cannot be enabled at the same time.
 
-| Name                          | Description                                | Value        |
-| ----------------------------- | ------------------------------------------ | ------------ |
-| `redis.enabled`               | Enable redis standalone or replicated      | `false`      |
-| `redis.architecture`          | Whether to use standalone or replication   | `standalone` |
-| `redis.global.redis.password` | Required password                          | `changeme`   |
-| `redis.master.count`          | Number of Redis master instances to deploy | `1`          |
+| Name                                 | Description                                 | Value        |
+| ------------------------------------ | ------------------------------------------- | ------------ |
+| `valkey.enabled`                     | Enable valkey standalone or replicated      | `false`      |
+| `valkey.architecture`                | Whether to use standalone or replication    | `standalone` |
+| `valkey.global.valkey.password`      | Required password                           | `changeme`   |
+| `valkey.master.count`                | Number of Valkey master instances to deploy | `1`          |
+| `valkey.master.service.ports.valkey` | Port of Valkey service                      | `6379`       |
 
 ### PostgreSQL HA
 
@@ -1203,6 +1206,20 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 
 <details>
 
+<summary>To 12.0.0</summary>
+
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable-next-line -->
+**Breaking changes**
+<!-- prettier-ignore-end -->
+
+- Migrated from Redis/Redis-cluster to Valkey/Valkey-cluster charts (#775).
+  While marked as breaking, there should be no need to migrate data explicity. Cache will start to refill automatically.
+
+</details>
+
+<details>
+
 <summary>To 11.0.0</summary>
 
 <!-- prettier-ignore-start -->
@@ -1220,8 +1237,7 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
   Although there are no breaking changes in the Redis Chart itself, it updates Redis from `7.2` to `7.4`. We recommend checking the release notes:
   - [Redis Chart release notes (starting with v11.0.0)](https://github.com/bitnami/charts/blob/HEAD/bitnami/redis-cluster/CHANGELOG.md#1100-2024-08-09).
   - [Redis 7.4 release notes](https://raw.githubusercontent.com/redis/redis/7.4/00-RELEASENOTES).
-
-</details>
+  </details>
 
 <details>
 
@@ -1298,16 +1314,16 @@ gitea:
   config:
     session:
       PROVIDER: redis-cluster
-      PROVIDER_CONFIG: redis+cluster://:gitea@gitea-redis-cluster-headless.<namespace>.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
+      PROVIDER_CONFIG: redis+cluster://:gitea@gitea-valkey-cluster-headless.<namespace>.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
 
     cache:
       ENABLED: true
       ADAPTER: redis-cluster
-      HOST: redis+cluster://:gitea@gitea-redis-cluster-headless.<namespace>.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
+      HOST: redis+cluster://:gitea@gitea-valkey-cluster-headless.<namespace>.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
 
     queue:
       TYPE: redis
-      CONN_STR: redis+cluster://:gitea@gitea-redis-cluster-headless.<namespace>.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
+      CONN_STR: redis+cluster://:gitea@gitea-valkey-cluster-headless.<namespace>.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
 ```
 
 <!-- prettier-ignore-start -->

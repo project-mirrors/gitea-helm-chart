@@ -1,19 +1,19 @@
-suite: Dependency checks | Customization integrity | redis-cluster
+suite: Dependency checks | Customization integrity | valkey-cluster
 release:
   name: gitea-unittests
   namespace: testing
 set:
-  redis:
+  valkey:
     enabled: false
-  redis-cluster:
+  valkey-cluster:
     enabled: true
     usePassword: false
     cluster:
       nodes: 5
       replicas: 2
 tests:
-  - it: "[redis-cluster] configures correct nodes/replicas"
-    template: charts/redis-cluster/templates/redis-statefulset.yaml
+  - it: "[valkey-cluster] configures correct nodes/replicas"
+    template: charts/valkey-cluster/templates/valkey-statefulset.yaml
     asserts:
       - documentIndex: 0
         equal:
@@ -22,31 +22,31 @@ tests:
       - documentIndex: 0
         matchRegex:
           path: spec.template.spec.containers[0].args[0]
-          pattern: REDIS_CLUSTER_REPLICAS="2"
-  - it: "[redis-cluster] support auth-less connections"
+          pattern: VALKEY_CLUSTER_REPLICAS="2"
+  - it: "[valkey-cluster] support auth-less connections"
     asserts:
-      - template: charts/redis-cluster/templates/secret.yaml
+      - template: charts/valkey-cluster/templates/secret.yaml
         hasDocuments:
           count: 0
-      - template: charts/redis-cluster/templates/redis-statefulset.yaml
+      - template: charts/valkey-cluster/templates/valkey-statefulset.yaml
         documentIndex: 0
         contains:
           path: spec.template.spec.containers[0].env
           content:
             name: ALLOW_EMPTY_PASSWORD
             value: "yes"
-  - it: "[redis-cluster] support auth-full connections"
+  - it: "[valkey-cluster] support auth-full connections"
     set:
-      redis-cluster:
+      valkey-cluster:
         usePassword: true
     asserts:
-      - template: charts/redis-cluster/templates/secret.yaml
+      - template: charts/valkey-cluster/templates/secret.yaml
         containsDocument:
           kind: Secret
           apiVersion: v1
-          name: gitea-unittests-redis-cluster
+          name: gitea-unittests-valkey-cluster
           namespace: testing
-      - template: charts/redis-cluster/templates/redis-statefulset.yaml
+      - template: charts/valkey-cluster/templates/valkey-statefulset.yaml
         documentIndex: 0
         contains:
           path: spec.template.spec.containers[0].env
@@ -54,25 +54,25 @@ tests:
             name: REDISCLI_AUTH
             valueFrom:
               secretKeyRef:
-                name: gitea-unittests-redis-cluster
-                key: redis-password
-      - template: charts/redis-cluster/templates/redis-statefulset.yaml
+                name: gitea-unittests-valkey-cluster
+                key: valkey-password
+      - template: charts/valkey-cluster/templates/valkey-statefulset.yaml
         documentIndex: 0
         contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: REDIS_PASSWORD
+            name: REDISCLI_AUTH
             valueFrom:
               secretKeyRef:
-                name: gitea-unittests-redis-cluster
-                key: redis-password
-  - it: "[redis-cluster] renders the referenced service"
-    template: charts/redis-cluster/templates/headless-svc.yaml
+                name: gitea-unittests-valkey-cluster
+                key: valkey-password
+  - it: "[valkey-cluster] renders the referenced service"
+    template: charts/valkey-cluster/templates/headless-svc.yaml
     asserts:
       - containsDocument:
           kind: Service
           apiVersion: v1
-          name: gitea-unittests-redis-cluster-headless
+          name: gitea-unittests-valkey-cluster-headless
           namespace: testing
       - documentIndex: 0
         contains:
@@ -81,10 +81,10 @@ tests:
             name: tcp-redis
             port: 6379
             targetPort: tcp-redis
-  - it: "[gitea] waits for redis-cluster to be up and running"
+  - it: "[gitea] waits for valkey-cluster to be up and running"
     template: templates/gitea/init.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
           path: stringData["configure_gitea.sh"]
-          pattern: nc -vz -w2 gitea-unittests-redis-cluster-headless.testing.svc.cluster.local 6379
+          pattern: nc -vz -w2 gitea-unittests-valkey-cluster-headless.testing.svc.cluster.local 6379
