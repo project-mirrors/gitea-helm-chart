@@ -29,6 +29,7 @@ When submitting or updating a PR:
 - try to avoid rebases. They make code reviews for large PRs and comments much harder.
 - if applicable, use the PR template for a well-defined PR description.
 - clearly mark breaking changes.
+- format the PR title following the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) schema
 
 ## Local development & testing
 
@@ -37,7 +38,7 @@ be used:
 
 1. Install `minikube` and `helm`.
 1. Start a `minikube` cluster via `minikube start`.
-1. From the `gitea/helm-chart` directory execute the following command.
+1. From the `gitea/helm-gitea` directory execute the following command.
    This will install the dependencies listed in `Chart.yml` and deploy the current state of the helm chart found locally.
    If you want to test a branch, make sure to switch to the respective branch first.
    `helm install --dependency-update gitea . -f values.yaml`.
@@ -48,15 +49,29 @@ default port-forward svc/gitea-http 3000:3000`.
 
 ### Unit tests
 
+#### Helm templating tests
+
 ```bash
 # install the unittest plugin
 $ helm plugin install https://github.com/helm-unittest/helm-unittest
 
-# run the unittests
-make unittests
+# run the Helm unittests
+make unittests-helm
 ```
 
 See [plugin documentation](https://github.com/helm-unittest/helm-unittest/blob/main/DOCUMENT.md) for usage instructions.
+
+#### Bash script tests
+
+```bash
+# setup the environment
+git submodule update --init --recursive
+
+# run the bash tests
+make unittests-bash
+```
+
+See [bats documentation](https://bats-core.readthedocs.io/en/stable/) for usage instructions.
 
 ## Release process
 

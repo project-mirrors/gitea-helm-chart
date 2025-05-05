@@ -7,21 +7,20 @@ on:
   push:
     branches:
       - main
-      - "renovate/**"
 
 env:
   # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
-  HELM_UNITTEST_VERSION: "v0.5.1"
+  HELM_UNITTEST_VERSION: "v0.8.1"
 
 jobs:
   check-and-test:
     runs-on: ubuntu-latest
-    container: alpine/helm:3.15.2
+    container: alpine/helm:3.17.2
     steps:
       - name: install tools
         run: |
           apk update
-          apk add --update make nodejs npm yamllint
+          apk add --update bash make nodejs npm yamllint ncurses
       - uses: actions/checkout@v4
       - name: install chart dependencies
         run: helm dependency build
@@ -29,9 +28,14 @@ jobs:
         run: helm lint
       - name: template
         run: helm template --debug gitea-helm .
-      - name: unit tests
+      - name: prepare unit test environment
         run: |
           helm plugin install --version ${{ env.HELM_UNITTEST_VERSION }} https://github.com/helm-unittest/helm-unittest
+          git submodule update --init --recursive
+      - name: unit tests
+        env:
+          TERM: xterm
+        run: |
           make unittests
       - name: verify readme
         run: |

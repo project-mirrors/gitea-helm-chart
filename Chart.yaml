@@ -3,7 +3,8 @@ name: gitea
 description: Gitea Helm chart for Kubernetes
 type: application
 version: 0.0.0
-appVersion: 1.22.0
+# renovate datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
+appVersion: 1.23.7
 icon: https://gitea.com/assets/img/logo.svg
 
 keywords:
@@ -14,9 +15,9 @@ keywords:
   - gitea
   - gogs
 sources:
-  - https://gitea.com/gitea/helm-chart
+  - https://gitea.com/gitea/helm-gitea
   - https://github.com/go-gitea/gitea
-  - https://hub.docker.com/r/gitea/gitea/
+  - https://docker.gitea.com/gitea
 maintainers:
   - name: Charlie Drage
     email: charlie@charliedrage.com
@@ -35,20 +36,20 @@ dependencies:
   # https://github.com/bitnami/charts/blob/main/bitnami/postgresql
   - name: postgresql
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 15.5.16
+    version: 16.6.0
     condition: postgresql.enabled
   # https://github.com/bitnami/charts/blob/main/bitnami/postgresql-ha/Chart.yaml
   - name: postgresql-ha
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 14.2.11
+    version: 15.3.8
     condition: postgresql-ha.enabled
-  # https://github.com/bitnami/charts/blob/main/bitnami/redis-cluster/Chart.yaml
-  - name: redis-cluster
+  # https://github.com/bitnami/charts/blob/main/bitnami/valkey-cluster/Chart.yaml
+  - name: valkey-cluster
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 10.2.6
-    condition: redis-cluster.enabled
-  # https://github.com/bitnami/charts/blob/main/bitnami/redis/Chart.yaml
-  - name: redis
+    version: 3.0.3
+    condition: valkey-cluster.enabled
+  # https://github.com/bitnami/charts/blob/main/bitnami/valkey/Chart.yaml
+  - name: valkey
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 19.6.1
-    condition: redis.enabled
+    version: 3.0.3
+    condition: valkey.enabled

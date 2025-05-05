@@ -1,15 +1,15 @@
 dependencies:
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 15.5.16
+  version: 16.6.0
 - name: postgresql-ha
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 14.2.11
-- name: redis-cluster
+  version: 15.3.8
+- name: valkey-cluster
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 10.2.6
-- name: redis
+  version: 3.0.3
+- name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 19.6.1
-digest: sha256:2f5e7ab97242b6254437fe1ebaff720ef93d159ae600b5ff84e6251a02ec4b25
-generated: "2024-07-13T00:17:56.909401868Z"
+  version: 3.0.3
+digest: sha256:f1d1b04d28fd93a00467a61ef19bdf1d02df1bccc613cc1eedde08f295e8b253
+generated: "2025-05-05T09:54:33.58745+02:00"

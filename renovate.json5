@@ -9,13 +9,19 @@
   labels: [
     'kind/dependency',
   ],
+  digest: {
+    automerge: true,
+  },
   automergeStrategy: 'squash',
+  'git-submodules': {
+    enabled: true,
+  },
   customManagers: [
     {
       description: 'Gitea-version of https://docs.renovatebot.com/presets-regexManagers/#regexmanagersgithubactionsversions',
       customType: 'regex',
-      fileMatch: [
-        '.gitea/workflows/.+\\.ya?ml$',
+      managerFilePatterns: [
+        '/.gitea/workflows/.+\\.ya?ml$/',
       ],
       matchStrings: [
         '# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s+[A-Za-z0-9_]+?_VERSION\\s*:\\s*["\']?(?<currentValue>.+?)["\']?\\s',
@@ -24,11 +30,23 @@
     {
       description: 'Detect helm-unittest yaml schema file',
       customType: 'regex',
-      fileMatch: ['.vscode/settings\\.json$'],
+      managerFilePatterns: [
+        '/.vscode/settings\\.json$/',
+      ],
       matchStrings: [
         'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^\\s]+?)\\/(?<currentValue>v[0-9.]+?)\\/schema\\/helm-testsuite\\.json',
       ],
       datasourceTemplate: 'github-releases',
+    },
+    {
+      description: 'Automatically detect new Gitea releases',
+      customType: 'regex',
+      managerFilePatterns: [
+        '/(^|/)Chart\\.yaml$/',
+      ],
+      matchStrings: [
+        '# renovate datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) extractVersion=(?<extractVersion>\\S+)\\nappVersion:\\s?(?<currentValue>\\S+)\\n',
+      ],
     },
   ],
   packageRules: [
@@ -36,6 +54,17 @@
       groupName: 'subcharts (minor & patch)',
       matchManagers: [
         'helmv3',
+      ],
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+        'digest',
+      ],
+    },
+    {
+      groupName: 'bats testing framework',
+      matchManagers: [
+        'git-submodules',
       ],
       matchUpdateTypes: [
         'minor',
@@ -54,6 +83,41 @@
         'minor',
         'patch',
         'digest',
+      ],
+      matchFileNames: [
+        '!Chart.yaml',
+      ],
+    },
+    {
+      description: 'Update README.md on changes in values.yaml',
+      matchManagers: [
+        'helm-values',
+      ],
+      postUpgradeTasks: {
+        commands: [
+          'install-tool node',
+          'make readme',
+        ],
+        fileFilters: [
+          'README.md',
+        ],
+        executionMode: 'update',
+      },
+    },
+    {
+      description: 'Override changelog url for Helm image, to have release notes in our PRs',
+      matchDepNames: [
+        'alpine/helm',
+      ],
+      changelogUrl: 'https://github.com/helm/helm',
+    },
+    {
+      description: 'Bump Gitea as fast as possible - not only on weekends',
+      matchDepNames: [
+        'go-gitea/gitea',
+      ],
+      schedule: [
+        'at any time',
       ],
     },
   ],
