@@ -1,8 +1,6 @@
-{{- include "deprecations" . -}}
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "gitea.fullname" . -}}
 {{- $httpPort := .Values.service.http.port -}}
-{{- $pathType := .Values.ingress.pathType -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -10,11 +8,14 @@ metadata:
   namespace: {{ .Values.namespace | default .Release.Namespace }}
   labels:
     {{- include "gitea.labels" . | nindent 4 }}
-  {{- template "ingress.annotations" . }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
-{{- if ne .Values.ingress.className "" }}
+{{- if .Values.ingress.className }}
   ingressClassName: {{ tpl .Values.ingress.className . }}
-{{- else }}
+{{- else if .Values.ingress.ingressClassName }}
   ingressClassName: {{ tpl .Values.ingress.ingressClassName . }}
 {{- end }}
 {{- if .Values.ingress.tls }}
@@ -32,9 +33,9 @@ spec:
     - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          {{- range (.paths | default (list "/")) }}
+          {{- range .paths }}
           - path: {{ . }}
-            pathType: {{ $pathType }}
+            pathType: {{ default "Prefix" $.Values.ingress.pathType }}
             backend:
               service:
                 name: {{ $fullName }}-http
