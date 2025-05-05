@@ -43,7 +43,7 @@ spec:
                 port:
                   number: {{ $httpPort }}
           {{- else }}
-          - path: {{ .path }}
+          - path: {{ .path | default "/" }}
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
