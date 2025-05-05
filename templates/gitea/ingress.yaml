@@ -34,6 +34,7 @@ spec:
       http:
         paths:
           {{- range .paths }}
+          {{- if kindIs "string" . }}
           - path: {{ . }}
             pathType: {{ default "Prefix" $.Values.ingress.pathType }}
             backend:
@@ -41,6 +42,15 @@ spec:
                 name: {{ $fullName }}-http
                 port:
                   number: {{ $httpPort }}
+          {{- else }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $fullName }}-http
+                port:
+                  number: {{ $httpPort }}
+          {{- end }}
           {{- end }}
     {{- end }}
 {{- end }}

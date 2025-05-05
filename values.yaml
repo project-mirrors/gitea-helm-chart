@@ -161,7 +161,7 @@ service:
 ## @param ingress.pathType Ingress Path Type
 ## @param ingress.annotations Ingress annotations
 ## @param ingress.hosts[0].host Default Ingress host
-## @param ingress.hosts[0].paths Default Ingress path
+## @param ingress.hosts[0].paths[0].path Default Ingress path
 ## @param ingress.tls Ingress tls settings
 ingress:
   enabled: false
@@ -170,7 +170,8 @@ ingress:
   annotations: {}
   hosts:
     - host: git.example.com
-      paths: []
+      paths:
+        - path: /
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
