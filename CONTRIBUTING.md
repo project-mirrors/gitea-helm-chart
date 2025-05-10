@@ -75,6 +75,6 @@ See [bats documentation](https://bats-core.readthedocs.io/en/stable/) for usage 
 
 ## Release process
 
-1. Create a tag following the tagging schema
-1. Push the tag
+1. Ensure you have [`git-sv`](https://github.com/thegeeklab/git-sv) installed
+1. Run `git sv tag` (this creates and pushes the tag following the respective next tag according to the semver commits issued since the last release)
 1. Let CI do it's work

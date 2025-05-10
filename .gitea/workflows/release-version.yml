@@ -68,3 +68,21 @@ jobs:
       - name: Copy files to S3 and clear cache
         run: |
           aws s3 sync gitea/ s3://${{ secrets.AWS_S3_BUCKET}}/charts/
+
+  release-gitea:
+    needs: generate-chart-publish
+    runs-on: ubuntu-latest
+    container: docker.io/thegeeklab/git-sv:2.0.1
+    steps:
+      - name: Create changelog
+        run: |
+          git sv current-version
+          git sv release-notes -t ${CI_COMMIT_TAG} -o CHANGELOG.md
+          sed -i '1,2d' CHANGELOG.md # remove version
+          cat CHANGELOG.md
+
+      - name: Release
+        uses: https://github.com/akkuman/gitea-release-action@v1
+        with:
+          body_path: CHANGELOG.md
+          token: "${{secrets.ISSUE_RW_TOKEN}}"
