@@ -74,6 +74,10 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/thegeeklab/git-sv:2.0.1
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
       - name: Create changelog
         run: |
           git sv current-version
