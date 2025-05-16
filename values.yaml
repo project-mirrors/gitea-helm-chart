@@ -157,33 +157,25 @@ service:
 
 ## @section Ingress
 ## @param ingress.enabled Enable ingress
-## @param ingress.className Ingress class name
+## @param ingress.className DEPRECATED: Ingress class name
+## @param ingress.pathType Ingress Path Type
 ## @param ingress.annotations Ingress annotations
 ## @param ingress.hosts[0].host Default Ingress host
 ## @param ingress.hosts[0].paths[0].path Default Ingress path
-## @param ingress.hosts[0].paths[0].pathType Ingress path type
 ## @param ingress.tls Ingress tls settings
-## @extra ingress.apiVersion Specify APIVersion of ingress object. Mostly would only be used for argocd.
 ingress:
   enabled: false
-  # className: nginx
-  className:
-  annotations:
-    {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  className: ""
+  pathType: Prefix
+  annotations: {}
   hosts:
     - host: git.example.com
       paths:
         - path: /
-          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - git.example.com
-  # Mostly for argocd or any other CI that uses `helm template | kubectl apply` or similar
-  # If helm doesn't correctly detect your ingress API version you can set it here.
-  # apiVersion: networking.k8s.io/v1
 
 ## @section deployment
 #
