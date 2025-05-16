@@ -13,9 +13,7 @@ metadata:
       {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-{{- if .Values.ingress.className }}
   ingressClassName: {{ tpl .Values.ingress.className . }}
-{{- end }}
 {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}

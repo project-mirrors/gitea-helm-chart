@@ -990,15 +990,15 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Ingress
 
-| Name                             | Description                                          | Value             |
-| -------------------------------- | ---------------------------------------------------- | ----------------- |
-| `ingress.enabled`                | Enable ingress                                       | `false`           |
-| `ingress.className`              | DEPRECATED: Ingress class name. Use ingressClassName | `""`              |
-| `ingress.pathType`               | Ingress Path Type                                    | `Prefix`          |
-| `ingress.annotations`            | Ingress annotations                                  | `{}`              |
-| `ingress.hosts[0].host`          | Default Ingress host                                 | `git.example.com` |
-| `ingress.hosts[0].paths[0].path` | Default Ingress path                                 | `/`               |
-| `ingress.tls`                    | Ingress tls settings                                 | `[]`              |
+| Name                             | Description                     | Value             |
+| -------------------------------- | ------------------------------- | ----------------- |
+| `ingress.enabled`                | Enable ingress                  | `false`           |
+| `ingress.className`              | DEPRECATED: Ingress class name. | `""`              |
+| `ingress.pathType`               | Ingress Path Type               | `Prefix`          |
+| `ingress.annotations`            | Ingress annotations             | `{}`              |
+| `ingress.hosts[0].host`          | Default Ingress host            | `git.example.com` |
+| `ingress.hosts[0].paths[0].path` | Default Ingress path            | `/`               |
+| `ingress.tls`                    | Ingress tls settings            | `[]`              |
 
 ### deployment
 

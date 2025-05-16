@@ -53,7 +53,7 @@ tests:
   - it: Ingress Class using TPL
     set:
       global.ingress.className: "ingress-class"
-      ingress.ingressClassName: "{{ .Values.global.ingress.className }}"
+      ingress.className: "{{ .Values.global.ingress.className }}"
       ingress.enabled: true
       ingress.hosts[0].host: "some-host"
       ingress.tls:
