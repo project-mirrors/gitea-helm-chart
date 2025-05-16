@@ -15,8 +15,6 @@ metadata:
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ tpl .Values.ingress.className . }}
-{{- else if .Values.ingress.ingressClassName }}
-  ingressClassName: {{ tpl .Values.ingress.ingressClassName . }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:

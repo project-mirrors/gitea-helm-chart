@@ -157,7 +157,7 @@ service:
 
 ## @section Ingress
 ## @param ingress.enabled Enable ingress
-## @param ingress.className DEPRECATED: Ingress class name
+## @param ingress.className DEPRECATED: Ingress class name.
 ## @param ingress.pathType Ingress Path Type
 ## @param ingress.annotations Ingress annotations
 ## @param ingress.hosts[0].host Default Ingress host
