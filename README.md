@@ -990,15 +990,15 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Ingress
 
-| Name                             | Description                    | Value             |
-| -------------------------------- | ------------------------------ | ----------------- |
-| `ingress.enabled`                | Enable ingress                 | `false`           |
-| `ingress.className`              | DEPRECATED: Ingress class name | `""`              |
-| `ingress.pathType`               | Ingress Path Type              | `Prefix`          |
-| `ingress.annotations`            | Ingress annotations            | `{}`              |
-| `ingress.hosts[0].host`          | Default Ingress host           | `git.example.com` |
-| `ingress.hosts[0].paths[0].path` | Default Ingress path           | `/`               |
-| `ingress.tls`                    | Ingress tls settings           | `[]`              |
+| Name                             | Description                                          | Value             |
+| -------------------------------- | ---------------------------------------------------- | ----------------- |
+| `ingress.enabled`                | Enable ingress                                       | `false`           |
+| `ingress.className`              | DEPRECATED: Ingress class name. Use ingressClassName | `""`              |
+| `ingress.pathType`               | Ingress Path Type                                    | `Prefix`          |
+| `ingress.annotations`            | Ingress annotations                                  | `{}`              |
+| `ingress.hosts[0].host`          | Default Ingress host                                 | `git.example.com` |
+| `ingress.hosts[0].paths[0].path` | Default Ingress path                                 | `/`               |
+| `ingress.tls`                    | Ingress tls settings                                 | `[]`              |
 
 ### deployment
 
@@ -1212,8 +1212,19 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 **Breaking changes**
 <!-- prettier-ignore-end -->
 
+- Outsourced "Actions" related configuration.
+  To deploy and use "Actions", please see the new dedicated chart at <https://gitea.com/gitea/helm-actions>.
+  It is maintained by a seperate maintainer group and hasn't seen a release yet (at the time of the 12.0 release).
+  Feel encouraged to contribute if "Actions" is important to you!
+  
+  This change was made to avoid overloading the existing helm chart, which is already quite large in size and configuration options.
+  In addition, the existing maintainers team was not actively using "Actions" which slowed down development and community contributions.
+  While the new chart is still young (and waiting for contributions! and maintainers), we believe that it is the best way moving forward for both parts.
 - Migrated from Redis/Redis-cluster to Valkey/Valkey-cluster charts (#775).
-  While marked as breaking, there should be no need to migrate data explicity. Cache will start to refill automatically.
+  While marked as breaking, there is no need to migrate data.
+  The cache will start to refill automatically.
+- Migrated ingress from `networking.k8s.io/v1beta` to `networking.k8s.io/v1`.
+  We didn't make any changes to the syntax, so the upgrade should be seamless.
 
 </details>
 
