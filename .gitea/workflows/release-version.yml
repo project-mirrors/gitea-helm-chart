@@ -97,7 +97,7 @@ jobs:
           aws s3 sync gitea/ s3://${{ secrets.AWS_S3_BUCKET}}/charts/
 
   release-gitea:
-    # needs: generate-chart-publish
+    needs: generate-chart-publish
     runs-on: ubuntu-latest
     container: docker.io/thegeeklab/git-sv:2.0.1
     steps:
