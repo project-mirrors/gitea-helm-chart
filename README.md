@@ -1167,6 +1167,7 @@ Valkey and [Valkey cluster](#valkey-cluster) cannot be enabled at the same time.
 | `postgresql-ha.postgresql.repmgrPassword`   | Repmgr Password                                                  | `changeme2` |
 | `postgresql-ha.postgresql.postgresPassword` | postgres Password                                                | `changeme1` |
 | `postgresql-ha.pgpool.adminPassword`        | pgpool adminPassword                                             | `changeme3` |
+| `postgresql-ha.pgpool.srCheckPassword`      | pgpool srCheckPassword                                           | `changeme4` |
 | `postgresql-ha.service.ports.postgresql`    | PostgreSQL service port (overrides `service.ports.postgresql`)   | `5432`      |
 | `postgresql-ha.persistence.size`            | PVC Storage Request for PostgreSQL HA volume                     | `10Gi`      |
 

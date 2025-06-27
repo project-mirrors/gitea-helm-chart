@@ -18,6 +18,7 @@ set:
       password: custom-password-overwritten-by-global-postgresql-password
     pgpool:
       adminPassword: custom-password-pgpool
+      srCheckPassword: custom-password-sr-check
     service:
       ports:
         postgresql: 1234
@@ -75,6 +76,13 @@ tests:
         equal:
           path: data["admin-password"]
           value: "Y3VzdG9tLXBhc3N3b3JkLXBncG9vbA=="
+  - it: "[postgresql-ha] pgpool.srCheckPassword is applied as expected"
+    template: charts/postgresql-ha/templates/pgpool/secrets.yaml
+    asserts:
+      - documentIndex: 0
+        equal:
+          path: data["sr-check-password"]
+          value: "Y3VzdG9tLXBhc3N3b3JkLXNyLWNoZWNr"
   - it: "[postgresql-ha] persistence.size is applied as expected"
     template: charts/postgresql-ha/templates/postgresql/statefulset.yaml
     asserts:
