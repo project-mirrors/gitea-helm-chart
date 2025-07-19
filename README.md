@@ -101,8 +101,8 @@ These dependencies are enabled by default:
 
 Alternatively, the following non-HA replacements are available:
 
-- PostgreSQL ([Bitnami PostgreSQL](<Postgresql](https://github.com/bitnami/charts/blob/main/bitnami/postgresql/Chart.yaml)>))
-- Valkey ([Bitnami Valkey](<Valkey](https://github.com/bitnami/charts/blob/main/bitnami/valkey/Chart.yaml)>))
+- PostgreSQL ([Bitnami PostgreSQL](https://github.com/bitnami/charts/blob/main/bitnami/postgresql/Chart.yaml))
+- Valkey ([Bitnami Valkey](https://github.com/bitnami/charts/blob/main/bitnami/valkey/Chart.yaml))
 
 ### Dependency Versioning
 
