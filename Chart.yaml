@@ -27,8 +27,6 @@ maintainers:
     email: konrad.lother@novum-rgi.de
   - name: Lucas Hahn
     email: lucas.hahn@novum-rgi.de
-  - name: Patrick Schratz
-    email: patrick.schratz@gmail.com
 
 dependencies:
   # https://github.com/bitnami/charts/blob/main/bitnami/postgresql
