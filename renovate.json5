@@ -49,6 +49,14 @@
       ],
     },
   ],
+  lockFileMaintenance: {
+    "enabled": true,
+    "commitMessageAction": "update",
+    "commitMessageTopic": "lockfiles",
+    schedule: [
+      'at any time',
+    ]
+  },
   packageRules: [
     {
       groupName: 'subcharts (minor & patch)',
