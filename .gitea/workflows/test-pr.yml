@@ -21,7 +21,7 @@ jobs:
         run: |
           apk update
           apk add --update bash make nodejs npm yamllint ncurses
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: install chart dependencies
         run: helm dependency build
       - name: lint
