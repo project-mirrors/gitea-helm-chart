@@ -950,7 +950,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `global.imagePullSecrets` | global image pull secrets override; can be extended by `imagePullSecrets`                      | `[]`  |
 | `global.storageClass`     | global storage class override                                                                  | `""`  |
 | `global.hostAliases`      | global hostAliases which will be added to the pod's hosts files                                | `[]`  |
-| `namespace`               | An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified | `""`  |
+| `namespace`               | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified | `""`  |
 | `replicaCount`            | number of replicas for the deployment                                                          | `1`   |
 
 ### strategy
@@ -1072,8 +1072,8 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `persistence.subPath`                             | Subdirectory of the volume to mount at                                                                | `nil`                  |
 | `persistence.volumeName`                          | Name of persistent volume in PVC                                                                      | `""`                   |
 | `extraContainers`                                 | Additional sidecar containers to run in the pod                                                       | `[]`                   |
-| `preExtraInitContainers`                          | Additional init containers to run in the pod before gitea runs it owns init containers.               | `[]`                   |
-| `postExtraInitContainers`                         | Additional init containers to run in the pod after gitea runs it owns init containers.                | `[]`                   |
+| `preExtraInitContainers`                          | Additional init containers to run in the pod before Gitea runs it owns init containers.               | `[]`                   |
+| `postExtraInitContainers`                         | Additional init containers to run in the pod after Gitea runs it owns init containers.                | `[]`                   |
 | `extraVolumes`                                    | Additional volumes to mount to the Gitea deployment                                                   | `[]`                   |
 | `extraContainerVolumeMounts`                      | Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates. | `[]`                   |
 | `extraInitVolumeMounts`                           | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.    | `[]`                   |
