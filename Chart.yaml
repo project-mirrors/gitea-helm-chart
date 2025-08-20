@@ -19,14 +19,8 @@ sources:
   - https://github.com/go-gitea/gitea
   - https://docker.gitea.com/gitea
 maintainers:
-  - name: Charlie Drage
-    email: charlie@charliedrage.com
-  - name: Gitea Authors
-    email: maintainers@gitea.io
-  - name: Konrad Lother
-    email: konrad.lother@novum-rgi.de
-  - name: Lucas Hahn
-    email: lucas.hahn@novum-rgi.de
+  - name: Ross Golder
+    email: ross@golder.org
 
 dependencies:
   # https://github.com/bitnami/charts/blob/main/bitnami/postgresql
