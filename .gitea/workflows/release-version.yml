@@ -99,7 +99,7 @@ jobs:
   release-gitea:
     needs: generate-chart-publish
     runs-on: ubuntu-latest
-    container: docker.io/thegeeklab/git-sv:2.0.4
+    container: docker.io/thegeeklab/git-sv:2.0.5
     steps:
       - name: install tools
         run: |
