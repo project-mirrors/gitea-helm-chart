@@ -88,6 +88,12 @@ storageClassName: {{ $storageClass | quote }}
 {{- end -}}
 
 {{/*
+Common annotations
+*/}}
+{{- define "gitea.annotations" -}}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "gitea.labels" -}}

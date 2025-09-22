@@ -513,6 +513,100 @@ gitea:
     successThreshold: 1
     failureThreshold: 10
 
+
+## @section Network Policy
+networkPolicy:
+  ## @param networkPolicy.enabled Enable network policies in general.
+  ## @param networkPolicy.annotations Additional network policy annotations.
+  ## @param networkPolicy.labels Additional network policy labels.
+  ## @param networkPolicy.policyTypes List of policy types. Supported is ingress, egress or ingress and egress.
+  ## @param networkPolicy.egress Concrete egress network policy implementation.
+  ## @skip networkPolicy.egress Skip individual egress configuration.
+  ## @param networkPolicy.ingress Concrete ingress network policy implementation.
+  ## @skip networkPolicy.ingress Skip individual ingress configuration.
+  enabled: false
+  annotations: {}
+  labels: {}
+  policyTypes: []
+  # - Egress
+  # - Ingress
+  egress: []
+  # Allow outgoing DNS traffic to the internal running DNS-Server. For example core-dns.
+  #
+  # - to:
+  #   - namespaceSelector:
+  #       matchLabels:
+  #         kubernetes.io/metadata.name: kube-system
+  #     podSelector:
+  #       matchLabels:
+  #        k8s-app: kube-dns
+  #   ports:
+  #   - port: 53
+  #     protocol: TCP
+  #   - port: 53
+  #     protocol: UDP
+
+  # Allow outgoing traffic via HTTPS. For example for oAuth2, Gravatar and other third party APIs.
+  #
+  # - to:
+  #   ports:
+  #   - port: 443
+  #     protocol: TCP
+
+  # Allow outgoing traffic to PostgreSQL.
+  #
+  # - to:
+  #   - podSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: postgresql-ha
+  #   ports: []
+  #   # Avoid explicit list of ports, because Gitea tries to ping the PostgreSQL database during the initialization
+  #   # process. The ICMP protocol is currently not supported as list of protocols by kubernetes. For this reason would
+  #   # lead listing of the ports to an issue. Therefore, please handle the database ports with care.
+  #   #
+  #   # - port: 5432
+  #   #   protocol: TCP
+
+  # Allow outgoing traffic to Valkey.
+  #
+  # - to:
+  #   - podSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: valkey-cluster
+  #   ports:
+  #   - port: 6379
+  #     protocol: TCP
+  #   - port: 16379
+  #     protocol: TCP
+
+  ingress: []
+  # Allow incoming HTTP traffic from prometheus.
+  #
+  # - from:
+  #   - namespaceSelector:
+  #       matchLabels:
+  #         kubernetes.io/metadata.name: monitoring
+  #     podSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: prometheus
+  #   ports:
+  #   - port: http
+  #     protocol: TCP
+
+  # Allow incoming HTTP traffic from ingress-nginx.
+  #
+  # - from:
+  #   - namespaceSelector:
+  #       matchLabels:
+  #         kubernetes.io/metadata.name: ingress-nginx
+  #     podSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: ingress-nginx
+  #   ports:
+  #   - port: http
+  #     protocol: TCP
+
+
 ## @section valkey-cluster
 ## @param valkey-cluster.enabled Enable valkey cluster
 # ⚠️ The valkey charts do not work well with special characters in the password (<https://gitea.com/gitea/helm-chart/issues/690>).

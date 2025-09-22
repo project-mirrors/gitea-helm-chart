@@ -1158,6 +1158,17 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gitea.startupProbe.successThreshold`    | Success threshold for startup probe             | `1`     |
 | `gitea.startupProbe.failureThreshold`    | Failure threshold for startup probe             | `10`    |
 
+### Network Policy
+
+| Name                        | Description                                                               | Value   |
+| --------------------------- | ------------------------------------------------------------------------- | ------- |
+| `networkPolicy.enabled`     | Enable network policies in general.                                       | `false` |
+| `networkPolicy.annotations` | Additional network policy annotations.                                    | `{}`    |
+| `networkPolicy.labels`      | Additional network policy labels.                                         | `{}`    |
+| `networkPolicy.policyTypes` | List of policy types. Supported is ingress, egress or ingress and egress. | `[]`    |
+| `networkPolicy.egress`      | Concrete egress network policy implementation.                            | `[]`    |
+| `networkPolicy.ingress`     | Concrete ingress network policy implementation.                           | `[]`    |
+
 ### valkey-cluster
 
 Valkey cluster and [Valkey](#valkey) cannot be enabled at the same time.
