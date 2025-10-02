@@ -82,7 +82,7 @@ tests:
             port: 6379
             targetPort: tcp-redis
   - it: "[gitea] waits for valkey-cluster to be up and running"
-    template: templates/gitea/init.yaml
+    template: templates/init.yaml
     asserts:
       - documentIndex: 0
         matchRegex:

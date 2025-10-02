@@ -4,7 +4,7 @@ release:
   namespace: testing
 tests:
   - it: metrics token is set
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       gitea:
         metrics:
@@ -18,7 +18,7 @@ tests:
             ENABLED=true
             TOKEN=somepassword
   - it: metrics token is empty
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       gitea:
         metrics:
@@ -31,7 +31,7 @@ tests:
           value: |-
             ENABLED=true
   - it: metrics token is nil
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       gitea:
         metrics:
@@ -44,7 +44,7 @@ tests:
           value: |-
             ENABLED=true
   - it: does not configures a token if metrics are disabled
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       gitea:
         metrics:

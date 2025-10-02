@@ -3,11 +3,11 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/ssh-svc.yaml
-  - templates/gitea/http-svc.yaml
+  - templates/ssh-svc.yaml
+  - templates/http-svc.yaml
 tests:
   - it: supports adding custom labels to ssh-svc
-    template: templates/gitea/ssh-svc.yaml
+    template: templates/ssh-svc.yaml
     set:
       service:
         ssh:
@@ -19,7 +19,7 @@ tests:
           value: "testvalue"
 
   - it: keeps existing labels (ssh)
-    template: templates/gitea/ssh-svc.yaml
+    template: templates/ssh-svc.yaml
     set:
       service:
         ssh:
@@ -29,7 +29,7 @@ tests:
           path: metadata.labels["app"]
 
   - it: supports adding custom labels to http-svc
-    template: templates/gitea/http-svc.yaml
+    template: templates/http-svc.yaml
     set:
       service:
         http:
@@ -41,7 +41,7 @@ tests:
           value: "testvalue"
 
   - it: keeps existing labels (http)
-    template: templates/gitea/http-svc.yaml
+    template: templates/http-svc.yaml
     set:
       service:
         http:
@@ -51,7 +51,7 @@ tests:
           path: metadata.labels["app"]
 
   - it: render service.ssh.loadBalancerClass if set and type is LoadBalancer
-    template: templates/gitea/ssh-svc.yaml
+    template: templates/ssh-svc.yaml
     set:
       service:
         ssh:
@@ -73,7 +73,7 @@ tests:
           value: ["1.2.3.4/32", "5.6.7.8/32"]
 
   - it: does not render when loadbalancer properties are set but type is not loadBalancerClass
-    template: templates/gitea/http-svc.yaml
+    template: templates/http-svc.yaml
     set:
       service:
         http:
@@ -92,7 +92,7 @@ tests:
           path: spec.loadBalancerSourceRanges
 
   - it: does not render loadBalancerClass by default even when type is LoadBalancer
-    template: templates/gitea/http-svc.yaml
+    template: templates/http-svc.yaml
     set:
       service:
         http:
@@ -107,8 +107,8 @@ tests:
 
   - it: both ssh and http services exist
     templates:
-      - templates/gitea/ssh-svc.yaml
-      - templates/gitea/http-svc.yaml
+      - templates/ssh-svc.yaml
+      - templates/http-svc.yaml
     asserts:
       - matchRegex:
           path: metadata.name

@@ -3,11 +3,11 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/config.yaml
+  - templates/deployment.yaml
+  - templates/config.yaml
 tests:
   - it: Renders a deployment
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - hasDocuments:
           count: 1
@@ -16,7 +16,7 @@ tests:
           apiVersion: apps/v1
           name: gitea-unittests
   - it: Deployment with empty additionalConfigFromEnvs
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea.additionalConfigFromEnvs: []
     asserts:
@@ -44,7 +44,7 @@ tests:
               - name: ENV_TO_INI_MOUNT_POINT
                 value: /env-to-ini-mounts
   - it: Deployment with standard additionalConfigFromEnvs
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea.additionalConfigFromEnvs: [{name: GITEA_database_HOST, value: my-db:123}, {name: GITEA_database_USER, value: my-user}]
     asserts:
@@ -76,7 +76,7 @@ tests:
               - name: GITEA_database_USER
                 value: my-user
   - it: Deployment with templated additionalConfigFromEnvs
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea.misc.host: my-db-host:321
       gitea.misc.user: my-db-user
@@ -110,7 +110,7 @@ tests:
               - name: GITEA_database_USER
                 value: my-db-user
   - it: Deployment with additionalConfigFromEnvs templated secret name
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea.misc.existingSecret: my-db-secret
       gitea.additionalConfigFromEnvs[0]:

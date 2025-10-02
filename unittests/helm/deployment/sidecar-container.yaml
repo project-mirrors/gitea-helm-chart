@@ -3,11 +3,11 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/config.yaml
+  - templates/deployment.yaml
+  - templates/config.yaml
 tests:
   - it: supports adding a sidecar container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       extraContainers:
         - name: sidecar-bob

@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/pvc.yaml
+  - templates/pvc.yaml
 tests:
   - it: Storage Class using TPL
     set:

@@ -1,6 +1,6 @@
 suite: Test ingress with implicit path defaults
 templates:
-  - templates/gitea/ingress.yaml
+  - templates/ingress.yaml
 tests:
   - it: should use default path and pathType when no paths are specified
     set:

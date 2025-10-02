@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/gpg-secret.yaml
+  - templates/gpg-secret.yaml
 tests:
   - it: fails rendering when nothing is configured
     set:

@@ -3,17 +3,17 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/config.yaml
+  - templates/config.yaml
 tests:
   - it: "actions are enabled by default (based on vanilla Gitea behavior)"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     asserts:
       - documentIndex: 0
         notExists:
           path: stringData.actions
 
   - it: "actions can be disabled via inline config"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       gitea.config.actions.ENABLED: false
     asserts:

@@ -44,7 +44,7 @@ tests:
             port: 6379
             targetPort: redis
   - it: "[gitea] waits for valkey to be up and running"
-    template: templates/gitea/init.yaml
+    template: templates/init.yaml
     asserts:
       - documentIndex: 0
         matchRegex:

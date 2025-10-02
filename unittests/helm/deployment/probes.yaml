@@ -3,11 +3,11 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/config.yaml
+  - templates/deployment.yaml
+  - templates/config.yaml
 tests:
   - it: renders default liveness probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].livenessProbe.enabled
@@ -22,7 +22,7 @@ tests:
               port: http
             timeoutSeconds: 1
   - it: renders default readiness probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].readinessProbe.enabled
@@ -37,12 +37,12 @@ tests:
               port: http
             timeoutSeconds: 1
   - it: does not render a default startup probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].startupProbe
   - it: allows enabling a startup probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea.startupProbe.enabled: true
     asserts:
@@ -60,7 +60,7 @@ tests:
             timeoutSeconds: 1
 
   - it: allows overwriting the default port of the liveness probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         livenessProbe:
@@ -74,7 +74,7 @@ tests:
               port: my-port
 
   - it: allows overwriting the default port of the readiness probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         readinessProbe:
@@ -88,7 +88,7 @@ tests:
               port: my-port
 
   - it: allows overwriting the default port of the startup probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         startupProbe:
@@ -103,7 +103,7 @@ tests:
               port: my-port
 
   - it: allows using a non-default method as liveness probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         livenessProbe:
@@ -131,7 +131,7 @@ tests:
             timeoutSeconds: 13372
 
   - it: allows using a non-default method as readiness probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         readinessProbe:
@@ -159,7 +159,7 @@ tests:
             timeoutSeconds: 13372
 
   - it: allows using a non-default method as startup probe
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         startupProbe:

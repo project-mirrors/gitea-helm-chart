@@ -6,7 +6,7 @@ release:
   name: gitea-unittest
   namespace: testing
 templates:
-  - templates/gitea/networkPolicy.yaml
+  - templates/networkPolicy.yaml
 tests:
   - it: Skip rendering networkPolicy
     set:

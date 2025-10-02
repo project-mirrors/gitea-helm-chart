@@ -4,7 +4,7 @@ release:
   namespace: testing
 tests:
   - it: "queue is configured correctly for valkey-cluster"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: true
@@ -19,7 +19,7 @@ tests:
             TYPE=redis
 
   - it: "queue is configured correctly for valkey"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: false
@@ -34,7 +34,7 @@ tests:
             TYPE=redis
 
   - it: "queue is configured correctly for 'levelDB' when valkey (and valkey-cluster) is disabled"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: false
@@ -49,7 +49,7 @@ tests:
             TYPE=level
 
   - it: "queue can be customized when valkey (and valkey-cluster) are disabled"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: false

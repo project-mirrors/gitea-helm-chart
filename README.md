@@ -266,7 +266,7 @@ If `.Values.image.rootless: true`, then the following will occur. In case you us
 
 - `$HOME` becomes `/data/gitea/git`
 
-  [see deployment.yaml](./templates/gitea/deployment.yaml) template inside (init-)container "env" declarations
+  [see deployment.yaml](./templates/deployment.yaml) template inside (init-)container "env" declarations
 
 - `START_SSH_SERVER: true` (Unless explicity overwritten by `gitea.config.server.START_SSH_SERVER`)
 
@@ -278,7 +278,7 @@ If `.Values.image.rootless: true`, then the following will occur. In case you us
 
 - `SSH_LOG_LEVEL` environment variable is not injected into the container
 
-  [see deployment.yaml](./templates/gitea/deployment.yaml) template inside container "env" declarations
+  [see deployment.yaml](./templates/deployment.yaml) template inside container "env" declarations
 
 #### Session, Cache and Queue
 

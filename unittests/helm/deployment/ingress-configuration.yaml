@@ -1,6 +1,6 @@
 suite: Test ingress tpl use
 templates:
-  - templates/gitea/ingress.yaml
+  - templates/ingress.yaml
 tests:
   - it: Ingress Class using TPL
     set:

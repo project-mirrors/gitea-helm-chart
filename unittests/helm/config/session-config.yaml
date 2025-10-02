@@ -4,7 +4,7 @@ release:
   namespace: testing
 tests:
   - it: "session is configured correctly for valkey-cluster"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: true
@@ -19,7 +19,7 @@ tests:
             PROVIDER_CONFIG=redis+cluster://:@gitea-unittests-valkey-cluster-headless.testing.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
 
   - it: "session is configured correctly for valkey"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: false
@@ -34,7 +34,7 @@ tests:
             PROVIDER_CONFIG=redis://:changeme@gitea-unittests-valkey-headless.testing.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
 
   - it: "session is configured correctly for 'memory' when valkey (and valkey-cluster) is disabled"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: false
@@ -49,7 +49,7 @@ tests:
             PROVIDER_CONFIG=
 
   - it: "session can be customized when valkey (and valkey-cluster) is disabled"
-    template: templates/gitea/config.yaml
+    template: templates/config.yaml
     set:
       valkey-cluster:
         enabled: false

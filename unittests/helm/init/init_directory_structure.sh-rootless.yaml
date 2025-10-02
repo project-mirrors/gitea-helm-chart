@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/init.yaml
+  - templates/init.yaml
 tests:
   - it: runs gpg in batch mode
     set:
@@ -63,7 +63,7 @@ tests:
               chown -v 1000:1000 "${GNUPGHOME}"
             fi
   - it: it does not chown /data even when image.fullOverride is set
-    template: templates/gitea/init.yaml
+    template: templates/init.yaml
     set:
       image.fullOverride: docker.gitea.com/gitea:1.20.5
     asserts:

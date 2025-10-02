@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/servicemonitor.yaml
+  - templates/servicemonitor.yaml
 tests:
   - it: renders unsecure ServiceMonitor if gitea.metrics.token nil
     set:

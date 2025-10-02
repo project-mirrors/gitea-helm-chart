@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/serviceaccount.yaml
+  - templates/serviceaccount.yaml
 tests:
   - it: skips rendering by default
     asserts:
