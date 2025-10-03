@@ -17,7 +17,7 @@
     - [Rootless Defaults](#rootless-defaults)
     - [Session, Cache and Queue](#session-cache-and-queue)
   - [Single-Pod Configurations](#single-pod-configurations)
-  - [Additional _app.ini_ settings](#additional-appini-settings)
+  - [Additional app.ini settings](#additional-appini-settings)
     - [User defined environment variables in app.ini](#user-defined-environment-variables-in-appini)
   - [External Database](#external-database)
   - [Ports and external url](#ports-and-external-url)
@@ -72,7 +72,7 @@ Additionally, this chart allows to provide LDAP and admin user configuration wit
 ## Update and versioning policy
 
 The Gitea helm chart versioning does not follow Gitea's versioning.
-The latest chart version can be looked up in [https://dl.gitea.com/charts](https://dl.gitea.com/charts) or in the [repository releases](https://gitea.com/gitea/helm-gitea/releases).
+The latest chart version can be looked up in [https://dl.gitea.com/charts/](https://dl.gitea.com/charts/) or in the [repository releases](https://gitea.com/gitea/helm-gitea/releases).
 
 The chart aims to follow Gitea's releases closely.
 There might be times when the chart is behind the latest Gitea release.
@@ -360,7 +360,7 @@ If HA is not needed/desired, the following configurations can be used to deploy 
 
    </details>
 
-### Additional _app.ini_ settings
+### Additional app.ini settings
 
 > **The [generic](https://docs.gitea.com/administration/config-cheat-sheet#overall-default)
 > section cannot be defined that way.**

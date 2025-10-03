@@ -1,19 +1,17 @@
-name: commitlint
+name: Rum commitlint
 
 on:
   pull_request:
-    branches:
-      - "*"
-    types:
-      - opened
-      - edited
+    branches: [ '**' ]
+    types: [ "opened", "edited" ]
 
 jobs:
   check-and-test:
+    container: docker.io/commitlint/commitlint:19.9.1
+    name: Execute commitlint
     runs-on: ubuntu-latest
-    container: commitlint/commitlint:19.9.1
     steps:
-      - uses: actions/checkout@v5
-      - name: check PR title
+      - uses: actions/checkout@v5.0.0
+      - name: Check PR title
         run: |
           echo "${{ gitea.event.pull_request.title }}" | commitlint --config .commitlintrc.json

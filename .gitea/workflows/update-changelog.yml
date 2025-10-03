@@ -1,0 +1,29 @@
+name: Update changelog
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install packages via apt-get
+        run: |
+          apt-get update &&
+          apt-get install --yes curl jq
+      - uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Install git-sv
+        env:
+          GIT_SV_VERSION: v2.0.4 # renovate: datasource=github-releases depName=thegeeklab/git-sv
+        run: |
+          curl --fail --location --output /usr/local/bin/git-sv --silent --show-error https://github.com/thegeeklab/git-sv/releases/download/${GIT_SV_VERSION}/git-sv-linux-$(dpkg --print-architecture)
+          chmod +x /usr/local/bin/git-sv
+          git-sv --version
+      - name: Update changelog issue
+        env:
+          ISSUE_RW_TOKEN: ${{ secrets.ISSUE_RW_TOKEN }}
+        run: .gitea/scripts/update-changelog.sh

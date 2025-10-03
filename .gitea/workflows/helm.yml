@@ -1,0 +1,75 @@
+name: Run Helm tests
+
+on:
+  pull_request:
+    branches: [ '**' ]
+  push:
+    branches: [ '**' ]
+    tags-ignore: [ '**' ]
+  workflow_call: {}
+
+env:
+  # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
+  HELM_UNITTEST_VERSION: "v1.0.1"
+
+jobs:
+  helm-lint:
+    container: docker.io/alpine/helm:3.18.6
+    name: Execute helm lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install additional tools
+        run: |
+          apk update
+          apk add --update bash make nodejs
+      - uses: actions/checkout@v5.0.0
+      - name: Install helm chart dependencies
+        run: helm dependency build
+      - name: Execute helm lint
+        run: helm lint
+
+  helm-template:
+    container: docker.io/alpine/helm:3.18.6
+    name: Execute helm template
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install additional tools
+        run: |
+          apk update
+          apk add --update bash make nodejs
+      - uses: actions/checkout@v5.0.0
+      - name: Install helm chart dependencies
+        run: helm dependency build
+      - name: Execute helm template
+        run: helm template --debug gitea-helm .
+
+  helm-unittest:
+    container: docker.io/alpine/helm:3.18.6
+    name: Execute helm unittest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install additional tools
+        run: |
+          apk update
+          apk add --update bash make nodejs npm yamllint ncurses
+      - uses: actions/checkout@v5.0.0
+      - name: Install helm chart dependencies
+        run: helm dependency build
+      - name: Install helm plugin 'unittest'
+        run: |
+          helm plugin install --version ${{ env.HELM_UNITTEST_VERSION }} https://github.com/helm-unittest/helm-unittest
+          git submodule update --init --recursive
+      - name: Execute helm unittest
+        env:
+          TERM: xterm
+        run: make unittests
+
+
+
+
+      # - name: verify readme
+      #   run: |
+      #     make readme
+      #     git diff --exit-code --name-only README.md
+      # - name: yaml lint
+      #   uses: https://github.com/ibiqlik/action-yamllint@v3

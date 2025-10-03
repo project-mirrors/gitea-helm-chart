@@ -44,8 +44,7 @@ be used:
    `helm install --dependency-update gitea . -f values.yaml`.
 1. Gitea is now deployed in `minikube`.
    To access it, it's port needs to be forwarded first from `minikube` to localhost first via `kubectl --namespace
-default port-forward svc/gitea-http 3000:3000`.
-   Now Gitea is accessible at [http://localhost:3000](http://localhost:3000).
+default port-forward svc/gitea-http 3000:3000`. Now Gitea is accessible at [http://localhost:3000](http://localhost:3000).
 
 ### Unit tests
 
