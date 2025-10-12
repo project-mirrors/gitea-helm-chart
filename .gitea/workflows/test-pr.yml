@@ -10,7 +10,7 @@ on:
 
 env:
   # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
-  HELM_UNITTEST_VERSION: "v1.0.2"
+  HELM_UNITTEST_VERSION: "v1.0.3"
 
 jobs:
   check-and-test:
