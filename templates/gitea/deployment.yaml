@@ -370,9 +370,9 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- range $key, $value := .Values.nodeSelector }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-        {{ $key }}: {{ $value | quote }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- with .Values.affinity }}
       affinity:
