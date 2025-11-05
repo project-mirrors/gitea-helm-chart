@@ -20,7 +20,10 @@ unittests-helm:
 unittests-bash:
 	./unittests/bash/bats/bin/bats --pretty ./unittests/bash/tests/**/*.bats
 
-.PHONY: helm
+.PHONY: update-helm-dependencies
 update-helm-dependencies:
 	helm dependency update
-  
+
+.PHONY: yamllint
+yamllint:
+	yamllint -c .yamllint .
