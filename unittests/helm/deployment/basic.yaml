@@ -29,6 +29,24 @@ tests:
           path: spec.template.metadata.labels
           content:
             hello: world
+  - it: nodeSelector is undefined
+    asserts:
+      - notExists:
+          path: spec.template.spec.nodeSelector
+        template: templates/gitea/deployment.yaml
+  - it: nodeSelector is defined
+    set:
+      nodeSelector:
+        foo: bar
+        bar: foo
+    asserts:
+      - isSubset:
+          path: spec.template.spec.nodeSelector
+          content:
+            foo: bar
+            bar: foo
+        template: templates/gitea/deployment.yaml
+
   - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
     template: templates/deployment.yaml
     asserts:
