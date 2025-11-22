@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container: commitlint/commitlint:20.1.0
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: check PR title
         run: |
           echo "${{ gitea.event.pull_request.title }}" | commitlint --config .commitlintrc.json
