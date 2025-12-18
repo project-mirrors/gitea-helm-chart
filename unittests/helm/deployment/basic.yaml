@@ -33,7 +33,7 @@ tests:
     asserts:
       - notExists:
           path: spec.template.spec.nodeSelector
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
   - it: nodeSelector is defined
     set:
       nodeSelector:
@@ -45,7 +45,7 @@ tests:
           content:
             foo: bar
             bar: foo
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
 
   - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
     template: templates/deployment.yaml
