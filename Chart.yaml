@@ -55,5 +55,5 @@ dependencies:
   # https://github.com/bitnami/charts/blob/main/bitnami/valkey/Chart.yaml
   - name: valkey
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 3.0.31
+    version: 6.1.16
     condition: valkey.enabled
