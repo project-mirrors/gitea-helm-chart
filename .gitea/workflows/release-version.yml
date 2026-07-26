@@ -96,6 +96,16 @@ jobs:
         run: |
           aws s3 sync gitea/ s3://${{ secrets.AWS_S3_BUCKET}}/charts/
 
+      - name: Copy files to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          CLOUDFLARE_R2_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
+          CLOUDFLARE_R2_BUCKET: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
+        run: |
+          aws s3 sync gitea/ s3://${CLOUDFLARE_R2_BUCKET}/charts/ --endpoint-url https://${CLOUDFLARE_R2_ACCOUNT_ID}.r2.cloudflarestorage.com
+
   release-gitea:
     needs: generate-chart-publish
     runs-on: ubuntu-latest
