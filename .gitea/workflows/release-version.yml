@@ -28,15 +28,6 @@ jobs:
           rm --force --recursive linux-$(dpkg --print-architecture) helm-v${HELM_VERSION}-linux-$(dpkg --print-architecture).tar.gz
           helm version
 
-      - name: Install yq
-        env:
-          YQ_VERSION: v4.45.4 # renovate: datasource=github-releases depName=mikefarah/yq
-        run: |
-          curl --fail --location --output /dev/stdout --silent --show-error https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_$(dpkg --print-architecture).tar.gz | tar --extract --gzip --file /dev/stdin
-          mv yq_linux_$(dpkg --print-architecture) /usr/local/bin
-          rm --force --recursive yq_linux_$(dpkg --print-architecture) yq_linux_$(dpkg --print-architecture).tar.gz
-          yq --version
-
       - name: Install docker-ce via apt
         run: |
           install -m 0755 -d /etc/apt/keyrings
@@ -60,13 +51,7 @@ jobs:
           fingerprint: CC64B1DB67ABBEECAB24B6455FC346329753F4B0
 
       - name: Add Artifacthub.io annotations
-        run: |
-          NEW_TAG="$(git tag --sort=-version:refname | head --lines 1)"
-          OLD_TAG="$(git tag --sort=-version:refname | head --lines 2 | tail --lines 1)"
-          .gitea/scripts/add-annotations.sh "${OLD_TAG}" "${NEW_TAG}"
-
-      - name: Print Chart.yaml
-        run: cat Chart.yaml
+        uses: volker-raschek/ah-annotations@v0.2.0
 
       # Using helm gpg plugin as 'helm package --sign' has issues with gpg2: https://github.com/helm/helm/issues/2843
       - name: package chart
