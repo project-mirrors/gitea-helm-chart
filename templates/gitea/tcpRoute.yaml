@@ -1,6 +1,6 @@
 {{- if eq (include "gitea.tcpRoute.enabled" .) "true" -}}
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha2
+apiVersion: gateway.networking.k8s.io/v1
 kind: TCPRoute
 metadata:
   {{- with (include "gitea.tcpRoute.annotations" .) }}

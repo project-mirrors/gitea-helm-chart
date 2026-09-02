@@ -18,7 +18,7 @@ The chart does **not** render a `Gateway` resource — provisioning and managing
 | Resource               | API version                          | Status (as of writing) |
 | ---------------------- | ------------------------------------ | ---------------------- |
 | `HTTPRoute`            | `gateway.networking.k8s.io/v1`       | GA                     |
-| `TCPRoute`             | `gateway.networking.k8s.io/v1alpha2` | Experimental           |
+| `TCPRoute`             | `gateway.networking.k8s.io/v1`       | GA (v1.4+)             |
 | `BackendTLSPolicy`     | `gateway.networking.k8s.io/v1`       | GA (v1.2+)             |
 | `ClientSettingsPolicy` | `gateway.nginx.org/v1alpha1`         | NGINX Gateway Fabric   |
 
@@ -262,6 +262,6 @@ Likewise, `ROOT_URL` becomes `https://` if any of these terminate TLS: `route.tl
 
 ## SSH considerations
 
-- `TCPRoute` is still experimental. Many production-grade implementations support it (Envoy Gateway, Istio, Kgateway, NGINX Gateway Fabric), but you should verify before relying on it.
+- `TCPRoute` is GA since Gateway API v1.4. Older CRD bundles only ship the `v1alpha2` version, so make sure the installed CRDs are at least v1.4.
 - If your Gateway implementation does not support `TCPRoute`, keep using `service.ssh.type: LoadBalancer` (or `NodePort`) and only enable `httpRoute` for HTTP traffic.
 - The default TCPRoute rule points at the Gitea SSH `Service` on `service.ssh.port` (typically 22), which itself proxies to `gitea.config.server.SSH_LISTEN_PORT` inside the pod.
