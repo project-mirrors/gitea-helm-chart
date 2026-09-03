@@ -5,7 +5,10 @@ release:
 templates:
   - templates/gitea/deployment.yaml
   - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_gpg.yaml
+  - templates/gitea/secret_init.yaml
   - templates/gitea/secret_inlineConfig.yaml
+  - templates/gitea/secret_metrics.yaml
 tests:
   - it: Render the deployment (default)
     asserts:
@@ -20,6 +23,7 @@ tests:
   - it: Render the deployment (signing)
     set:
       signing.enabled: true
+      signing.existingSecret: "custom-gpg-secret"
     asserts:
       - hasDocuments:
           count: 1
@@ -38,6 +42,7 @@ tests:
         - name: bar
           image: docker.io/library/busybox:latest
       signing.enabled: true
+      signing.existingSecret: "custom-gpg-secret"
     asserts:
       - hasDocuments:
           count: 1

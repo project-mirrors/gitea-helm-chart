@@ -27,8 +27,21 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if and .Values.secrets.config.addSHASumAnnotation (not .Values.secrets.config.existingSecret.enabled) }}
         checksum/config: {{ include (print $.Template.BasePath "/gitea/secret_config.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if and .Values.secrets.gpg.addSHASumAnnotation (not .Values.secrets.gpg.existingSecret.enabled) }}
+        checksum/gpg: {{ include (print $.Template.BasePath "/gitea/secret_gpg.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if and .Values.secrets.init.addSHASumAnnotation (not .Values.secrets.init.existingSecret.enabled) }}
+        checksum/init: {{ include (print $.Template.BasePath "/gitea/secret_init.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if and .Values.secrets.inlineConfig.addSHASumAnnotation (not .Values.secrets.inlineConfig.existingSecret.enabled) }}
         checksum/inlineConfig: {{ include (print $.Template.BasePath "/gitea/secret_inlineConfig.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if and .Values.secrets.metrics.addSHASumAnnotation (not .Values.secrets.metrics.existingSecret.enabled) }}
+        checksum/metrics: {{ include (print $.Template.BasePath "/gitea/secret_metrics.yaml") . | sha256sum }}
+        {{- end }}
         {{- range $idx, $value := .Values.gitea.ldap }}
         checksum/ldap_{{ $idx }}: {{ include "gitea.ldap_settings" (list $idx $value) | sha256sum }}
         {{- end }}

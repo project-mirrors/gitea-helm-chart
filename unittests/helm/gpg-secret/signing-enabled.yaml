@@ -11,7 +11,7 @@ tests:
         enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: Either specify `signing.privateKey` or `signing.existingSecret`
+          errorMessage: Either specify `signing.privateKey`, `signing.existingSecret` or `secrets.gpg.existingSecret`
   - it: skips rendering using external secret reference
     set:
       signing:

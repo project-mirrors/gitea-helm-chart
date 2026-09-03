@@ -1116,6 +1116,36 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.labels`                        | Labels for the deployment                              | `{}`  |
 | `deployment.annotations`                   | Annotations for the Gitea deployment to be created     | `{}`  |
 
+### Secret
+
+| Name                                             | Description                                                                                             | Value   |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ------- |
+| `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change               | `true`  |
+| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                    | `false` |
+| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                              | `""`    |
+| `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                       | `{}`    |
+| `secrets.config.new.labels`                      | Labels for the config Secret                                                                            | `{}`    |
+| `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change              | `true`  |
+| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                   | `false` |
+| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                             | `""`    |
+| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret                                                                      | `{}`    |
+| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret                                                                           | `{}`    |
+| `secrets.init.addSHASumAnnotation`               | Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change                 | `true`  |
+| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret                                      | `false` |
+| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret                                                                | `""`    |
+| `secrets.init.new.annotations`                   | Annotations for the init Secret                                                                         | `{}`    |
+| `secrets.init.new.labels`                        | Labels for the init Secret                                                                              | `{}`    |
+| `secrets.inlineConfig.addSHASumAnnotation`       | Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change | `true`  |
+| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret                      | `false` |
+| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret                                                | `""`    |
+| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret                                                         | `{}`    |
+| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret                                                              | `{}`    |
+| `secrets.metrics.addSHASumAnnotation`            | Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change              | `true`  |
+| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret                                   | `false` |
+| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                             | `""`    |
+| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                      | `{}`    |
+| `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                           | `{}`    |
+
 ### ServiceAccount
 
 | Name                                          | Description                                                                                                                               | Value   |

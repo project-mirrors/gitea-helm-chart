@@ -6,7 +6,10 @@ templates:
   - templates/gitea/serviceAccount.yaml
   - templates/gitea/deployment.yaml
   - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_gpg.yaml
+  - templates/gitea/secret_init.yaml
   - templates/gitea/secret_inlineConfig.yaml
+  - templates/gitea/secret_metrics.yaml
 tests:
   - it: does not modify the deployment by default
     template: templates/gitea/deployment.yaml

@@ -343,6 +343,88 @@ deployment:
   labels: {}
   annotations: {}
 
+## @section Secret
+secrets:
+  config:
+    ## @param secrets.config.addSHASumAnnotation Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change
+    addSHASumAnnotation: true
+
+    ## @param secrets.config.existingSecret.enabled Use an already existing Secret instead of creating the config Secret
+    ## @param secrets.config.existingSecret.secretName Name of the already existing config Secret
+    existingSecret:
+      enabled: false
+      secretName: ""
+
+    ## @param secrets.config.new.annotations Annotations for the config Secret
+    ## @param secrets.config.new.labels Labels for the config Secret
+    new:
+      annotations: {}
+      labels: {}
+
+  gpg:
+    ## @param secrets.gpg.addSHASumAnnotation Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change
+    addSHASumAnnotation: true
+
+    ## @param secrets.gpg.existingSecret.enabled Use an already existing Secret instead of creating the GPG key Secret
+    ## @param secrets.gpg.existingSecret.secretName Name of the already existing GPG key Secret
+    existingSecret:
+      enabled: false
+      secretName: ""
+
+    ## @param secrets.gpg.new.annotations Annotations for the GPG key Secret
+    ## @param secrets.gpg.new.labels Labels for the GPG key Secret
+    new:
+      annotations: {}
+      labels: {}
+
+  init:
+    ## @param secrets.init.addSHASumAnnotation Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change
+    addSHASumAnnotation: true
+
+    ## @param secrets.init.existingSecret.enabled Use an already existing Secret instead of creating the init Secret
+    ## @param secrets.init.existingSecret.secretName Name of the already existing init Secret
+    existingSecret:
+      enabled: false
+      secretName: ""
+
+    ## @param secrets.init.new.annotations Annotations for the init Secret
+    ## @param secrets.init.new.labels Labels for the init Secret
+    new:
+      annotations: {}
+      labels: {}
+
+  inlineConfig:
+    ## @param secrets.inlineConfig.addSHASumAnnotation Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change
+    addSHASumAnnotation: true
+
+    ## @param secrets.inlineConfig.existingSecret.enabled Use an already existing Secret instead of creating the inline configuration Secret
+    ## @param secrets.inlineConfig.existingSecret.secretName Name of the already existing inline configuration Secret
+    existingSecret:
+      enabled: false
+      secretName: ""
+
+    ## @param secrets.inlineConfig.new.annotations Annotations for the inline configuration Secret
+    ## @param secrets.inlineConfig.new.labels Labels for the inline configuration Secret
+    new:
+      annotations: {}
+      labels: {}
+
+  metrics:
+    ## @param secrets.metrics.addSHASumAnnotation Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change
+    addSHASumAnnotation: true
+
+    ## @param secrets.metrics.existingSecret.enabled Use an already existing Secret instead of creating the metrics Secret
+    ## @param secrets.metrics.existingSecret.secretName Name of the already existing metrics Secret
+    existingSecret:
+      enabled: false
+      secretName: ""
+
+    ## @param secrets.metrics.new.annotations Annotations for the metrics Secret
+    ## @param secrets.metrics.new.labels Labels for the metrics Secret
+    new:
+      annotations: {}
+      labels: {}
+
 ## @section ServiceAccount
 
 ## @param serviceAccount.create Enable the creation of a ServiceAccount

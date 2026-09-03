@@ -1,0 +1,82 @@
+suite: deployment template (checksum annotations)
+release:
+  name: gitea-unittests
+  namespace: testing
+templates:
+  - templates/gitea/deployment.yaml
+  - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_gpg.yaml
+  - templates/gitea/secret_init.yaml
+  - templates/gitea/secret_inlineConfig.yaml
+  - templates/gitea/secret_metrics.yaml
+tests:
+  - it: adds a checksum annotation for every Secret by default
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/gpg"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/init"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/metrics"]
+
+  - it: omits the checksum annotations when addSHASumAnnotation is disabled
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.config.addSHASumAnnotation: false
+      secrets.gpg.addSHASumAnnotation: false
+      secrets.init.addSHASumAnnotation: false
+      secrets.inlineConfig.addSHASumAnnotation: false
+      secrets.metrics.addSHASumAnnotation: false
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/gpg"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/init"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/metrics"]
+
+  - it: omits the checksum annotation of a single disabled Secret only
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.init.addSHASumAnnotation: false
+    asserts:
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/init"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+
+  - it: omits the checksum annotations of Secrets provided by the user
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.config.existingSecret.enabled: true
+      secrets.config.existingSecret.secretName: custom-config
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: custom-gpg
+      secrets.init.existingSecret.enabled: true
+      secrets.init.existingSecret.secretName: custom-init
+      secrets.inlineConfig.existingSecret.enabled: true
+      secrets.inlineConfig.existingSecret.secretName: custom-inline-config
+      secrets.metrics.existingSecret.enabled: true
+      secrets.metrics.existingSecret.secretName: custom-metrics
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/gpg"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/init"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/metrics"]

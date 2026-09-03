@@ -5,7 +5,10 @@ release:
 templates:
   - templates/gitea/deployment.yaml
   - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_gpg.yaml
+  - templates/gitea/secret_init.yaml
   - templates/gitea/secret_inlineConfig.yaml
+  - templates/gitea/secret_metrics.yaml
 tests:
   - it: fails with multiple replicas and "GIT_GC_REPOS" enabled
     template: templates/gitea/secret_config.yaml
