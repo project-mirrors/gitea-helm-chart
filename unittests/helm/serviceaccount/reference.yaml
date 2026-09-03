@@ -3,9 +3,9 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/serviceaccount.yaml
+  - templates/gitea/serviceAccount.yaml
   - templates/gitea/deployment.yaml
-  - templates/gitea/config.yaml
+  - templates/gitea/secret_config.yaml
 tests:
   - it: does not modify the deployment by default
     template: templates/gitea/deployment.yaml

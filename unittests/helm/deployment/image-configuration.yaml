@@ -7,7 +7,7 @@ chart:
   appVersion: 1.19.3
 templates:
   - templates/gitea/deployment.yaml
-  - templates/gitea/config.yaml
+  - templates/gitea/secret_config.yaml
 tests:
   - it: default values
     template: templates/gitea/deployment.yaml

@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/init.yaml
+  - templates/gitea/secret_init.yaml
 tests:
   - it: runs gpg in batch mode
     set:

@@ -4,7 +4,7 @@ release:
   namespace: testing
 tests:
   - it: "queue is configured correctly for valkey"
-    template: templates/gitea/config.yaml
+    template: templates/gitea/secret_inlineConfig.yaml
     set:
       valkey:
         enabled: true
@@ -17,7 +17,7 @@ tests:
             TYPE=redis
 
   - it: "queue is configured correctly for 'levelDB' when valkey is disabled"
-    template: templates/gitea/config.yaml
+    template: templates/gitea/secret_inlineConfig.yaml
     set:
       valkey:
         enabled: false
@@ -30,7 +30,7 @@ tests:
             TYPE=level
 
   - it: "queue can be customized when valkey is disabled"
-    template: templates/gitea/config.yaml
+    template: templates/gitea/secret_inlineConfig.yaml
     set:
       valkey:
         enabled: false

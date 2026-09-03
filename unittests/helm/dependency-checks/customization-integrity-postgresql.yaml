@@ -65,7 +65,7 @@ tests:
           name: gitea-unittests-postgresql
           namespace: testing
   - it: "[gitea] connects to postgresql service"
-    template: templates/gitea/config.yaml
+    template: templates/gitea/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
@@ -74,14 +74,14 @@ tests:
   - it: "[gitea] connects to postgresql service with custom cluster domain"
     set:
       clusterDomain: my-special-cluster.local
-    template: templates/gitea/config.yaml
+    template: templates/gitea/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
           path: stringData.database
           pattern: HOST=gitea-unittests-postgresql.testing.svc.my-special-cluster.local:1234
   - it: "[gitea] connects to configured database"
-    template: templates/gitea/config.yaml
+    template: templates/gitea/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
