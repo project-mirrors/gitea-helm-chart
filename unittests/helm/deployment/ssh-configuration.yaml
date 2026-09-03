@@ -5,6 +5,7 @@ release:
 templates:
   - templates/gitea/deployment.yaml
   - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_inlineConfig.yaml
 tests:
   - it: supports defining SSH log level for root based image
     template: templates/gitea/deployment.yaml

@@ -28,6 +28,7 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/gitea/secret_config.yaml") . | sha256sum }}
+        checksum/inlineConfig: {{ include (print $.Template.BasePath "/gitea/secret_inlineConfig.yaml") . | sha256sum }}
         {{- range $idx, $value := .Values.gitea.ldap }}
         checksum/ldap_{{ $idx }}: {{ include "gitea.ldap_settings" (list $idx $value) | sha256sum }}
         {{- end }}
@@ -419,18 +420,18 @@ spec:
       volumes:
         - name: init
           secret:
-            secretName: {{ include "gitea.fullname" . }}-init
+            secretName: {{ include "gitea.secret.init.name" . }}
             defaultMode: 110
         - name: config
           secret:
-            secretName: {{ include "gitea.fullname" . }}
+            secretName: {{ include "gitea.secret.config.name" . }}
             defaultMode: 110
         {{- if gt (len .Values.extraVolumes) 0 }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
         - name: inline-config-sources
           secret:
-            secretName: {{ include "gitea.fullname" . }}-inline-config
+            secretName: {{ include "gitea.secret.inlineConfig.name" . }}
         {{- range $idx, $value := .Values.gitea.additionalConfigSources }}
         - name: additional-config-sources-{{ $idx }}
           {{- toYaml $value | nindent 10 }}
@@ -440,7 +441,7 @@ spec:
         {{- if .Values.signing.enabled }}
         - name: gpg-private-key
           secret:
-            secretName: {{ include "gitea.gpg-key-secret-name" . }}
+            secretName: {{ include "gitea.secret.gpg.name" . }}
             items:
               - key: privateKey
                 path: private.asc

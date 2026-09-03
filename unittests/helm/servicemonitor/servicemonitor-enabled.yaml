@@ -65,6 +65,6 @@ tests:
               authorization:
                 type: Bearer
                 credentials:
-                  name: gitea-unittests-metrics-secret
+                  name: gitea-unittests-metrics
                   key: token
                   optional: false
