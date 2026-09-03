@@ -21,13 +21,12 @@ tests:
   - it: skips gpg env in `init-directories` init container
     template: templates/gitea/deployment.yaml
     set:
-      signing.enabled: false
+      secrets.gpg.enabled: false
     asserts:
       - notContains:
           path: spec.template.spec.initContainers[0].env
           content:
             name: GNUPGHOME
-            value: /data/git/.gnupg
   - it: skips gpg env in runtime container
     template: templates/gitea/deployment.yaml
     asserts:

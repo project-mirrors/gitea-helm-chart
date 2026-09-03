@@ -8,8 +8,8 @@ tests:
   - it: runs gpg in batch mode
     set:
       image.rootless: false
-      signing.enabled: true
-      signing.privateKey: |-
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |-
         -----BEGIN PGP PRIVATE KEY BLOCK-----
         {placeholder}
         -----END PGP PRIVATE KEY BLOCK-----
@@ -43,8 +43,8 @@ tests:
   - it: adds gpg script block for enabled signing
     set:
       image.rootless: false
-      signing.enabled: true
-      signing.privateKey: |-
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |-
         -----BEGIN PGP PRIVATE KEY BLOCK-----
         {placeholder}
         -----END PGP PRIVATE KEY BLOCK-----

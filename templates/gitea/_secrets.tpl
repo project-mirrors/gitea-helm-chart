@@ -83,7 +83,7 @@
 {{- if .Values.secrets.gpg.existingSecret.enabled -}}
 {{ required "`secrets.gpg.existingSecret.secretName` must be set when `secrets.gpg.existingSecret.enabled` is enabled" .Values.secrets.gpg.existingSecret.secretName }}
 {{- else -}}
-{{ default (printf "%s-gpg-key" (include "gitea.fullname" .)) .Values.signing.existingSecret }}
+{{ include "gitea.fullname" . }}-gpg-key
 {{- end -}}
 {{- end }}
 
@@ -108,5 +108,23 @@
 {{ required "`secrets.metrics.existingSecret.secretName` must be set when `secrets.metrics.existingSecret.enabled` is enabled" .Values.secrets.metrics.existingSecret.secretName }}
 {{- else -}}
 {{ include "gitea.fullname" . }}-metrics
+{{- end -}}
+{{- end }}
+
+{{/* keys */}}
+
+{{- define "gitea.secret.gpg.gpgHomeKey" -}}
+{{- if .Values.secrets.gpg.existingSecret.enabled -}}
+{{ .Values.secrets.gpg.existingSecret.gpgHomeKey }}
+{{- else -}}
+gpgHome
+{{- end -}}
+{{- end }}
+
+{{- define "gitea.secret.gpg.privateKeyKey" -}}
+{{- if .Values.secrets.gpg.existingSecret.enabled -}}
+{{ .Values.secrets.gpg.existingSecret.privateKeyKey }}
+{{- else -}}
+privateKey
 {{- end -}}
 {{- end }}

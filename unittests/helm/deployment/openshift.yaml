@@ -64,8 +64,9 @@ tests:
     template: templates/gitea/deployment.yaml
     set:
       openshift.enabled: true
-      signing.enabled: true
-      signing.existingSecret: custom-gpg-secret
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: custom-gpg-secret
     asserts:
       - notExists:
           path: spec.template.spec.initContainers[2].securityContext.runAsUser

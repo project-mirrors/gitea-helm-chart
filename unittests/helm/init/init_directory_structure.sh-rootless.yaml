@@ -7,8 +7,8 @@ templates:
 tests:
   - it: runs gpg in batch mode
     set:
-      signing.enabled: true
-      signing.privateKey: |-
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |-
         -----BEGIN PGP PRIVATE KEY BLOCK-----
         {placeholder}
         -----END PGP PRIVATE KEY BLOCK-----
@@ -37,8 +37,8 @@ tests:
             chmod -v ug+rwx "${GITEA_TEMP}"
   - it: adds gpg script block for enabled signing
     set:
-      signing.enabled: true
-      signing.privateKey: |-
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |-
         -----BEGIN PGP PRIVATE KEY BLOCK-----
         {placeholder}
         -----END PGP PRIVATE KEY BLOCK-----

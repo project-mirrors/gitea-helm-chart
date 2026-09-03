@@ -7,24 +7,22 @@ templates:
 tests:
   - it: fails rendering when nothing is configured
     set:
-      signing:
-        enabled: true
+      secrets.gpg.enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: Either specify `signing.privateKey`, `signing.existingSecret` or `secrets.gpg.existingSecret`
+          errorMessage: Either specify `secrets.gpg.new.privateKey` or reference an existing Secret via `secrets.gpg.existingSecret`
   - it: skips rendering using external secret reference
     set:
-      signing:
-        enabled: true
-        existingSecret: "external-secret-reference"
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: "external-secret-reference"
     asserts:
       - hasDocuments:
           count: 0
   - it: renders secret specification using inline gpg key
     set:
-      signing:
-        enabled: true
-        privateKey: "gpg-key-placeholder"
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: "gpg-key-placeholder"
     asserts:
       - hasDocuments:
           count: 1
@@ -35,6 +33,9 @@ tests:
           name: gitea-unittests-gpg-key
       - isNotNullOrEmpty:
           path: metadata.labels
+      - equal:
+          path: data.gpgHome
+          value: "L2RhdGEvZ2l0Ly5nbnVwZw=="
       - equal:
           path: data.privateKey
           value: "Z3BnLWtleS1wbGFjZWhvbGRlcg=="

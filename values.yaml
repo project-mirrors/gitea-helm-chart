@@ -362,20 +362,35 @@ secrets:
       labels: {}
 
   gpg:
+    ## @param secrets.gpg.enabled Enable mounting of a GPG key to sign git commits.
+    enabled: false
+
     ## @param secrets.gpg.addSHASumAnnotation Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change
     addSHASumAnnotation: true
 
     ## @param secrets.gpg.existingSecret.enabled Use an already existing Secret instead of creating the GPG key Secret
     ## @param secrets.gpg.existingSecret.secretName Name of the already existing GPG key Secret
+    ## @param secrets.gpg.existingSecret.gpgHomeKey Key of the GPG home directory in the existing GPG key Secret
+    ## @param secrets.gpg.existingSecret.privateKeyKey Key of the private key in the existing GPG key Secret.
     existingSecret:
       enabled: false
       secretName: ""
+      gpgHomeKey: gpgHome
+      privateKeyKey: privateKey
 
     ## @param secrets.gpg.new.annotations Annotations for the GPG key Secret
     ## @param secrets.gpg.new.labels Labels for the GPG key Secret
+    ## @param secrets.gpg.new.gpgHome Path to the GPG home directory.
+    ## @param secrets.gpg.new.privateKey Content of the private GPG key in armored format.
     new:
       annotations: {}
       labels: {}
+      gpgHome: /data/git/.gnupg
+      privateKey: ""
+      # privateKey: |-
+      #   -----BEGIN PGP PRIVATE KEY BLOCK-----
+      #   ...
+      #   -----END PGP PRIVATE KEY BLOCK-----
 
   init:
     ## @param secrets.init.addSHASumAnnotation Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change
@@ -531,23 +546,6 @@ initContainers:
     requests:
       cpu: 100m
       memory: 128Mi
-
-# Configure commit/action signing prerequisites
-## @section Signing
-#
-## @param signing.enabled Enable commit/action signing
-## @param signing.gpgHome GPG home directory
-## @param signing.privateKey Inline private gpg key for signed internal Git activity
-## @param signing.existingSecret Use an existing secret to store the value of `signing.privateKey`
-signing:
-  enabled: false
-  gpgHome: /data/git/.gnupg
-  privateKey: ""
-  # privateKey: |-
-  #   -----BEGIN PGP PRIVATE KEY BLOCK-----
-  #   ...
-  #   -----END PGP PRIVATE KEY BLOCK-----
-  existingSecret: ""
 
 ## @section Gitea
 #

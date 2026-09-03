@@ -59,9 +59,9 @@ tests:
   - it: sources env file in configure-gpg when extraEnvSourceFile is set with signing enabled
     template: templates/gitea/deployment.yaml
     set:
-      signing:
-        enabled: true
-        existingSecret: "custom-gpg-secret"
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: "custom-gpg-secret"
       gitea:
         extraEnvSourceFile: /vault/secrets/gitea
     asserts:

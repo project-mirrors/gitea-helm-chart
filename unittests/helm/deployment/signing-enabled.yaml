@@ -13,9 +13,9 @@ tests:
   - it: adds gpg init container
     template: templates/gitea/deployment.yaml
     set:
-      signing:
-        enabled: true
-        existingSecret: "custom-gpg-secret"
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: "custom-gpg-secret"
     asserts:
       - equal:
           path: spec.template.spec.initContainers[2].name
@@ -31,7 +31,10 @@ tests:
           path: spec.template.spec.initContainers[2].env
           value:
             - name: GNUPGHOME
-              value: /data/git/.gnupg
+              valueFrom:
+                secretKeyRef:
+                  name: custom-gpg-secret
+                  key: gpgHome
             - name: TMP_RAW_GPG_KEY
               value: /raw/private.asc
       - equal:
@@ -47,31 +50,54 @@ tests:
   - it: adds gpg env in `init-directories` init container
     template: templates/gitea/deployment.yaml
     set:
-      signing.enabled: true
-      signing.existingSecret: "custom-gpg-secret"
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: "custom-gpg-secret"
     asserts:
       - contains:
           path: spec.template.spec.initContainers[0].env
           content:
             name: GNUPGHOME
-            value: /data/git/.gnupg
+            valueFrom:
+              secretKeyRef:
+                name: custom-gpg-secret
+                key: gpgHome
   - it: adds gpg env in runtime container
     template: templates/gitea/deployment.yaml
     set:
-      signing.enabled: true
-      signing.existingSecret: "custom-gpg-secret"
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: "custom-gpg-secret"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: GNUPGHOME
-            value: /data/git/.gnupg
+            valueFrom:
+              secretKeyRef:
+                name: custom-gpg-secret
+                key: gpgHome
+  - it: reads the gpg home from the configured key of an existing secret
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: "custom-gpg-secret"
+      secrets.gpg.existingSecret.gpgHomeKey: custom-gpg-home
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GNUPGHOME
+            valueFrom:
+              secretKeyRef:
+                name: custom-gpg-secret
+                key: custom-gpg-home
   - it: adds gpg volume spec
     template: templates/gitea/deployment.yaml
     set:
-      signing:
-        enabled: true
-        existingSecret: "gitea-unittests-gpg-key"
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: "gpg-key-placeholder"
     asserts:
       - contains:
           path: spec.template.spec.volumes
@@ -86,9 +112,10 @@ tests:
   - it: supports gpg volume spec with external reference
     template: templates/gitea/deployment.yaml
     set:
-      signing:
-        enabled: true
-        existingSecret: custom-gpg-secret
+      secrets.gpg.enabled: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: custom-gpg-secret
+      secrets.gpg.existingSecret.privateKeyKey: custom-private-key
     asserts:
       - contains:
           path: spec.template.spec.volumes
@@ -97,6 +124,6 @@ tests:
             secret:
               secretName: custom-gpg-secret
               items:
-                - key: privateKey
+                - key: custom-private-key
                   path: private.asc
               defaultMode: 0100

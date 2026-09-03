@@ -7,7 +7,7 @@ templates:
 tests:
   - it: renders nothing
     set:
-      signing.enabled: false
+      secrets.gpg.enabled: false
     asserts:
       - hasDocuments:
           count: 0

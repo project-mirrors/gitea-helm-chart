@@ -46,10 +46,10 @@
   - [Route](#route)
   - [Gateway API](#gateway-api)
   - [deployment](#deployment)
+  - [Secret](#secret)
   - [ServiceAccount](#serviceaccount)
   - [Persistence](#persistence-1)
   - [Init](#init)
-  - [Signing](#signing)
   - [Gitea](#gitea)
   - [LivenessProbe](#livenessprobe)
   - [ReadinessProbe](#readinessprobe)
@@ -766,17 +766,20 @@ When using the rootless image the gpg key folder is not persistent by default.
 If you consider using signed commits for internal Gitea activities (e.g. initial commit), you'd need to provide a signing key.
 Prior to [PR186](https://gitea.com/gitea/helm-gitea/pulls/186), imported keys had to be re-imported once the container got replaced by another.
 
-The mentioned PR introduced a new configuration object `signing` allowing you to configure prerequisites for commit signing.
+The `secrets.gpg` object allows you to configure the prerequisites for commit signing.
 By default this section is disabled to maintain backwards compatibility.
 
 ```yaml
-signing:
-  enabled: false
-  gpgHome: /data/git/.gnupg
+secrets:
+  gpg:
+    enabled: false
+    new:
+      gpgHome: /data/git/.gnupg
 ```
 
-Regardless of the used container image the `signing` object allows to specify a private gpg key.
-Either using the `signing.privateKey` to define the key inline, or refer to an existing secret containing the key data by using `signing.existingSecret`.
+Regardless of the used container image the `secrets.gpg` object allows to specify a private gpg key.
+Either using `secrets.gpg.new.privateKey` to define the key inline, or refer to an existing Secret containing the key data by
+using `secrets.gpg.existingSecret`.
 
 ```yaml
 apiVersion: v1
@@ -785,6 +788,7 @@ metadata:
   name: custom-gitea-gpg-key
 type: Opaque
 stringData:
+  gpgHome: /data/git/.gnupg
   privateKey: |-
     -----BEGIN PGP PRIVATE KEY BLOCK-----
     ...
@@ -792,9 +796,16 @@ stringData:
 ```
 
 ```yaml
-signing:
-  existingSecret: custom-gitea-gpg-key
+secrets:
+  gpg:
+    enabled: true
+    existingSecret:
+      enabled: true
+      secretName: custom-gitea-gpg-key
 ```
+
+The keys within the existing Secret can be customized via `secrets.gpg.existingSecret.gpgHomeKey` and
+`secrets.gpg.existingSecret.privateKeyKey`.
 
 To use the gpg key, Gitea needs to be configured accordingly.
 A detailed description can be found in the [official Gitea documentation](https://docs.gitea.com/administration/signing#general-configuration).
@@ -1118,33 +1129,38 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Secret
 
-| Name                                             | Description                                                                                             | Value   |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ------- |
-| `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change               | `true`  |
-| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                    | `false` |
-| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                              | `""`    |
-| `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                       | `{}`    |
-| `secrets.config.new.labels`                      | Labels for the config Secret                                                                            | `{}`    |
-| `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change              | `true`  |
-| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                   | `false` |
-| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                             | `""`    |
-| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret                                                                      | `{}`    |
-| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret                                                                           | `{}`    |
-| `secrets.init.addSHASumAnnotation`               | Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change                 | `true`  |
-| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret                                      | `false` |
-| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret                                                                | `""`    |
-| `secrets.init.new.annotations`                   | Annotations for the init Secret                                                                         | `{}`    |
-| `secrets.init.new.labels`                        | Labels for the init Secret                                                                              | `{}`    |
-| `secrets.inlineConfig.addSHASumAnnotation`       | Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change | `true`  |
-| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret                      | `false` |
-| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret                                                | `""`    |
-| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret                                                         | `{}`    |
-| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret                                                              | `{}`    |
-| `secrets.metrics.addSHASumAnnotation`            | Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change              | `true`  |
-| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret                                   | `false` |
-| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                             | `""`    |
-| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                      | `{}`    |
-| `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                           | `{}`    |
+| Name                                             | Description                                                                                             | Value              |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ------------------ |
+| `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change               | `true`             |
+| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                    | `false`            |
+| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                              | `""`               |
+| `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                       | `{}`               |
+| `secrets.config.new.labels`                      | Labels for the config Secret                                                                            | `{}`               |
+| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign Git commits.                                                       | `false`            |
+| `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change              | `true`             |
+| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                   | `false`            |
+| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                             | `""`               |
+| `secrets.gpg.existingSecret.gpgHomeKey`          | Key of the GPG home directory in the existing GPG key Secret                                            | `gpgHome`          |
+| `secrets.gpg.existingSecret.privateKeyKey`       | Key of the private key in the existing GPG key Secret.                                                  | `privateKey`       |
+| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret                                                                      | `{}`               |
+| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret                                                                           | `{}`               |
+| `secrets.gpg.new.gpgHome`                        | Path to the GPG home directory.                                                                         | `/data/git/.gnupg` |
+| `secrets.gpg.new.privateKey`                     | Content of the private GPG key in armored format.                                                       | `""`               |
+| `secrets.init.addSHASumAnnotation`               | Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change                 | `true`             |
+| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret                                      | `false`            |
+| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret                                                                | `""`               |
+| `secrets.init.new.annotations`                   | Annotations for the init Secret                                                                         | `{}`               |
+| `secrets.init.new.labels`                        | Labels for the init Secret                                                                              | `{}`               |
+| `secrets.inlineConfig.addSHASumAnnotation`       | Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change | `true`             |
+| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret                      | `false`            |
+| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret                                                | `""`               |
+| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret                                                         | `{}`               |
+| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret                                                              | `{}`               |
+| `secrets.metrics.addSHASumAnnotation`            | Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change              | `true`             |
+| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret                                   | `false`            |
+| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                             | `""`               |
+| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                      | `{}`               |
+| `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                           | `{}`               |
 
 ### ServiceAccount
 
@@ -1189,15 +1205,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `initContainers.resources.limits`          | initContainers.limits Kubernetes resource limits for init containers                 | `{}`         |
 | `initContainers.resources.requests.cpu`    | initContainers.requests.cpu Kubernetes cpu resource limits for init containers       | `100m`       |
 | `initContainers.resources.requests.memory` | initContainers.requests.memory Kubernetes memory resource limits for init containers | `128Mi`      |
-
-### Signing
-
-| Name                     | Description                                                       | Value              |
-| ------------------------ | ----------------------------------------------------------------- | ------------------ |
-| `signing.enabled`        | Enable commit/action signing                                      | `false`            |
-| `signing.gpgHome`        | GPG home directory                                                | `/data/git/.gnupg` |
-| `signing.privateKey`     | Inline private gpg key for signed internal Git activity           | `""`               |
-| `signing.existingSecret` | Use an existing secret to store the value of `signing.privateKey` | `""`               |
 
 ### Gitea
 
@@ -1351,6 +1358,41 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 
 <details>
 
+<summary>To 13.0.0</summary>
+
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable-next-line -->
+**Breaking changes**
+<!-- prettier-ignore-end -->
+
+- All Secrets created by this chart are now configured through the new `secrets` section.
+  It exposes `annotations`, `labels`, a checksum-annotation toggle and an `existingSecret` reference for each of the
+  `config`, `gpg`, `init`, `inlineConfig` and `metrics` Secrets.
+- The top-level `signing` object has been replaced by `secrets.gpg`.
+  The chart fails to render if `signing` is still set.
+  Migrate as follows:
+
+  | Old                      | New                                                                              |
+  | ------------------------ | -------------------------------------------------------------------------------- |
+  | `signing.enabled`        | `secrets.gpg.enabled`                                                            |
+  | `signing.gpgHome`        | `secrets.gpg.new.gpgHome`                                                        |
+  | `signing.privateKey`     | `secrets.gpg.new.privateKey`                                                     |
+  | `signing.existingSecret` | `secrets.gpg.existingSecret.enabled` and `secrets.gpg.existingSecret.secretName` |
+
+  The `gpgHome` path is now stored in the GPG key Secret and consumed via `secretKeyRef` instead of being rendered as a
+  plain environment variable value.
+  Existing Secrets referenced via `secrets.gpg.existingSecret` therefore need a `gpgHome` key in addition to
+  `privateKey`. Both key names are configurable via `secrets.gpg.existingSecret.gpgHomeKey` and
+  `secrets.gpg.existingSecret.privateKeyKey`.
+
+- Renamed the generated Secrets to make their purpose obvious:
+  the config Secret changed from `<fullname>` to `<fullname>-config` and the metrics Secret from
+  `<fullname>-metrics-secret` to `<fullname>-metrics`.
+
+</details>
+
+<details>
+
 <summary>To 12.0.0</summary>
 
 <!-- prettier-ignore-start -->
@@ -1366,6 +1408,7 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
   This change was made to avoid overloading the existing helm chart, which is already quite large in size and configuration options.
   In addition, the existing maintainers team was not actively using "Actions" which slowed down development and community contributions.
   While the new chart is still young (and waiting for contributions! and maintainers), we believe that it is the best way moving forward for both parts.
+
 - Migrated from Redis/Redis-cluster to Valkey/Valkey-cluster charts (#775).
   While marked as breaking, there is no need to migrate data.
   The cache will start to refill automatically.

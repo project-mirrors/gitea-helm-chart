@@ -100,9 +100,12 @@ spec:
             {{- if .Values.deployment.env }}
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}
-            {{- if .Values.signing.enabled }}
+            {{- if .Values.secrets.gpg.enabled }}
             - name: GNUPGHOME
-              value: {{ .Values.signing.gpgHome }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gitea.secret.gpg.name" . }}
+                  key: {{ include "gitea.secret.gpg.gpgHomeKey" . }}
             {{- end }}
           volumeMounts:
             - name: init
@@ -176,7 +179,7 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.initContainers.resources | nindent 12 }}
-        {{- if .Values.signing.enabled }}
+        {{- if .Values.secrets.gpg.enabled }}
         - name: configure-gpg
           image: "{{ include "gitea.image" . }}"
           {{- if .Values.gitea.extraEnvSourceFile }}
@@ -196,7 +199,10 @@ spec:
           {{- end }}
           env:
             - name: GNUPGHOME
-              value: {{ .Values.signing.gpgHome }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gitea.secret.gpg.name" . }}
+                  key: {{ include "gitea.secret.gpg.gpgHomeKey" . }}
             - name: TMP_RAW_GPG_KEY
               value: /raw/private.asc
           volumeMounts:
@@ -357,9 +363,12 @@ spec:
             - name: HOME
               value: /data/gitea/git
             {{- end }}
-            {{- if .Values.signing.enabled }}
+            {{- if .Values.secrets.gpg.enabled }}
             - name: GNUPGHOME
-              value: {{ .Values.signing.gpgHome }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gitea.secret.gpg.name" . }}
+                  key: {{ include "gitea.secret.gpg.gpgHomeKey" . }}
             {{- end }}
             {{- if .Values.deployment.env }}
             {{- toYaml .Values.deployment.env | nindent 12 }}
@@ -451,12 +460,12 @@ spec:
         {{- end }}
         - name: temp
           emptyDir: {}
-        {{- if .Values.signing.enabled }}
+        {{- if .Values.secrets.gpg.enabled }}
         - name: gpg-private-key
           secret:
             secretName: {{ include "gitea.secret.gpg.name" . }}
             items:
-              - key: privateKey
+              - key: {{ include "gitea.secret.gpg.privateKeyKey" . }}
                 path: private.asc
             defaultMode: 0100
         {{- end }}

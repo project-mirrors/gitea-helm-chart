@@ -14,12 +14,12 @@
   {{- if kindIs "map" .Values.gitea.ldap -}}
     {{- fail "You can configure multiple LDAP sources. Please refer to the changelog and switch `gitea.ldap` from object to array notation." -}}
   {{- end -}}
-  
+
   {{/* OAUTH SOURCES */}}
   {{- if kindIs "map" .Values.gitea.oauth -}}
     {{- fail "You can configure multiple OAuth sources. Please refer to the changelog and switch `gitea.oauth` from object to array notation." -}}
   {{- end -}}
-  
+
   {{/* BUILTIN */}}
   {{- if .Values.gitea.cache -}}
     {{- if .Values.gitea.cache.builtIn -}}
@@ -30,5 +30,10 @@
     {{- if .Values.gitea.database.builtIn -}}
       {{- fail "`gitea.database.builtIn` does no longer exist. Builtin databases can be configured inside the dependencies itself. Please refer to the changelog." -}}
     {{- end -}}
+  {{- end -}}
+
+  {{/* SIGNING */}}
+  {{- if .Values.signing -}}
+    {{- fail "`signing` does no longer exist. Please refer to the changelog and configure `secrets.gpg` instead." -}}
   {{- end -}}
 {{- end -}}
