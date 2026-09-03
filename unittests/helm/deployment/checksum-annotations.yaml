@@ -4,6 +4,7 @@ release:
   namespace: testing
 templates:
   - templates/gitea/deployment.yaml
+  - templates/gitea/secret_admin.yaml
   - templates/gitea/secret_config.yaml
   - templates/gitea/secret_gpg.yaml
   - templates/gitea/secret_init.yaml
@@ -14,9 +15,9 @@ tests:
     template: templates/gitea/deployment.yaml
     asserts:
       - exists:
-          path: spec.template.metadata.annotations["checksum/config"]
+          path: spec.template.metadata.annotations["checksum/admin"]
       - exists:
-          path: spec.template.metadata.annotations["checksum/gpg"]
+          path: spec.template.metadata.annotations["checksum/config"]
       - exists:
           path: spec.template.metadata.annotations["checksum/init"]
       - exists:
@@ -27,12 +28,15 @@ tests:
   - it: omits the checksum annotations when addSHASumAnnotation is disabled
     template: templates/gitea/deployment.yaml
     set:
+      secrets.admin.addSHASumAnnotation: false
       secrets.config.addSHASumAnnotation: false
       secrets.gpg.addSHASumAnnotation: false
       secrets.init.addSHASumAnnotation: false
       secrets.inlineConfig.addSHASumAnnotation: false
       secrets.metrics.addSHASumAnnotation: false
     asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/admin"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/config"]
       - notExists:
@@ -59,6 +63,8 @@ tests:
   - it: omits the checksum annotations of Secrets provided by the user
     template: templates/gitea/deployment.yaml
     set:
+      secrets.admin.existingSecret.enabled: true
+      secrets.admin.existingSecret.secretName: custom-admin
       secrets.config.existingSecret.enabled: true
       secrets.config.existingSecret.secretName: custom-config
       secrets.gpg.existingSecret.enabled: true
@@ -70,6 +76,8 @@ tests:
       secrets.metrics.existingSecret.enabled: true
       secrets.metrics.existingSecret.secretName: custom-metrics
     asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/admin"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/config"]
       - notExists:

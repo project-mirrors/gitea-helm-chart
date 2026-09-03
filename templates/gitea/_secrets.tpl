@@ -2,6 +2,12 @@
 
 {{/* annotations */}}
 
+{{- define "gitea.secret.admin.annotations" -}}
+{{- with .Values.secrets.admin.new.annotations }}
+{{- toYaml . -}}
+{{- end }}
+{{- end }}
+
 {{- define "gitea.secret.config.annotations" -}}
 {{- with .Values.secrets.config.new.annotations }}
 {{- toYaml . -}}
@@ -33,6 +39,13 @@
 {{- end }}
 
 {{/* labels */}}
+
+{{- define "gitea.secret.admin.labels" -}}
+{{ include "gitea.labels" . }}
+{{- with .Values.secrets.admin.new.labels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
 
 {{- define "gitea.secret.config.labels" -}}
 {{ include "gitea.labels" . }}
@@ -70,6 +83,14 @@
 {{- end }}
 
 {{/* names */}}
+
+{{- define "gitea.secret.admin.name" -}}
+{{- if .Values.secrets.admin.existingSecret.enabled -}}
+{{ required "`secrets.admin.existingSecret.secretName` must be set when `secrets.admin.existingSecret.enabled` is enabled" .Values.secrets.admin.existingSecret.secretName }}
+{{- else -}}
+{{ include "gitea.fullname" . }}-admin
+{{- end -}}
+{{- end }}
 
 {{- define "gitea.secret.config.name" -}}
 {{- if .Values.secrets.config.existingSecret.enabled -}}
@@ -113,6 +134,30 @@
 
 {{/* keys */}}
 
+{{- define "gitea.secret.admin.emailKey" -}}
+{{- if .Values.secrets.admin.existingSecret.enabled -}}
+{{ .Values.secrets.admin.existingSecret.emailKey }}
+{{- else -}}
+email
+{{- end -}}
+{{- end }}
+
+{{- define "gitea.secret.admin.passwordKey" -}}
+{{- if .Values.secrets.admin.existingSecret.enabled -}}
+{{ .Values.secrets.admin.existingSecret.passwordKey }}
+{{- else -}}
+password
+{{- end -}}
+{{- end }}
+
+{{- define "gitea.secret.admin.usernameKey" -}}
+{{- if .Values.secrets.admin.existingSecret.enabled -}}
+{{ .Values.secrets.admin.existingSecret.usernameKey }}
+{{- else -}}
+username
+{{- end -}}
+{{- end }}
+
 {{- define "gitea.secret.gpg.gpgHomeKey" -}}
 {{- if .Values.secrets.gpg.existingSecret.enabled -}}
 {{ .Values.secrets.gpg.existingSecret.gpgHomeKey }}
@@ -126,5 +171,15 @@ gpgHome
 {{ .Values.secrets.gpg.existingSecret.privateKeyKey }}
 {{- else -}}
 privateKey
+{{- end -}}
+{{- end }}
+
+{{/* misc */}}
+
+{{- define "gitea.secret.admin.passwordMode" -}}
+{{- if has .Values.secrets.admin.passwordMode (tuple "keepUpdated" "initialOnlyNoReset" "initialOnlyRequireReset") -}}
+{{ .Values.secrets.admin.passwordMode }}
+{{- else -}}
+{{ printf "`secrets.admin.passwordMode` must be set to one of 'keepUpdated', 'initialOnlyNoReset', or 'initialOnlyRequireReset'. Received: '%s'" .Values.secrets.admin.passwordMode | fail }}
 {{- end -}}
 {{- end }}

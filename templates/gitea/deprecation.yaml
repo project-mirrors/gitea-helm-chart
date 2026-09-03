@@ -31,6 +31,9 @@
       {{- fail "`gitea.database.builtIn` does no longer exist. Builtin databases can be configured inside the dependencies itself. Please refer to the changelog." -}}
     {{- end -}}
   {{- end -}}
+  {{- if .Values.gitea.admin -}}
+    {{- fail "`gitea.admin` does no longer exist. Please refer to the changelog and configure `secrets.admin` instead." -}}
+  {{- end -}}
 
   {{/* SIGNING */}}
   {{- if .Values.signing -}}

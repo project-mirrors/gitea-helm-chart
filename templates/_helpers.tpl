@@ -523,14 +523,6 @@ https
   {{- end }}
 {{- end -}}
 
-{{- define "gitea.admin.passwordMode" -}}
-{{- if has .Values.gitea.admin.passwordMode (tuple "keepUpdated" "initialOnlyNoReset" "initialOnlyRequireReset") -}}
-{{ .Values.gitea.admin.passwordMode }}
-{{- else -}}
-{{ printf "gitea.admin.passwordMode must be set to one of 'keepUpdated', 'initialOnlyNoReset', or 'initialOnlyRequireReset'. Received: '%s'" .Values.gitea.admin.passwordMode | fail }}
-{{- end -}}
-{{- end -}}
-
 {{/* Create a functioning probe object for rendering. Given argument must be either a livenessProbe, readinessProbe, or startupProbe */}}
 {{- define "gitea.deployment.probe" -}}
   {{- $probe := unset . "enabled" -}}

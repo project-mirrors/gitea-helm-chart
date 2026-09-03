@@ -27,6 +27,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if and .Values.secrets.admin.addSHASumAnnotation (not .Values.secrets.admin.existingSecret.enabled) }}
+        checksum/admin: {{ include (print $.Template.BasePath "/gitea/secret_admin.yaml") . | sha256sum }}
+        {{- end }}
         {{- if and .Values.secrets.config.addSHASumAnnotation (not .Values.secrets.config.existingSecret.enabled) }}
         checksum/config: {{ include (print $.Template.BasePath "/gitea/secret_config.yaml") . | sha256sum }}
         {{- end }}
@@ -289,25 +292,25 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
-            {{- if .Values.gitea.admin.existingSecret }}
+            {{- if .Values.secrets.admin.enabled }}
             - name: GITEA_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key:  username
-                  name: {{ .Values.gitea.admin.existingSecret }}
+                  key: {{ include "gitea.secret.admin.usernameKey" . }}
+                  name: {{ include "gitea.secret.admin.name" . }}
             - name: GITEA_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key:  password
-                  name: {{ .Values.gitea.admin.existingSecret }}
-            {{- else }}
-            - name: GITEA_ADMIN_USERNAME
-              value: {{ .Values.gitea.admin.username | quote }}
-            - name: GITEA_ADMIN_PASSWORD
-              value: {{ .Values.gitea.admin.password | quote }}
-            {{- end }}
+                  key: {{ include "gitea.secret.admin.passwordKey" . }}
+                  name: {{ include "gitea.secret.admin.name" . }}
+            - name: GITEA_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: {{ include "gitea.secret.admin.emailKey" . }}
+                  name: {{ include "gitea.secret.admin.name" . }}
             - name: GITEA_ADMIN_PASSWORD_MODE
-              value: {{ include "gitea.admin.passwordMode" $ }}
+              value: {{ include "gitea.secret.admin.passwordMode" $ }}
+            {{- end }}
             {{- if .Values.deployment.env }}
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}

@@ -1,0 +1,64 @@
+suite: Admin secret template
+release:
+  name: gitea-unittests
+  namespace: testing
+templates:
+  - templates/gitea/secret_admin.yaml
+tests:
+  - it: skips rendering when the admin user is disabled
+    set:
+      secrets.admin.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: skips rendering using an existing secret reference
+    set:
+      secrets.admin.enabled: true
+      secrets.admin.existingSecret.enabled: true
+      secrets.admin.existingSecret.secretName: "external-secret-reference"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails rendering without credentials
+    set:
+      secrets.admin.new.password: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: Either specify `secrets.admin.new.username` and `secrets.admin.new.password` or reference an existing Secret via `secrets.admin.existingSecret`
+
+  - it: renders the secret specification with the default credentials
+    asserts:
+      - hasDocuments:
+          count: 1
+      - documentIndex: 0
+        containsDocument:
+          kind: Secret
+          apiVersion: v1
+          name: gitea-unittests-admin
+      - isNotNullOrEmpty:
+          path: metadata.labels
+      - equal:
+          path: data.email
+          value: "Z2l0ZWFAbG9jYWwuZG9tYWlu"
+      - equal:
+          path: data.password
+          value: "cjhzQThDUEhEOSFidDZk"
+      - equal:
+          path: data.username
+          value: "Z2l0ZWFfYWRtaW4="
+
+  - it: supports custom annotations and labels
+    set:
+      secrets.admin.new.annotations:
+        custom-annotation: annotation-value
+      secrets.admin.new.labels:
+        custom-label: label-value
+    asserts:
+      - equal:
+          path: metadata.annotations["custom-annotation"]
+          value: annotation-value
+      - equal:
+          path: metadata.labels["custom-label"]
+          value: label-value

@@ -345,6 +345,40 @@ deployment:
 
 ## @section Secret
 secrets:
+  admin:
+    ## @param secrets.admin.enabled Create and keep the Gitea admin user in sync
+    enabled: true
+
+    ## @param secrets.admin.addSHASumAnnotation Add a pod annotation with the SHA sum of the admin Secret to trigger a rollout on change
+    addSHASumAnnotation: true
+
+    ## @param secrets.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
+    passwordMode: keepUpdated
+
+    ## @param secrets.admin.existingSecret.enabled Use an already existing Secret instead of creating the admin Secret
+    ## @param secrets.admin.existingSecret.secretName Name of the already existing admin Secret
+    ## @param secrets.admin.existingSecret.emailKey Key of the email address in the existing admin Secret
+    ## @param secrets.admin.existingSecret.passwordKey Key of the password in the existing admin Secret
+    ## @param secrets.admin.existingSecret.usernameKey Key of the username in the existing admin Secret
+    existingSecret:
+      enabled: false
+      secretName: ""
+      emailKey: email
+      passwordKey: password
+      usernameKey: username
+
+    ## @param secrets.admin.new.annotations Annotations for the admin Secret
+    ## @param secrets.admin.new.labels Labels for the admin Secret
+    ## @param secrets.admin.new.email Email of the Gitea admin user
+    ## @param secrets.admin.new.password Password of the Gitea admin user
+    ## @param secrets.admin.new.username Username of the Gitea admin user
+    new:
+      annotations: {}
+      labels: {}
+      email: gitea@local.domain
+      password: r8sA8CPHD9!bt6d
+      username: gitea_admin
+
   config:
     ## @param secrets.config.addSHASumAnnotation Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change
     addSHASumAnnotation: true
@@ -550,19 +584,6 @@ initContainers:
 ## @section Gitea
 #
 gitea:
-  ## @param gitea.admin.username Username for the Gitea admin user
-  ## @param gitea.admin.existingSecret Use an existing secret to store admin user credentials
-  ## @param gitea.admin.password Password for the Gitea admin user
-  ## @param gitea.admin.email Email for the Gitea admin user
-  ## @param gitea.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
-  admin:
-    # existingSecret: gitea-admin-secret
-    existingSecret:
-    username: gitea_admin
-    password: r8sA8CPHD9!bt6d
-    email: "gitea@local.domain"
-    passwordMode: keepUpdated
-
   ## @param gitea.metrics.enabled Enable Gitea metrics
   ## @param gitea.metrics.token used for `bearer` token authentication on metrics endpoint. If not specified or empty metrics endpoint is public.
   ## @param gitea.metrics.serviceMonitor.enabled Enable Gitea metrics service monitor. Requires, that `gitea.metrics.enabled` is also set to true, to enable metrics generally.

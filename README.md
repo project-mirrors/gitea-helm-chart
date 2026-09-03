@@ -621,11 +621,12 @@ This has to be done in the ui.
 You cannot use `admin` as username.
 
 ```yaml
-gitea:
+secrets:
   admin:
-    username: "MyAwesomeGiteaAdmin"
-    password: "AReallyAwesomeGiteaPassword"
-    email: "gi@tea.com"
+    new:
+      username: "MyAwesomeGiteaAdmin"
+      password: "AReallyAwesomeGiteaPassword"
+      email: "gi@tea.com"
 ```
 
 You can also use an existing Secret to configure the admin user:
@@ -637,15 +638,21 @@ metadata:
   name: gitea-admin-secret
 type: Opaque
 stringData:
+  email: gi@tea.com
   username: MyAwesomeGiteaAdmin
   password: AReallyAwesomeGiteaPassword
 ```
 
 ```yaml
-gitea:
+secrets:
   admin:
-    existingSecret: gitea-admin-secret
+    existingSecret:
+      enabled: true
+      secretName: gitea-admin-secret
 ```
+
+The keys within the existing Secret can be customized via `secrets.admin.existingSecret.emailKey`,
+`secrets.admin.existingSecret.passwordKey` and `secrets.admin.existingSecret.usernameKey`.
 
 Whether you use the existing Secret or specify a user name and password, there are three modes for how the admin user password is created or set.
 
@@ -656,10 +663,12 @@ Whether you use the existing Secret or specify a user name and password, there a
 These modes can be set like the following:
 
 ```yaml
-gitea:
+secrets:
   admin:
     passwordMode: initialOnlyRequireReset
 ```
+
+Set `secrets.admin.enabled` to `false` to skip the admin user handling entirely.
 
 ### LDAP Settings
 
@@ -1129,38 +1138,51 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Secret
 
-| Name                                             | Description                                                                                             | Value              |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ------------------ |
-| `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change               | `true`             |
-| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                    | `false`            |
-| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                              | `""`               |
-| `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                       | `{}`               |
-| `secrets.config.new.labels`                      | Labels for the config Secret                                                                            | `{}`               |
-| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign Git commits.                                                       | `false`            |
-| `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change              | `true`             |
-| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                   | `false`            |
-| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                             | `""`               |
-| `secrets.gpg.existingSecret.gpgHomeKey`          | Key of the GPG home directory in the existing GPG key Secret                                            | `gpgHome`          |
-| `secrets.gpg.existingSecret.privateKeyKey`       | Key of the private key in the existing GPG key Secret.                                                  | `privateKey`       |
-| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret                                                                      | `{}`               |
-| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret                                                                           | `{}`               |
-| `secrets.gpg.new.gpgHome`                        | Path to the GPG home directory.                                                                         | `/data/git/.gnupg` |
-| `secrets.gpg.new.privateKey`                     | Content of the private GPG key in armored format.                                                       | `""`               |
-| `secrets.init.addSHASumAnnotation`               | Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change                 | `true`             |
-| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret                                      | `false`            |
-| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret                                                                | `""`               |
-| `secrets.init.new.annotations`                   | Annotations for the init Secret                                                                         | `{}`               |
-| `secrets.init.new.labels`                        | Labels for the init Secret                                                                              | `{}`               |
-| `secrets.inlineConfig.addSHASumAnnotation`       | Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change | `true`             |
-| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret                      | `false`            |
-| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret                                                | `""`               |
-| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret                                                         | `{}`               |
-| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret                                                              | `{}`               |
-| `secrets.metrics.addSHASumAnnotation`            | Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change              | `true`             |
-| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret                                   | `false`            |
-| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                             | `""`               |
-| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                      | `{}`               |
-| `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                           | `{}`               |
+| Name                                             | Description                                                                                                                   | Value                |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `secrets.admin.enabled`                          | Create and keep the Gitea admin user in sync                                                                                  | `true`               |
+| `secrets.admin.addSHASumAnnotation`              | Add a pod annotation with the SHA sum of the admin Secret to trigger a rollout on change                                      | `true`               |
+| `secrets.admin.passwordMode`                     | Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated | `keepUpdated`        |
+| `secrets.admin.existingSecret.enabled`           | Use an already existing Secret instead of creating the admin Secret                                                           | `false`              |
+| `secrets.admin.existingSecret.secretName`        | Name of the already existing admin Secret                                                                                     | `""`                 |
+| `secrets.admin.existingSecret.emailKey`          | Key of the email address in the existing admin Secret                                                                         | `email`              |
+| `secrets.admin.existingSecret.passwordKey`       | Key of the password in the existing admin Secret                                                                              | `password`           |
+| `secrets.admin.existingSecret.usernameKey`       | Key of the username in the existing admin Secret                                                                              | `username`           |
+| `secrets.admin.new.annotations`                  | Annotations for the admin Secret                                                                                              | `{}`                 |
+| `secrets.admin.new.labels`                       | Labels for the admin Secret                                                                                                   | `{}`                 |
+| `secrets.admin.new.email`                        | Email of the Gitea admin user                                                                                                 | `gitea@local.domain` |
+| `secrets.admin.new.password`                     | Password of the Gitea admin user                                                                                              | `r8sA8CPHD9!bt6d`    |
+| `secrets.admin.new.username`                     | Username of the Gitea admin user                                                                                              | `gitea_admin`        |
+| `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change                                     | `true`               |
+| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                                          | `false`              |
+| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                                                    | `""`                 |
+| `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                                             | `{}`                 |
+| `secrets.config.new.labels`                      | Labels for the config Secret                                                                                                  | `{}`                 |
+| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign Git commits.                                                                             | `false`              |
+| `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change                                    | `true`               |
+| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                                         | `false`              |
+| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                                                   | `""`                 |
+| `secrets.gpg.existingSecret.gpgHomeKey`          | Key of the GPG home directory in the existing GPG key Secret                                                                  | `gpgHome`            |
+| `secrets.gpg.existingSecret.privateKeyKey`       | Key of the private key in the existing GPG key Secret.                                                                        | `privateKey`         |
+| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret                                                                                            | `{}`                 |
+| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret                                                                                                 | `{}`                 |
+| `secrets.gpg.new.gpgHome`                        | Path to the GPG home directory.                                                                                               | `/data/git/.gnupg`   |
+| `secrets.gpg.new.privateKey`                     | Content of the private GPG key in armored format.                                                                             | `""`                 |
+| `secrets.init.addSHASumAnnotation`               | Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change                                       | `true`               |
+| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret                                                            | `false`              |
+| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret                                                                                      | `""`                 |
+| `secrets.init.new.annotations`                   | Annotations for the init Secret                                                                                               | `{}`                 |
+| `secrets.init.new.labels`                        | Labels for the init Secret                                                                                                    | `{}`                 |
+| `secrets.inlineConfig.addSHASumAnnotation`       | Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change                       | `true`               |
+| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret                                            | `false`              |
+| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret                                                                      | `""`                 |
+| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret                                                                               | `{}`                 |
+| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret                                                                                    | `{}`                 |
+| `secrets.metrics.addSHASumAnnotation`            | Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change                                    | `true`               |
+| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret                                                         | `false`              |
+| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                                                   | `""`                 |
+| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                                            | `{}`                 |
+| `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                                                 | `{}`                 |
 
 ### ServiceAccount
 
@@ -1208,30 +1230,25 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Gitea
 
-| Name                                         | Description                                                                                                                                                                     | Value                |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| `gitea.admin.username`                       | Username for the Gitea admin user                                                                                                                                               | `gitea_admin`        |
-| `gitea.admin.existingSecret`                 | Use an existing secret to store admin user credentials                                                                                                                          | `nil`                |
-| `gitea.admin.password`                       | Password for the Gitea admin user                                                                                                                                               | `r8sA8CPHD9!bt6d`    |
-| `gitea.admin.email`                          | Email for the Gitea admin user                                                                                                                                                  | `gitea@local.domain` |
-| `gitea.admin.passwordMode`                   | Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated                                                   | `keepUpdated`        |
-| `gitea.metrics.enabled`                      | Enable Gitea metrics                                                                                                                                                            | `false`              |
-| `gitea.metrics.token`                        | used for `bearer` token authentication on metrics endpoint. If not specified or empty metrics endpoint is public.                                                               | `nil`                |
-| `gitea.metrics.serviceMonitor.enabled`       | Enable Gitea metrics service monitor. Requires, that `gitea.metrics.enabled` is also set to true, to enable metrics generally.                                                  | `false`              |
-| `gitea.metrics.serviceMonitor.interval`      | Interval at which metrics should be scraped. If not specified Prometheus' global scrape interval is used.                                                                       | `""`                 |
-| `gitea.metrics.serviceMonitor.relabelings`   | RelabelConfigs to apply to samples before scraping.                                                                                                                             | `[]`                 |
-| `gitea.metrics.serviceMonitor.scheme`        | HTTP scheme to use for scraping. For example `http` or `https`. Default is http.                                                                                                | `""`                 |
-| `gitea.metrics.serviceMonitor.scrapeTimeout` | Timeout after which the scrape is ended. If not specified, global Prometheus scrape timeout is used.                                                                            | `""`                 |
-| `gitea.metrics.serviceMonitor.tlsConfig`     | TLS configuration to use when scraping the metric endpoint by Prometheus.                                                                                                       | `{}`                 |
-| `gitea.ldap`                                 | LDAP configuration                                                                                                                                                              | `[]`                 |
-| `gitea.oauth`                                | OAuth configuration                                                                                                                                                             | `[]`                 |
-| `gitea.config.server.SSH_PORT`               | SSH port for rootlful Gitea image                                                                                                                                               | `22`                 |
-| `gitea.config.server.SSH_LISTEN_PORT`        | SSH port for rootless Gitea image                                                                                                                                               | `2222`               |
-| `gitea.additionalConfigSources`              | Additional configuration from secret or configmap                                                                                                                               | `[]`                 |
-| `gitea.additionalConfigFromEnvs`             | Additional configuration sources from environment variables                                                                                                                     | `[]`                 |
-| `gitea.extraEnvSourceFile`                   | Source environment variables from a file during init container startup. This is especially useful for reading environment variable files generated by the Vault agent-injector. | `nil`                |
-| `gitea.podAnnotations`                       | Annotations for the Gitea pod                                                                                                                                                   | `{}`                 |
-| `gitea.ssh.logLevel`                         | Configure OpenSSH's log level. Only available for root-based Gitea image.                                                                                                       | `INFO`               |
+| Name                                         | Description                                                                                                                                                                     | Value   |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `gitea.metrics.enabled`                      | Enable Gitea metrics                                                                                                                                                            | `false` |
+| `gitea.metrics.token`                        | used for `bearer` token authentication on metrics endpoint. If not specified or empty metrics endpoint is public.                                                               | `nil`   |
+| `gitea.metrics.serviceMonitor.enabled`       | Enable Gitea metrics service monitor. Requires, that `gitea.metrics.enabled` is also set to true, to enable metrics generally.                                                  | `false` |
+| `gitea.metrics.serviceMonitor.interval`      | Interval at which metrics should be scraped. If not specified Prometheus' global scrape interval is used.                                                                       | `""`    |
+| `gitea.metrics.serviceMonitor.relabelings`   | RelabelConfigs to apply to samples before scraping.                                                                                                                             | `[]`    |
+| `gitea.metrics.serviceMonitor.scheme`        | HTTP scheme to use for scraping. For example `http` or `https`. Default is http.                                                                                                | `""`    |
+| `gitea.metrics.serviceMonitor.scrapeTimeout` | Timeout after which the scrape is ended. If not specified, global Prometheus scrape timeout is used.                                                                            | `""`    |
+| `gitea.metrics.serviceMonitor.tlsConfig`     | TLS configuration to use when scraping the metric endpoint by Prometheus.                                                                                                       | `{}`    |
+| `gitea.ldap`                                 | LDAP configuration                                                                                                                                                              | `[]`    |
+| `gitea.oauth`                                | OAuth configuration                                                                                                                                                             | `[]`    |
+| `gitea.config.server.SSH_PORT`               | SSH port for rootlful Gitea image                                                                                                                                               | `22`    |
+| `gitea.config.server.SSH_LISTEN_PORT`        | SSH port for rootless Gitea image                                                                                                                                               | `2222`  |
+| `gitea.additionalConfigSources`              | Additional configuration from secret or configmap                                                                                                                               | `[]`    |
+| `gitea.additionalConfigFromEnvs`             | Additional configuration sources from environment variables                                                                                                                     | `[]`    |
+| `gitea.extraEnvSourceFile`                   | Source environment variables from a file during init container startup. This is especially useful for reading environment variable files generated by the Vault agent-injector. | `nil`   |
+| `gitea.podAnnotations`                       | Annotations for the Gitea pod                                                                                                                                                   | `{}`    |
+| `gitea.ssh.logLevel`                         | Configure OpenSSH's log level. Only available for root-based Gitea image.                                                                                                       | `INFO`  |
 
 ### LivenessProbe
 
@@ -1367,7 +1384,27 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 
 - All Secrets created by this chart are now configured through the new `secrets` section.
   It exposes `annotations`, `labels`, a checksum-annotation toggle and an `existingSecret` reference for each of the
-  `config`, `gpg`, `init`, `inlineConfig` and `metrics` Secrets.
+  `admin`, `config`, `gpg`, `init`, `inlineConfig` and `metrics` Secrets.
+- The `gitea.admin` object has been replaced by `secrets.admin`.
+  The chart fails to render if `gitea.admin` is still set.
+  Migrate as follows:
+
+  | Old                            | New                                                                                  |
+  | ------------------------------ | ------------------------------------------------------------------------------------ |
+  | `gitea.admin.username`         | `secrets.admin.new.username`                                                         |
+  | `gitea.admin.password`         | `secrets.admin.new.password`                                                         |
+  | `gitea.admin.email`            | `secrets.admin.new.email`                                                            |
+  | `gitea.admin.passwordMode`     | `secrets.admin.passwordMode`                                                         |
+  | `gitea.admin.existingSecret`   | `secrets.admin.existingSecret.enabled` and `secrets.admin.existingSecret.secretName` |
+
+  The admin credentials are no longer rendered as plain environment variable values into the Deployment. They are stored
+  in a dedicated Secret and consumed via `secretKeyRef` instead. The email address is part of that Secret as well, so
+  Secrets referenced via `secrets.admin.existingSecret` now need an `email` key in addition to `username` and
+  `password`. All three key names are configurable via `secrets.admin.existingSecret.emailKey`,
+  `secrets.admin.existingSecret.passwordKey` and `secrets.admin.existingSecret.usernameKey`.
+
+  Admin user handling was previously skipped implicitly when neither an existing Secret nor a username and password were
+  set. It is now controlled explicitly via `secrets.admin.enabled`.
 - The top-level `signing` object has been replaced by `secrets.gpg`.
   The chart fails to render if `signing` is still set.
   Migrate as follows:

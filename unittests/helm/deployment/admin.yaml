@@ -1,0 +1,103 @@
+suite: deployment template (admin user)
+release:
+  name: gitea-unittests
+  namespace: testing
+templates:
+  - templates/gitea/deployment.yaml
+  - templates/gitea/secret_admin.yaml
+  - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_gpg.yaml
+  - templates/gitea/secret_init.yaml
+  - templates/gitea/secret_inlineConfig.yaml
+  - templates/gitea/secret_metrics.yaml
+tests:
+  - it: reads the admin credentials from the generated secret
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: gitea-unittests-admin
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: gitea-unittests-admin
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_EMAIL
+            valueFrom:
+              secretKeyRef:
+                key: email
+                name: gitea-unittests-admin
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_PASSWORD_MODE
+            value: keepUpdated
+
+  - it: reads the admin credentials from the configured keys of an existing secret
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.admin.existingSecret.enabled: true
+      secrets.admin.existingSecret.secretName: custom-admin-secret
+      secrets.admin.existingSecret.emailKey: custom-email
+      secrets.admin.existingSecret.passwordKey: custom-password
+      secrets.admin.existingSecret.usernameKey: custom-username
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: custom-username
+                name: custom-admin-secret
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: custom-password
+                name: custom-admin-secret
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_EMAIL
+            valueFrom:
+              secretKeyRef:
+                key: custom-email
+                name: custom-admin-secret
+
+  - it: omits the admin environment when the admin user is disabled
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.admin.enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_USERNAME
+          any: true
+      - notContains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: GITEA_ADMIN_PASSWORD_MODE
+          any: true
+
+  - it: fails on an unsupported password mode
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.admin.passwordMode: unsupported
+    asserts:
+      - failedTemplate:
+          errorMessage: "`secrets.admin.passwordMode` must be set to one of 'keepUpdated', 'initialOnlyNoReset', or 'initialOnlyRequireReset'. Received: 'unsupported'"
