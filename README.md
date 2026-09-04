@@ -1121,21 +1121,22 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### deployment
 
-| Name                                       | Description                                                      | Value  |
-| ------------------------------------------ | ---------------------------------------------------------------- | ------ |
-| `resources`                                | Kubernetes resources                                             | `{}`   |
-| `schedulerName`                            | Use an alternate scheduler, e.g. "stork"                         | `""`   |
-| `tolerations`                              | Tolerations for the deployment                                   | `[]`   |
-| `topologySpreadConstraints`                | TopologySpreadConstraints for the deployment                     | `[]`   |
-| `priorityClassName`                        | priorityClassName for the deployment                             | `""`   |
-| `deployment.enabled`                       | Enable the deployment of Gitea.                                  | `true` |
-| `deployment.annotations`                   | Annotations for the Gitea deployment to be created               | `{}`   |
-| `deployment.labels`                        | Labels for the deployment                                        | `{}`   |
-| `deployment.affinity`                      | Affinity for the deployment.                                     | `{}`   |
-| `deployment.dnsConfig`                     | dnsConfig of the Gitea deployment.                               | `{}`   |
-| `deployment.gitea.env`                     | Additional environment variables to pass to the Gitea container. | `[]`   |
-| `deployment.nodeSelector`                  | NodeSelector for the deployment                                  | `{}`   |
-| `deployment.terminationGracePeriodSeconds` | How long to wait until forcefully kill the pod                   | `60`   |
+| Name                                       | Description                                                                                      | Value  |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------ |
+| `schedulerName`                            | Use an alternate scheduler, e.g. "stork"                                                         | `""`   |
+| `tolerations`                              | Tolerations for the deployment                                                                   | `[]`   |
+| `topologySpreadConstraints`                | TopologySpreadConstraints for the deployment                                                     | `[]`   |
+| `deployment.enabled`                       | Enable the deployment of Gitea.                                                                  | `true` |
+| `deployment.annotations`                   | Annotations for the Gitea deployment to be created                                               | `{}`   |
+| `deployment.labels`                        | Labels for the deployment                                                                        | `{}`   |
+| `deployment.affinity`                      | Affinity for the deployment.                                                                     | `{}`   |
+| `deployment.dnsConfig`                     | dnsConfig of the Gitea deployment.                                                               | `{}`   |
+| `deployment.gitea.env`                     | Additional environment variables to pass to the Gitea container.                                 | `[]`   |
+| `deployment.gitea.resources`               | Compute Resources required by Gitea container. Cannot be updated.                                | `nil`  |
+| `deployment.nodeSelector`                  | NodeSelector for the deployment                                                                  | `{}`   |
+| `deployment.priorityClassName`             | priorityClassName for the deployment                                                             | `""`   |
+| `deployment.resources`                     | Resources is the total amount of CPU and Memory resources required by all containers in the pod. | `{}`   |
+| `deployment.terminationGracePeriodSeconds` | How long to wait until forcefully kill the pod                                                   | `60`   |
 
 ### Secret
 

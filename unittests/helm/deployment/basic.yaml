@@ -126,6 +126,19 @@ tests:
             options:
               - name: ndots
                 value: "2"
+  - it: priorityClassName is undefined
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.priorityClassName
+  - it: priorityClassName is defined
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.priorityClassName: high-priority
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: high-priority
 
   - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
     template: templates/gitea/deployment.yaml
@@ -173,7 +186,7 @@ tests:
   - it: CPU resources are defined as well as GOMAXPROCS
     template: templates/gitea/deployment.yaml
     set:
-      resources:
+      deployment.gitea.resources:
         limits:
           cpu: 200ms
           memory: 200Mi
@@ -198,6 +211,45 @@ tests:
             requests:
               cpu: 100ms
               memory: 100Mi
+  - it: container resources default to an empty map and GOMAXPROCS is omitted
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources
+          value: {}
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                divisor: "1"
+                resource: limits.cpu
+  - it: pod level resources are undefined
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.resources
+  - it: pod level resources are defined
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
   - it: Init containers have correct volumeMount path
     template: templates/gitea/deployment.yaml
     set:

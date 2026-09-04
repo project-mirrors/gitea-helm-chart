@@ -59,4 +59,14 @@
   {{- if .Values.nodeSelector -}}
     {{- fail "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead." -}}
   {{- end -}}
+
+  {{/* PRIORITY CLASS NAME */}}
+  {{- if .Values.priorityClassName -}}
+    {{- fail "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead." -}}
+  {{- end -}}
+
+  {{/* RESOURCES */}}
+  {{- if .Values.resources -}}
+    {{- fail "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead." -}}
+  {{- end -}}
 {{- end -}}

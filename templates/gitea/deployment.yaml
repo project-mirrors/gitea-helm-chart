@@ -72,8 +72,8 @@ spec:
       {{- if (or .Values.serviceAccount.create .Values.serviceAccount.name) }}
       serviceAccountName: {{ include "gitea.serviceAccountName" . }}
       {{- end }}
-      {{- if .Values.priorityClassName }}
-      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- if .Values.deployment.priorityClassName }}
+      priorityClassName: "{{ .Values.deployment.priorityClassName }}"
       {{- end }}
       {{- if $hostUsers }}
       hostUsers: {{ $hostUsers }}
@@ -354,12 +354,14 @@ spec:
               value: /data
             - name: GITEA_TEMP
               value: /tmp/gitea
-            {{- if and (hasKey .Values.resources "limits") (hasKey .Values.resources.limits "cpu") }}
+            {{- with .Values.deployment.gitea.resources }}
+            {{- if and (hasKey . "limits") (hasKey (.limits | default dict) "cpu") }}
             - name: GOMAXPROCS
               valueFrom:
                 resourceFieldRef:
                   divisor: "1"
                   resource: limits.cpu
+            {{- end }}
             {{- end }}
             - name: TMPDIR
               value: /tmp/gitea
@@ -402,7 +404,7 @@ spec:
             {{- include "gitea.deployment.probe" .Values.gitea.startupProbe | nindent 12 }}
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml (.Values.deployment.gitea.resources | default dict) | nindent 12 }}
           {{- if $runtimeContainerSecurityContext }}
           securityContext:
             {{- $runtimeContainerSecurityContext | nindent 12 }}
@@ -442,6 +444,10 @@ spec:
     {{- if .Values.deployment.dnsConfig }}
       dnsConfig:
         {{- toYaml .Values.deployment.dnsConfig | nindent 8 }}
+    {{- end }}
+    {{- with .Values.deployment.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
         - name: init

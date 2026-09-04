@@ -46,6 +46,20 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead."
+  - it: fails when the removed `priorityClassName` value is set
+    set:
+      priorityClassName: high-priority
+    asserts:
+      - failedTemplate:
+          errorMessage: "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead."
+  - it: fails when the removed `resources` value is set
+    set:
+      resources:
+        limits:
+          cpu: 100m
+    asserts:
+      - failedTemplate:
+          errorMessage: "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead."
   - it: skips the deprecation checks when `checkDeprecation` is disabled
     set:
       checkDeprecation: false
@@ -59,6 +73,10 @@ tests:
           - 192.0.2.1
       nodeSelector:
         foo: bar
+      priorityClassName: high-priority
+      resources:
+        limits:
+          cpu: 100m
     asserts:
       - hasDocuments:
           count: 0
