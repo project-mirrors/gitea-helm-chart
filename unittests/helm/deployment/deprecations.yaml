@@ -1,0 +1,44 @@
+suite: deprecation template (deployment)
+release:
+  name: gitea-unittests
+  namespace: testing
+templates:
+  - templates/gitea/deprecation.yaml
+tests:
+  - it: renders nothing with the default values
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: fails when the removed `affinity` value is set
+    set:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
+    asserts:
+      - failedTemplate:
+          errorMessage: "`affinity` does no longer exist. Please refer to the changelog and configure `deployment.affinity` instead."
+  - it: fails when the removed `deployment.env` value is set
+    set:
+      deployment.env:
+        - name: VARIABLE
+          value: my-value
+    asserts:
+      - failedTemplate:
+          errorMessage: "`deployment.env` does no longer exist. Please refer to the changelog and configure `deployment.gitea.env` instead."
+  - it: skips the deprecation checks when `checkDeprecation` is disabled
+    set:
+      checkDeprecation: false
+      affinity:
+        nodeAffinity: {}
+      deployment.env:
+        - name: VARIABLE
+          value: my-value
+    asserts:
+      - hasDocuments:
+          count: 0

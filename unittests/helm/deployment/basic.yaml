@@ -20,6 +20,13 @@ tests:
           kind: Deployment
           apiVersion: apps/v1
           name: gitea-unittests
+  - it: renders no deployment when disabled
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
   - it: deployment labels are set
     template: templates/gitea/deployment.yaml
     set:
@@ -113,6 +120,33 @@ tests:
           content:
             name: ENV_TO_INI_MOUNT_POINT
             value: /env-to-ini-mounts
+  - it: "deployment.gitea.env is injected into all init containers and the gitea container"
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.gitea.env:
+        - name: VARIABLE
+          value: my-value
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: VARIABLE
+            value: my-value
+      - contains:
+          path: spec.template.spec.initContainers[1].env
+          content:
+            name: VARIABLE
+            value: my-value
+      - contains:
+          path: spec.template.spec.initContainers[2].env
+          content:
+            name: VARIABLE
+            value: my-value
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: VARIABLE
+            value: my-value
   - it: CPU resources are defined as well as GOMAXPROCS
     template: templates/gitea/deployment.yaml
     set:

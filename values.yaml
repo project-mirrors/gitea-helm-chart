@@ -328,12 +328,17 @@ dnsConfig: {}
 ## @param priorityClassName priorityClassName for the deployment
 priorityClassName: ""
 
-## @param deployment.affinity Affinity for the deployment.
-## @param deployment.env Additional environment variables to pass to containers
-## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
-## @param deployment.labels Labels for the deployment
+## @param deployment.enabled Enable the deployment of Gitea.
 ## @param deployment.annotations Annotations for the Gitea deployment to be created
+## @param deployment.labels Labels for the deployment
+## @param deployment.affinity Affinity for the deployment.
+## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
+
 deployment:
+  enabled: true
+  annotations: {}
+  labels: {}
+
   affinity: {}
     # nodeAffinity:
     #   requiredDuringSchedulingIgnoredDuringExecution:
@@ -352,12 +357,15 @@ deployment:
     #         values:
     #         - amd64
 
-  env: []
-  # - name: VARIABLE
-  #   value: my-value
+
+  gitea:
+    ## @param deployment.gitea.env Additional environment variables to pass to the gitea container.
+    env: []
+    # - name: VARIABLE
+    #   value: my-value
+
   terminationGracePeriodSeconds: 60
-  labels: {}
-  annotations: {}
+
 
 ## @section Secret
 secrets:

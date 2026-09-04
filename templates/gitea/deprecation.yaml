@@ -44,4 +44,9 @@
   {{- if .Values.affinity -}}
     {{- fail "`affinity` does no longer exist. Please refer to the changelog and configure `deployment.affinity` instead." -}}
   {{- end -}}
+
+  {{/* DEPLOYMENT ENV */}}
+  {{- if .Values.deployment.env -}}
+    {{- fail "`deployment.env` does no longer exist. Please refer to the changelog and configure `deployment.gitea.env` instead." -}}
+  {{- end -}}
 {{- end -}}
