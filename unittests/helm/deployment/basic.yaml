@@ -57,6 +57,31 @@ tests:
           value:
             app.kubernetes.io/name: gitea
             app.kubernetes.io/instance: gitea-unittests
+  - it: deployment labels are always rendered
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - isSubset:
+          path: metadata.labels
+          content:
+            app: gitea
+            app.kubernetes.io/name: gitea
+            app.kubernetes.io/instance: gitea-unittests
+            app.kubernetes.io/managed-by: Helm
+  - it: deployment annotations are undefined
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: metadata.annotations
+  - it: deployment annotations are set
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.annotations:
+        hello: world
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            hello: world
   - it: nodeSelector is undefined
     asserts:
       - notExists:

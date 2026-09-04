@@ -2,17 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with (include "gitea.deployment.annotations" . | fromYaml) }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with (include "gitea.deployment.labels" . | fromYaml) }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: {{ include "gitea.fullname" . }}
   namespace: {{ .Values.namespace | default .Release.Namespace }}
-  annotations:
-    {{- if .Values.deployment.annotations }}
-    {{- toYaml .Values.deployment.annotations | nindent 4 }}
-    {{- end }}
-  labels:
-    {{- include "gitea.labels" . | nindent 4 }}
-    {{- if .Values.deployment.labels }}
-    {{- toYaml .Values.deployment.labels | nindent 4 }}
-    {{- end }}
 spec:
   replicas: {{ .Values.deployment.replicas }}
   strategy:
