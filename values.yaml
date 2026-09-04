@@ -322,9 +322,6 @@ tolerations: []
 ## @param topologySpreadConstraints TopologySpreadConstraints for the deployment
 topologySpreadConstraints: []
 
-## @param dnsConfig dnsConfig for the deployment
-dnsConfig: {}
-
 ## @param priorityClassName priorityClassName for the deployment
 priorityClassName: ""
 
@@ -357,6 +354,17 @@ deployment:
     #         values:
     #         - amd64
 
+  ## @param deployment.dnsConfig dnsConfig of the Gitea deployment.
+  dnsConfig: {}
+    # nameservers:
+    # - 192.0.2.1 # this is an example
+    # searches:
+    # - ns1.svc.cluster-domain.example
+    # - my.dns.search.suffix
+    # options:
+    # - name: ndots
+    #   value: "2"
+    # - name: edns0
 
   gitea:
     ## @param deployment.gitea.env Additional environment variables to pass to the gitea container.

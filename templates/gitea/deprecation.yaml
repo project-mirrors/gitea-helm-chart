@@ -49,4 +49,9 @@
   {{- if .Values.deployment.env -}}
     {{- fail "`deployment.env` does no longer exist. Please refer to the changelog and configure `deployment.gitea.env` instead." -}}
   {{- end -}}
+
+  {{/* DNS CONFIG */}}
+  {{- if .Values.dnsConfig -}}
+    {{- fail "`dnsConfig` does no longer exist. Please refer to the changelog and configure `deployment.dnsConfig` instead." -}}
+  {{- end -}}
 {{- end -}}

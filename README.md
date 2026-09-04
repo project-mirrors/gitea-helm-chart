@@ -1128,13 +1128,13 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `nodeSelector`                             | NodeSelector for the deployment                                  | `{}`   |
 | `tolerations`                              | Tolerations for the deployment                                   | `[]`   |
 | `topologySpreadConstraints`                | TopologySpreadConstraints for the deployment                     | `[]`   |
-| `dnsConfig`                                | dnsConfig for the deployment                                     | `{}`   |
 | `priorityClassName`                        | priorityClassName for the deployment                             | `""`   |
 | `deployment.enabled`                       | Enable the deployment of Gitea.                                  | `true` |
 | `deployment.annotations`                   | Annotations for the Gitea deployment to be created               | `{}`   |
 | `deployment.labels`                        | Labels for the deployment                                        | `{}`   |
 | `deployment.affinity`                      | Affinity for the deployment.                                     | `{}`   |
 | `deployment.terminationGracePeriodSeconds` | How long to wait until forcefully kill the pod                   | `60`   |
+| `deployment.dnsConfig`                     | dnsConfig of the Gitea deployment.                               | `{}`   |
 | `deployment.gitea.env`                     | Additional environment variables to pass to the Gitea container. | `[]`   |
 
 ### Secret

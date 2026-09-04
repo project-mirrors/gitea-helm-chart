@@ -439,9 +439,9 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if .Values.dnsConfig }}
+    {{- if .Values.deployment.dnsConfig }}
       dnsConfig:
-        {{- toYaml .Values.dnsConfig | nindent 8 }}
+        {{- toYaml .Values.deployment.dnsConfig | nindent 8 }}
     {{- end }}
       volumes:
         - name: init

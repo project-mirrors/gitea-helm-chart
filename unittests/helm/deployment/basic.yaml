@@ -103,6 +103,29 @@ tests:
                         operator: In
                         values:
                           - linux
+  - it: dnsConfig is undefined
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.dnsConfig
+  - it: dnsConfig is defined
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.dnsConfig:
+        nameservers:
+          - 192.0.2.1
+        options:
+          - name: ndots
+            value: "2"
+    asserts:
+      - equal:
+          path: spec.template.spec.dnsConfig
+          value:
+            nameservers:
+              - 192.0.2.1
+            options:
+              - name: ndots
+                value: "2"
 
   - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
     template: templates/gitea/deployment.yaml

@@ -31,6 +31,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`deployment.env` does no longer exist. Please refer to the changelog and configure `deployment.gitea.env` instead."
+  - it: fails when the removed `dnsConfig` value is set
+    set:
+      dnsConfig:
+        nameservers:
+          - 192.0.2.1
+    asserts:
+      - failedTemplate:
+          errorMessage: "`dnsConfig` does no longer exist. Please refer to the changelog and configure `deployment.dnsConfig` instead."
   - it: skips the deprecation checks when `checkDeprecation` is disabled
     set:
       checkDeprecation: false
@@ -39,6 +47,9 @@ tests:
       deployment.env:
         - name: VARIABLE
           value: my-value
+      dnsConfig:
+        nameservers:
+          - 192.0.2.1
     asserts:
       - hasDocuments:
           count: 0
