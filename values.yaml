@@ -20,278 +20,6 @@ global:
   #   hostnames:
   #   - example.com
 
-## @param namespace An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified
-namespace: ""
-
-## @param replicaCount number of replicas for the deployment
-replicaCount: 1
-
-## @section strategy
-## @param strategy.type strategy type
-## @param strategy.rollingUpdate.maxSurge maxSurge
-## @param strategy.rollingUpdate.maxUnavailable maxUnavailable
-strategy:
-  type: "RollingUpdate"
-  rollingUpdate:
-    maxSurge: "100%"
-    maxUnavailable: 0
-
-## @param clusterDomain cluster domain
-clusterDomain: cluster.local
-
-## @section Image
-## @param image.registry image registry, e.g. gcr.io,docker.io
-## @param image.repository Image to start for this pod
-## @param image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-## @param image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
-## @param image.pullPolicy Image pull policy
-## @param image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
-## @param image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
-image:
-  registry: "docker.gitea.com"
-  repository: gitea
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-  digest: ""
-  pullPolicy: IfNotPresent
-  rootless: true
-  fullOverride: ""
-
-## @param imagePullSecrets Secret to use for pulling the image
-imagePullSecrets: []
-
-## @section Security
-# Security context is only usable with rootless image due to image design
-## @param openshift.enabled Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API.
-## @param openshift.hostUsers Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.
-openshift:
-  enabled: null
-  hostUsers: null
-
-## @param podSecurityContext Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.
-podSecurityContext: {}
-
-## @param containerSecurityContext Security context
-containerSecurityContext: {}
-#   allowPrivilegeEscalation: false
-#   capabilities:
-#     drop:
-#       - ALL
-#   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-#   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-#   # get an error message from the SSH server that it is not possible to read from
-#   # the repository.
-#   # https://gitea.com/gitea/helm-gitea/issues/161
-#     add:
-#       - SYS_CHROOT
-#   privileged: false
-#   readOnlyRootFilesystem: true
-#   runAsGroup: 1000
-#   runAsNonRoot: true
-#   runAsUser: 1000
-
-## @deprecated The securityContext variable has been split two:
-## - containerSecurityContext
-## - podSecurityContext.
-## @param securityContext Run init and Gitea containers as a specific securityContext
-securityContext: {}
-
-## @param podDisruptionBudget Pod disruption budget
-podDisruptionBudget: {}
-#  maxUnavailable: 1
-#  minAvailable: 1
-
-## @section Service
-service:
-  ## @param service.http.type Kubernetes service type for web traffic
-  ## @param service.http.port Port number for web traffic
-  ## @param service.http.clusterIP ClusterIP setting for http autosetup for deployment is None
-  ## @param service.http.loadBalancerIP LoadBalancer IP setting
-  ## @param service.http.nodePort NodePort for http service
-  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
-  ## @param service.http.externalIPs External IPs for service
-  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy
-  ## @param service.http.ipFamilies HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
-  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer
-  ## @param service.http.annotations HTTP service annotations
-  ## @param service.http.labels HTTP service additional labels
-  ## @param service.http.loadBalancerClass Loadbalancer class
-  http:
-    type: ClusterIP
-    port: 3000
-    clusterIP: None
-    loadBalancerIP:
-    nodePort:
-    externalTrafficPolicy:
-    externalIPs:
-    ipFamilyPolicy:
-    ipFamilies:
-    loadBalancerSourceRanges: []
-    annotations: {}
-    labels: {}
-    loadBalancerClass:
-  ## @param service.ssh.type Kubernetes service type for ssh traffic
-  ## @param service.ssh.port Port number for ssh traffic
-  ## @param service.ssh.clusterIP ClusterIP setting for ssh autosetup for deployment is None
-  ## @param service.ssh.loadBalancerIP LoadBalancer IP setting
-  ## @param service.ssh.nodePort NodePort for ssh service
-  ## @param service.ssh.externalTrafficPolicy If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
-  ## @param service.ssh.externalIPs External IPs for service
-  ## @param service.ssh.ipFamilyPolicy SSH service dual-stack policy
-  ## @param service.ssh.ipFamilies SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
-  ## @param service.ssh.hostPort HostPort for ssh service
-  ## @param service.ssh.loadBalancerSourceRanges Source range filter for ssh loadbalancer
-  ## @param service.ssh.annotations SSH service annotations
-  ## @param service.ssh.labels SSH service additional labels
-  ## @param service.ssh.loadBalancerClass Loadbalancer class
-  ssh:
-    type: ClusterIP
-    port: 22
-    clusterIP: None
-    loadBalancerIP:
-    nodePort:
-    externalTrafficPolicy:
-    externalIPs:
-    ipFamilyPolicy:
-    ipFamilies:
-    hostPort:
-    loadBalancerSourceRanges: []
-    annotations: {}
-    labels: {}
-    loadBalancerClass:
-
-## @section Ingress
-## @param ingress.enabled Enable ingress
-## @param ingress.className DEPRECATED: Ingress class name.
-## @param ingress.pathType Ingress Path Type
-## @param ingress.annotations Ingress annotations
-## @param ingress.hosts[0].host Default Ingress host
-## @param ingress.hosts[0].paths[0].path Default Ingress path
-## @param ingress.tls Ingress tls settings
-ingress:
-  enabled: false
-  className: ""
-  pathType: Prefix
-  annotations: {}
-  hosts:
-    - host: git.example.com
-      paths:
-        - path: /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - git.example.com
-
-## @section Route
-## @param route.enabled Enable OpenShift Route
-## @param route.annotations Route annotations
-## @param route.host Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values.
-## @param route.path Route path
-## @param route.wildcardPolicy Route wildcard policy
-## @param route.tls.termination Route TLS termination type
-## @param route.tls.insecureEdgeTerminationPolicy Route insecure edge termination policy
-## @param route.tls.key Route TLS key
-## @param route.tls.certificate Route TLS certificate
-## @param route.tls.caCertificate Route TLS CA certificate
-## @param route.tls.destinationCACertificate Route destination CA certificate
-route:
-  enabled: false
-  annotations: {}
-  host: ""
-  path: ""
-  wildcardPolicy: None
-  tls:
-    termination:
-    insecureEdgeTerminationPolicy:
-    key:
-    certificate:
-    caCertificate:
-    destinationCACertificate:
-
-## @section Gateway API
-## See docs/gateway-api.md for full guidance.
-gatewayAPI:
-  ## @param gatewayAPI.enabled Enable deployment of Gateway API resources
-  enabled: false
-
-  core:
-    ## @param gatewayAPI.core.backendTLSPolicy.enabled Render a BackendTLSPolicy resource for encrypted backend traffic
-    ## @param gatewayAPI.core.backendTLSPolicy.annotations Annotations applied to the BackendTLSPolicy
-    ## @param gatewayAPI.core.backendTLSPolicy.labels Additional labels applied to the BackendTLSPolicy
-    ## @param gatewayAPI.core.backendTLSPolicy.targetRefs Target references for the BackendTLSPolicy. Defaults to the HTTP service.
-    ## @param gatewayAPI.core.backendTLSPolicy.validation Validation configuration (required when enabled). See `docs/gateway-api.md`.
-    ## @extra gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.
-    ## @extra gatewayAPI.core.backendTLSPolicy.validation.hostname Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`.
-    backendTLSPolicy:
-      enabled: false
-      annotations: {}
-      labels: {}
-      targetRefs: []
-      validation: {}
-      #  caCertificateRefs:
-      #    - name: gitea-ca
-      #      group: ""
-      #      kind: ConfigMap
-      #  hostname: gitea-http
-
-    ## @param gatewayAPI.core.httpRoute.enabled Render an HTTPRoute resource
-    ## @param gatewayAPI.core.httpRoute.annotations Annotations applied to the HTTPRoute
-    ## @param gatewayAPI.core.httpRoute.labels Additional labels applied to the HTTPRoute
-    ## @param gatewayAPI.core.httpRoute.tls When true, treat the upstream Gateway as terminating TLS so `ROOT_URL` uses `https`.
-    ## @param gatewayAPI.core.httpRoute.parentRefs Parent gateway references (required when enabled).
-    ## @param gatewayAPI.core.httpRoute.hostnames List of hostnames for the HTTPRoute.
-    ## @param gatewayAPI.core.httpRoute.rules Custom routing rules. Defaults to a PathPrefix `/` rule targeting the HTTP service.
-    httpRoute:
-      enabled: false
-      annotations: {}
-      labels: {}
-      tls: false
-      parentRefs: []
-      # - group: gateway.networking.k8s.io
-      #   kind: Gateway
-      #   name: shared-gateway
-      #   namespace: gateway-system
-      #   sectionName: http
-      hostnames: []
-      # - git.example.com
-      rules: []
-
-
-    ## @param gatewayAPI.core.tcpRoute.enabled Render a TCPRoute resource (typically for SSH)
-    ## @param gatewayAPI.core.tcpRoute.annotations Annotations applied to the TCPRoute
-    ## @param gatewayAPI.core.tcpRoute.labels Additional labels applied to the TCPRoute
-    ## @param gatewayAPI.core.tcpRoute.parentRefs Parent gateway references (required when enabled).
-    ## @param gatewayAPI.core.tcpRoute.rules Custom routing rules. Defaults to a rule targeting the SSH service.
-    tcpRoute:
-      enabled: false
-      annotations: {}
-      labels: {}
-      parentRefs: []
-      # - group: gateway.networking.k8s.io
-      #   kind: Gateway
-      #   name: shared-gateway
-      #   namespace: gateway-system
-      #   sectionName: ssh
-      rules: []
-
-
-  ## NGINX Gateway Fabric specific resources. Only relevant when the upstream
-  ## Gateway is backed by NGINX Gateway Fabric (nginx.org). Other implementations
-  ## (Envoy Gateway, Cilium, ...) do not impose a default request body size limit.
-  nginx:
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.enabled Render a ClientSettingsPolicy (NGINX Gateway Fabric) to raise the client request body limit
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.annotations Annotations applied to the ClientSettingsPolicy
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.labels Additional labels applied to the ClientSettingsPolicy
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.targetRef Target reference for the ClientSettingsPolicy. Defaults to the chart's HTTPRoute.
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.body Client body settings (required when enabled), e.g. `maxSize`. See `docs/gateway-api.md`.
-    clientSettingsPolicies:
-      enabled: false
-      annotations: {}
-      labels: {}
-      targetRef: {}
-      body: {}
-      #   maxSize: 100m
-
 
 ## @section deployment
 deployment:
@@ -394,9 +122,227 @@ deployment:
   #   whenUnsatisfiable: DoNotSchedule
   #   labelSelector:
   #     matchLabels:
-  #       app.kubernetes.io/instance: athens-proxy
+  #       app.kubernetes.io/instance: gitea
 
-## @section Secret
+
+## @section Gateway API
+## See docs/gateway-api.md for full guidance.
+gatewayAPI:
+  ## @param gatewayAPI.enabled Enable deployment of Gateway API resources
+  enabled: false
+
+  core:
+    ## @param gatewayAPI.core.backendTLSPolicy.enabled Render a BackendTLSPolicy resource for encrypted backend traffic
+    ## @param gatewayAPI.core.backendTLSPolicy.annotations Annotations applied to the BackendTLSPolicy
+    ## @param gatewayAPI.core.backendTLSPolicy.labels Additional labels applied to the BackendTLSPolicy
+    ## @param gatewayAPI.core.backendTLSPolicy.targetRefs Target references for the BackendTLSPolicy. Defaults to the HTTP service.
+    ## @param gatewayAPI.core.backendTLSPolicy.validation Validation configuration (required when enabled). See `docs/gateway-api.md`.
+    ## @extra gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.
+    ## @extra gatewayAPI.core.backendTLSPolicy.validation.hostname Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`.
+    backendTLSPolicy:
+      enabled: false
+      annotations: {}
+      labels: {}
+      targetRefs: []
+      validation: {}
+      #  caCertificateRefs:
+      #    - name: gitea-ca
+      #      group: ""
+      #      kind: ConfigMap
+      #  hostname: gitea-http
+
+    ## @param gatewayAPI.core.httpRoute.enabled Render an HTTPRoute resource
+    ## @param gatewayAPI.core.httpRoute.annotations Annotations applied to the HTTPRoute
+    ## @param gatewayAPI.core.httpRoute.labels Additional labels applied to the HTTPRoute
+    ## @param gatewayAPI.core.httpRoute.tls When true, treat the upstream Gateway as terminating TLS so `ROOT_URL` uses `https`.
+    ## @param gatewayAPI.core.httpRoute.parentRefs Parent gateway references (required when enabled).
+    ## @param gatewayAPI.core.httpRoute.hostnames List of hostnames for the HTTPRoute.
+    ## @param gatewayAPI.core.httpRoute.rules Custom routing rules. Defaults to a PathPrefix `/` rule targeting the HTTP service.
+    httpRoute:
+      enabled: false
+      annotations: {}
+      labels: {}
+      tls: false
+      parentRefs: []
+      # - group: gateway.networking.k8s.io
+      #   kind: Gateway
+      #   name: shared-gateway
+      #   namespace: gateway-system
+      #   sectionName: http
+      hostnames: []
+      # - git.example.com
+      rules: []
+
+
+    ## @param gatewayAPI.core.tcpRoute.enabled Render a TCPRoute resource (typically for SSH)
+    ## @param gatewayAPI.core.tcpRoute.annotations Annotations applied to the TCPRoute
+    ## @param gatewayAPI.core.tcpRoute.labels Additional labels applied to the TCPRoute
+    ## @param gatewayAPI.core.tcpRoute.parentRefs Parent gateway references (required when enabled).
+    ## @param gatewayAPI.core.tcpRoute.rules Custom routing rules. Defaults to a rule targeting the SSH service.
+    tcpRoute:
+      enabled: false
+      annotations: {}
+      labels: {}
+      parentRefs: []
+      # - group: gateway.networking.k8s.io
+      #   kind: Gateway
+      #   name: shared-gateway
+      #   namespace: gateway-system
+      #   sectionName: ssh
+      rules: []
+
+
+  ## NGINX Gateway Fabric specific resources. Only relevant when the upstream
+  ## Gateway is backed by NGINX Gateway Fabric (nginx.org). Other implementations
+  ## (Envoy Gateway, Cilium, ...) do not impose a default request body size limit.
+  nginx:
+    ## @param gatewayAPI.nginx.clientSettingsPolicies.enabled Render a ClientSettingsPolicy (NGINX Gateway Fabric) to raise the client request body limit
+    ## @param gatewayAPI.nginx.clientSettingsPolicies.annotations Annotations applied to the ClientSettingsPolicy
+    ## @param gatewayAPI.nginx.clientSettingsPolicies.labels Additional labels applied to the ClientSettingsPolicy
+    ## @param gatewayAPI.nginx.clientSettingsPolicies.targetRef Target reference for the ClientSettingsPolicy. Defaults to the chart's HTTPRoute.
+    ## @param gatewayAPI.nginx.clientSettingsPolicies.body Client body settings (required when enabled), e.g. `maxSize`. See `docs/gateway-api.md`.
+    clientSettingsPolicies:
+      enabled: false
+      annotations: {}
+      labels: {}
+      targetRef: {}
+      body: {}
+      #   maxSize: 100m
+
+
+## @section Ingress
+## @param ingress.enabled Enable ingress
+## @param ingress.className DEPRECATED: Ingress class name.
+## @param ingress.pathType Ingress Path Type
+## @param ingress.annotations Ingress annotations
+## @param ingress.hosts[0].host Default Ingress host
+## @param ingress.hosts[0].paths[0].path Default Ingress path
+## @param ingress.tls Ingress tls settings
+ingress:
+  enabled: false
+  className: ""
+  pathType: Prefix
+  annotations: {}
+  hosts:
+    - host: git.example.com
+      paths:
+        - path: /
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - git.example.com
+
+
+## @param namespace An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified
+namespace: ""
+
+## @param replicaCount number of replicas for the deployment
+replicaCount: 1
+
+## @section strategy
+## @param strategy.type strategy type
+## @param strategy.rollingUpdate.maxSurge maxSurge
+## @param strategy.rollingUpdate.maxUnavailable maxUnavailable
+strategy:
+  type: "RollingUpdate"
+  rollingUpdate:
+    maxSurge: "100%"
+    maxUnavailable: 0
+
+## @param clusterDomain cluster domain
+clusterDomain: cluster.local
+
+## @section Image
+## @param image.registry image registry, e.g. gcr.io,docker.io
+## @param image.repository Image to start for this pod
+## @param image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+## @param image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+## @param image.pullPolicy Image pull policy
+## @param image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+## @param image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+image:
+  registry: "docker.gitea.com"
+  repository: gitea
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  digest: ""
+  pullPolicy: IfNotPresent
+  rootless: true
+  fullOverride: ""
+
+## @param imagePullSecrets Secret to use for pulling the image
+imagePullSecrets: []
+
+## @section Security
+# Security context is only usable with rootless image due to image design
+## @param openshift.enabled Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API.
+## @param openshift.hostUsers Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.
+openshift:
+  enabled: null
+  hostUsers: null
+
+## @param podSecurityContext Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.
+podSecurityContext: {}
+
+## @param containerSecurityContext Security context
+containerSecurityContext: {}
+#   allowPrivilegeEscalation: false
+#   capabilities:
+#     drop:
+#       - ALL
+#   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+#   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+#   # get an error message from the SSH server that it is not possible to read from
+#   # the repository.
+#   # https://gitea.com/gitea/helm-gitea/issues/161
+#     add:
+#       - SYS_CHROOT
+#   privileged: false
+#   readOnlyRootFilesystem: true
+#   runAsGroup: 1000
+#   runAsNonRoot: true
+#   runAsUser: 1000
+
+## @deprecated The securityContext variable has been split two:
+## - containerSecurityContext
+## - podSecurityContext.
+## @param securityContext Run init and Gitea containers as a specific securityContext
+securityContext: {}
+
+## @param podDisruptionBudget Pod disruption budget
+podDisruptionBudget: {}
+#  maxUnavailable: 1
+#  minAvailable: 1
+
+
+## @section Route
+## @param route.enabled Enable OpenShift Route
+## @param route.annotations Route annotations
+## @param route.host Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values.
+## @param route.path Route path
+## @param route.wildcardPolicy Route wildcard policy
+## @param route.tls.termination Route TLS termination type
+## @param route.tls.insecureEdgeTerminationPolicy Route insecure edge termination policy
+## @param route.tls.key Route TLS key
+## @param route.tls.certificate Route TLS certificate
+## @param route.tls.caCertificate Route TLS CA certificate
+## @param route.tls.destinationCACertificate Route destination CA certificate
+route:
+  enabled: false
+  annotations: {}
+  host: ""
+  path: ""
+  wildcardPolicy: None
+  tls:
+    termination:
+    insecureEdgeTerminationPolicy:
+    key:
+    certificate:
+    caCertificate:
+    destinationCACertificate:
+
+
+## @section Secrets
 secrets:
   admin:
     ## @param secrets.admin.enabled Create and keep the Gitea admin user in sync
@@ -527,8 +473,69 @@ secrets:
       annotations: {}
       labels: {}
 
-## @section ServiceAccount
 
+## @section Service
+service:
+  ## @param service.http.type Kubernetes service type for web traffic
+  ## @param service.http.port Port number for web traffic
+  ## @param service.http.clusterIP ClusterIP setting for http autosetup for deployment is None
+  ## @param service.http.loadBalancerIP LoadBalancer IP setting
+  ## @param service.http.nodePort NodePort for http service
+  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.http.externalIPs External IPs for service
+  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy
+  ## @param service.http.ipFamilies HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer
+  ## @param service.http.annotations HTTP service annotations
+  ## @param service.http.labels HTTP service additional labels
+  ## @param service.http.loadBalancerClass Loadbalancer class
+  http:
+    type: ClusterIP
+    port: 3000
+    clusterIP: None
+    loadBalancerIP:
+    nodePort:
+    externalTrafficPolicy:
+    externalIPs:
+    ipFamilyPolicy:
+    ipFamilies:
+    loadBalancerSourceRanges: []
+    annotations: {}
+    labels: {}
+    loadBalancerClass:
+
+  ## @param service.ssh.type Kubernetes service type for ssh traffic
+  ## @param service.ssh.port Port number for ssh traffic
+  ## @param service.ssh.clusterIP ClusterIP setting for ssh autosetup for deployment is None
+  ## @param service.ssh.loadBalancerIP LoadBalancer IP setting
+  ## @param service.ssh.nodePort NodePort for ssh service
+  ## @param service.ssh.externalTrafficPolicy If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.ssh.externalIPs External IPs for service
+  ## @param service.ssh.ipFamilyPolicy SSH service dual-stack policy
+  ## @param service.ssh.ipFamilies SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.ssh.hostPort HostPort for ssh service
+  ## @param service.ssh.loadBalancerSourceRanges Source range filter for ssh loadbalancer
+  ## @param service.ssh.annotations SSH service annotations
+  ## @param service.ssh.labels SSH service additional labels
+  ## @param service.ssh.loadBalancerClass Loadbalancer class
+  ssh:
+    type: ClusterIP
+    port: 22
+    clusterIP: None
+    loadBalancerIP:
+    nodePort:
+    externalTrafficPolicy:
+    externalIPs:
+    ipFamilyPolicy:
+    ipFamilies:
+    hostPort:
+    loadBalancerSourceRanges: []
+    annotations: {}
+    labels: {}
+    loadBalancerClass:
+
+
+## @section ServiceAccount
 ## @param serviceAccount.create Enable the creation of a ServiceAccount
 ## @param serviceAccount.name Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used.
 ## @param serviceAccount.automountServiceAccountToken Enable/disable auto mounting of the service account token
@@ -545,7 +552,6 @@ serviceAccount:
   labels: {}
 
 ## @section Persistence
-#
 ## @param persistence.enabled Enable persistent storage
 ## @param persistence.create Whether to create the persistentVolumeClaim for shared storage
 ## @param persistence.mount Whether the persistentVolumeClaim should be mounted (even if not created)
