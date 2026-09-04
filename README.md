@@ -1127,10 +1127,10 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `schedulerName`                            | Use an alternate scheduler, e.g. "stork"               | `""`  |
 | `nodeSelector`                             | NodeSelector for the deployment                        | `{}`  |
 | `tolerations`                              | Tolerations for the deployment                         | `[]`  |
-| `affinity`                                 | Affinity for the deployment                            | `{}`  |
 | `topologySpreadConstraints`                | TopologySpreadConstraints for the deployment           | `[]`  |
 | `dnsConfig`                                | dnsConfig for the deployment                           | `{}`  |
 | `priorityClassName`                        | priorityClassName for the deployment                   | `""`  |
+| `deployment.affinity`                      | Affinity for the deployment.                           | `{}`  |
 | `deployment.env`                           | Additional environment variables to pass to containers | `[]`  |
 | `deployment.terminationGracePeriodSeconds` | How long to wait until forcefully kill the pod         | `60`  |
 | `deployment.labels`                        | Labels for the deployment                              | `{}`  |
@@ -1151,7 +1151,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `secrets.admin.new.annotations`                  | Annotations for the admin Secret                                                                                              | `{}`                 |
 | `secrets.admin.new.labels`                       | Labels for the admin Secret                                                                                                   | `{}`                 |
 | `secrets.admin.new.email`                        | Email of the Gitea admin user                                                                                                 | `gitea@local.domain` |
-| `secrets.admin.new.password`                     | Password of the Gitea admin user                                                                                              | `r8sA8CPHD9!bt6d`    |
+| `secrets.admin.new.password`                     | Password of the Gitea admin user.                                                                                             | `r8sA8CPHD9!bt6d`    |
 | `secrets.admin.new.username`                     | Username of the Gitea admin user                                                                                              | `gitea_admin`        |
 | `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change                                     | `true`               |
 | `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                                          | `false`              |
