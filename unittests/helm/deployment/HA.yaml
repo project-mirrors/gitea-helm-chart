@@ -14,7 +14,8 @@ tests:
   - it: fails with multiple replicas and "GIT_GC_REPOS" enabled
     template: templates/gitea/secret_config.yaml
     set:
-      replicaCount: 2
+      deployment:
+        replicas: 2
       persistence:
         accessModes:
           - ReadWriteMany
@@ -29,14 +30,16 @@ tests:
   - it: fails with multiple replicas and RWX file system not set
     template: templates/gitea/secret_config.yaml
     set:
-      replicaCount: 2
+      deployment:
+        replicas: 2
     asserts:
       - failedTemplate:
           errorMessage: "When using multiple replicas, a RWX file system is required and persistence.accessModes[0] must be set to ReadWriteMany."
   - it: fails with multiple replicas and bleve issue indexer
     template: templates/gitea/secret_config.yaml
     set:
-      replicaCount: 2
+      deployment:
+        replicas: 2
       persistence:
         accessModes:
           - ReadWriteMany
@@ -50,7 +53,8 @@ tests:
   - it: fails with multiple replicas and bleve repo indexer
     template: templates/gitea/secret_config.yaml
     set:
-      replicaCount: 2
+      deployment:
+        replicas: 2
       persistence:
         accessModes:
           - ReadWriteMany

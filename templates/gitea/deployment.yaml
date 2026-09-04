@@ -14,7 +14,7 @@ metadata:
     {{- toYaml .Values.deployment.labels | nindent 4 }}
     {{- end }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.deployment.replicas }}
   strategy:
     type: {{ .Values.deployment.strategy.type }}
     {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}

@@ -1007,6 +1007,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                 | `nil`           |
 | `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                   | `{}`            |
 | `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                              | `""`            |
+| `deployment.replicas`                              | Number of replicas for the Gitea deployment.                                                                      | `1`             |
 | `deployment.resources`                             | Resources is the total amount of CPU and Memory resources required by all containers in the pod.                  | `{}`            |
 | `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork"                                                                          | `""`            |
 | `deployment.strategy.type`                         | Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.                               | `RollingUpdate` |
@@ -1058,7 +1059,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `ingress.hosts[0].paths[0].path` | Default Ingress path                                                                           | `/`               |
 | `ingress.tls`                    | Ingress tls settings                                                                           | `[]`              |
 | `namespace`                      | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified | `""`              |
-| `replicaCount`                   | number of replicas for the deployment                                                          | `1`               |
 
 ### Network
 

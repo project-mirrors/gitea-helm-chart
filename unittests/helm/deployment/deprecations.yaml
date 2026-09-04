@@ -60,6 +60,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead."
+  - it: fails when the removed `replicaCount` value is set
+    set:
+      replicaCount: 2
+    asserts:
+      - failedTemplate:
+          errorMessage: "`replicaCount` does no longer exist. Please refer to the changelog and configure `deployment.replicas` instead."
   - it: fails when the removed `schedulerName` value is set
     set:
       schedulerName: stork
@@ -104,6 +110,7 @@ tests:
       nodeSelector:
         foo: bar
       priorityClassName: high-priority
+      replicaCount: 2
       resources:
         limits:
           cpu: 100m

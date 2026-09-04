@@ -90,6 +90,9 @@ deployment:
   ## @param deployment.priorityClassName priorityClassName for the deployment
   priorityClassName: ""
 
+  ## @param deployment.replicas Number of replicas for the Gitea deployment.
+  replicas: 1
+
   ## @param deployment.resources Resources is the total amount of CPU and Memory resources required by all containers in the pod.
   ## @skip deployment.resources.limits Limits describes the maximum amount of compute resources allowed.
   ## @skip deployment.resources.requests Requests describes the minimum amount of compute resources required.
@@ -244,9 +247,6 @@ ingress:
 
 ## @param namespace An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified
 namespace: ""
-
-## @param replicaCount number of replicas for the deployment
-replicaCount: 1
 
 ## @section Network
 ## @param clusterDomain Domain of the Cluster. Domain is part of internally issued certificates.

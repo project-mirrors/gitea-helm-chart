@@ -14,7 +14,7 @@ They might cost a bit more than using a self-hosted k8s variant but are usually 
 Also they can be centrally managed and are not linked to the Gitea helm chart or namespace.
 Please consider using external services before you start with your Gitea HA setup, it will make your life (and the life of the Gitea maintainers) easier.
 
-This helm chart tries to help as much as possible to simplify and assert the provisioning of a HA-ready Gitea instance by implementing smart conditionals if `replicaCount` is set to a value > 1.
+This helm chart tries to help as much as possible to simplify and assert the provisioning of a HA-ready Gitea instance by implementing smart conditionals if `deployment.replicas` is set to a value > 1.
 Nevertheless, we cannot guarantee for every possible combination of Gitea settings to work together perfectly in a HA setup.
 As a general advice, we recommend to have a test environment aside on which to test possible changes/upgrades before applying these to a production installation.
 
@@ -175,4 +175,4 @@ gitea:
 - Currently Cron jobs are run on all replicas as no leader election is implemented.
   See [https://github.com/go-gitea/gitea/issues/13791](https://github.com/go-gitea/gitea/issues/13791) for a discussion and possible solution.
 
-- Running with multiple replicas slows down Gitea a bit, i.e. page loading time increases. 
+- Running with multiple replicas slows down Gitea a bit, i.e. page loading time increases.
