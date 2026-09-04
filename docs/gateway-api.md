@@ -122,7 +122,7 @@ verify the backend certificate before forwarding the request.
 
 Gitea serves HTTPS via three `[server]` app.ini options
 ([cheat sheet](https://docs.gitea.com/administration/config-cheat-sheet#server-server)). Mount the
-cert/key with `extraVolumes` + `extraContainerVolumeMounts` and point Gitea at them with absolute paths:
+cert/key with `deployment.volumes` + `deployment.gitea.volumeMounts` and point Gitea at them with absolute paths:
 
 ```yaml
 gitea:
@@ -132,14 +132,16 @@ gitea:
       CERT_FILE: /etc/gitea-tls/tls.crt
       KEY_FILE: /etc/gitea-tls/tls.key
 
-extraVolumes:
-  - name: gitea-tls
-    secret:
-      secretName: gitea-backend-tls   # cert-manager-issued Secret, etc.
-extraContainerVolumeMounts:
-  - name: gitea-tls
-    mountPath: /etc/gitea-tls
-    readOnly: true
+deployment:
+  gitea:
+    volumeMounts:
+      - name: gitea-tls
+        mountPath: /etc/gitea-tls
+        readOnly: true
+  volumes:
+    - name: gitea-tls
+      secret:
+        secretName: gitea-backend-tls   # cert-manager-issued Secret, etc.
 ```
 
 - Relative `CERT_FILE`/`KEY_FILE` values resolve against Gitea's `CustomPath` (`/data/gitea` in the

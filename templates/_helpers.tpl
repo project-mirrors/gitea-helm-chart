@@ -489,8 +489,8 @@ https
 
 {{- define "gitea.container-additional-mounts" -}}
   {{- /* Honor the deprecated extraVolumeMounts variable when defined */ -}}
-  {{- if gt (len .Values.extraContainerVolumeMounts) 0 -}}
-    {{- toYaml .Values.extraContainerVolumeMounts -}}
+  {{- if gt (len .Values.deployment.gitea.volumeMounts) 0 -}}
+    {{- toYaml .Values.deployment.gitea.volumeMounts -}}
   {{- else if gt (len .Values.extraVolumeMounts) 0 -}}
     {{- toYaml .Values.extraVolumeMounts -}}
   {{- end -}}

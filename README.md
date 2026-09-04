@@ -894,15 +894,16 @@ Custom themes can be added via k8s secrets and referencing them in `values.yaml`
 The [http provider](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) is useful here.
 
 ```yaml
-extraVolumes:
-  - name: gitea-themes
-    secret:
-      secretName: gitea-themes
-
-extraVolumeMounts:
-  - name: gitea-themes
-    readOnly: true
-    mountPath: "/data/gitea/public/assets/css"
+deployment:
+  gitea:
+    volumeMounts:
+      - name: gitea-themes
+        readOnly: true
+        mountPath: "/data/gitea/public/assets/css"
+  volumes:
+    - name: gitea-themes
+      secret:
+        secretName: gitea-themes
 ```
 
 The secret can be created via `terraform`:
@@ -1015,6 +1016,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.gitea.image.fullOverride`              | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
 | `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                                                                                 | `nil`              |
 | `deployment.gitea.securityContext`                 | Security context of the Gitea container and the chart-managed init containers.                                                                                                    | `{}`               |
+| `deployment.gitea.volumeMounts`                    | Additional volume mounts.                                                                                                                                                         | `[]`               |
 | `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                                                                                   | `{}`               |
 | `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                                                                                              | `""`               |
 | `deployment.replicas`                              | Number of replicas for the Gitea deployment.                                                                                                                                      | `1`                |
@@ -1027,6 +1029,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.terminationGracePeriodSeconds`         | How long to wait until forcefully kill the pod                                                                                                                                    | `60`               |
 | `deployment.tolerations`                           | Tolerations of the Gitea deployment.                                                                                                                                              | `[]`               |
 | `deployment.topologySpreadConstraints`             | TopologySpreadConstraints for the deployment                                                                                                                                      | `[]`               |
+| `deployment.volumes`                               | Additional volumes to mount into the pods of the Gitea deployment.                                                                                                                | `[]`               |
 
 ### Gateway API
 
@@ -1200,26 +1203,24 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Persistence
 
-| Name                                              | Description                                                                                           | Value                  |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------- |
-| `persistence.enabled`                             | Enable persistent storage                                                                             | `true`                 |
-| `persistence.create`                              | Whether to create the persistentVolumeClaim for shared storage                                        | `true`                 |
-| `persistence.mount`                               | Whether the persistentVolumeClaim should be mounted (even if not created)                             | `true`                 |
-| `persistence.claimName`                           | Use an existing claim to store repository information                                                 | `gitea-shared-storage` |
-| `persistence.size`                                | Size for persistence to store repo information                                                        | `10Gi`                 |
-| `persistence.accessModes`                         | AccessMode for persistence                                                                            | `["ReadWriteOnce"]`    |
-| `persistence.labels`                              | Labels for the persistence volume claim to be created                                                 | `{}`                   |
-| `persistence.annotations.helm.sh/resource-policy` | Resource policy for the persistence volume claim                                                      | `keep`                 |
-| `persistence.storageClass`                        | Name of the storage class to use                                                                      | `nil`                  |
-| `persistence.subPath`                             | Subdirectory of the volume to mount at                                                                | `nil`                  |
-| `persistence.volumeName`                          | Name of persistent volume in PVC                                                                      | `""`                   |
-| `extraContainers`                                 | Additional sidecar containers to run in the pod                                                       | `[]`                   |
-| `preExtraInitContainers`                          | Additional init containers to run in the pod before Gitea runs it owns init containers.               | `[]`                   |
-| `postExtraInitContainers`                         | Additional init containers to run in the pod after Gitea runs it owns init containers.                | `[]`                   |
-| `extraVolumes`                                    | Additional volumes to mount to the Gitea deployment                                                   | `[]`                   |
-| `extraContainerVolumeMounts`                      | Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates. | `[]`                   |
-| `extraInitVolumeMounts`                           | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.    | `[]`                   |
-| `extraVolumeMounts`                               | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container              | `[]`                   |
+| Name                                              | Description                                                                                        | Value                  |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------- |
+| `persistence.enabled`                             | Enable persistent storage                                                                          | `true`                 |
+| `persistence.create`                              | Whether to create the persistentVolumeClaim for shared storage                                     | `true`                 |
+| `persistence.mount`                               | Whether the persistentVolumeClaim should be mounted (even if not created)                          | `true`                 |
+| `persistence.claimName`                           | Use an existing claim to store repository information                                              | `gitea-shared-storage` |
+| `persistence.size`                                | Size for persistence to store repo information                                                     | `10Gi`                 |
+| `persistence.accessModes`                         | AccessMode for persistence                                                                         | `["ReadWriteOnce"]`    |
+| `persistence.labels`                              | Labels for the persistence volume claim to be created                                              | `{}`                   |
+| `persistence.annotations.helm.sh/resource-policy` | Resource policy for the persistence volume claim                                                   | `keep`                 |
+| `persistence.storageClass`                        | Name of the storage class to use                                                                   | `nil`                  |
+| `persistence.subPath`                             | Subdirectory of the volume to mount at                                                             | `nil`                  |
+| `persistence.volumeName`                          | Name of persistent volume in PVC                                                                   | `""`                   |
+| `extraContainers`                                 | Additional sidecar containers to run in the pod                                                    | `[]`                   |
+| `preExtraInitContainers`                          | Additional init containers to run in the pod before Gitea runs it owns init containers.            | `[]`                   |
+| `postExtraInitContainers`                         | Additional init containers to run in the pod after Gitea runs it owns init containers.             | `[]`                   |
+| `extraInitVolumeMounts`                           | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration. | `[]`                   |
+| `extraVolumeMounts`                               | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container           | `[]`                   |
 
 ### Init
 

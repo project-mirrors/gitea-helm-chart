@@ -46,6 +46,23 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`dnsConfig` does no longer exist. Please refer to the changelog and configure `deployment.dnsConfig` instead."
+  - it: fails when the removed `extraContainerVolumeMounts` value is set
+    set:
+      extraContainerVolumeMounts:
+        - name: postgres-ssl-vol
+          mountPath: /pg-ssl
+    asserts:
+      - failedTemplate:
+          errorMessage: "`extraContainerVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` instead."
+  - it: fails when the removed `extraVolumes` value is set
+    set:
+      extraVolumes:
+        - name: postgres-ssl-vol
+          secret:
+            secretName: gitea-postgres-ssl
+    asserts:
+      - failedTemplate:
+          errorMessage: "`extraVolumes` does no longer exist. Please refer to the changelog and configure `deployment.volumes` instead."
   - it: fails when the removed `nodeSelector` value is set
     set:
       nodeSelector:
@@ -130,6 +147,13 @@ tests:
       dnsConfig:
         nameservers:
           - 192.0.2.1
+      extraContainerVolumeMounts:
+        - name: postgres-ssl-vol
+          mountPath: /pg-ssl
+      extraVolumes:
+        - name: postgres-ssl-vol
+          secret:
+            secretName: gitea-postgres-ssl
       nodeSelector:
         foo: bar
       podSecurityContext:

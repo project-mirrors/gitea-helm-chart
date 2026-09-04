@@ -120,6 +120,12 @@ deployment:
     #   runAsNonRoot: true
     #   runAsUser: 1000
 
+    ## @param deployment.gitea.volumeMounts Additional volume mounts.
+    volumeMounts: []
+    # - name: my-configmap-volume
+    #   mountPath: /configmap
+    #   readOnly: true
+
   ## @param deployment.nodeSelector NodeSelector for the deployment
   nodeSelector: {}
 
@@ -174,6 +180,16 @@ deployment:
   #   labelSelector:
   #     matchLabels:
   #       app.kubernetes.io/instance: gitea
+
+
+  ## @param deployment.volumes Additional volumes to mount into the pods of the Gitea deployment.
+  volumes: []
+  # - name: my-configmap-volume
+  #   config:
+  #     name: my-configmap
+  # - name: my-secret-volume
+  #   secret:
+  #     secretName: my-secret
 
 
 ## @section Gateway API
@@ -594,20 +610,11 @@ postExtraInitContainers: []
 #   image: docker.io/library/busybox
 #   command: [ /bin/sh, -c, 'echo "Hello world! I am a post init container."' ]
 
-## @param extraVolumes Additional volumes to mount to the Gitea deployment
-extraVolumes: []
-# - name: postgres-ssl-vol
-#   secret:
-#     secretName: gitea-postgres-ssl
-
-## @param extraContainerVolumeMounts Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates.
-extraContainerVolumeMounts: []
-
 ## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
 extraInitVolumeMounts: []
 
 ## @deprecated The extraVolumeMounts variable has been split two:
-## - extraContainerVolumeMounts
+## - deployment.gitea.volumeMounts
 ## - extraInitVolumeMounts
 ## As an example, can be used to mount a client cert when connecting to an external Postgres server.
 ## @param extraVolumeMounts **DEPRECATED** Additional volume mounts for init containers and the Gitea main container
