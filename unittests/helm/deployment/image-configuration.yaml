@@ -23,7 +23,7 @@ tests:
   - it: tag override
     template: templates/gitea/deployment.yaml
     set:
-      image.tag: "1.19.4"
+      deployment.gitea.image.tag: "1.19.4"
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -31,7 +31,7 @@ tests:
   - it: root-based image
     template: templates/gitea/deployment.yaml
     set:
-      image.rootless: false
+      deployment.gitea.image.rootless: false
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -39,7 +39,7 @@ tests:
   - it: scoped registry
     template: templates/gitea/deployment.yaml
     set:
-      image.registry: "example.com"
+      deployment.gitea.image.registry: "example.com"
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -55,9 +55,11 @@ tests:
   - it: digest for rootless image
     template: templates/gitea/deployment.yaml
     set:
-      image:
-        rootless: true
-        digest: sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a
+      deployment:
+        gitea:
+          image:
+            rootless: true
+            digest: sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -65,14 +67,16 @@ tests:
   - it: image fullOverride (does not append rootless)
     template: templates/gitea/deployment.yaml
     set:
-      image:
-        fullOverride: docker.gitea.com/gitea:1.19.3
-        # setting rootless, registry, repository, tag, and digest to prove that override works
-        rootless: true
-        registry: example.com
-        repository: example/image
-        tag: "1.0.0"
-        digest: sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a
+      deployment:
+        gitea:
+          image:
+            fullOverride: docker.gitea.com/gitea:1.19.3
+            # setting rootless, registry, repository, tag, and digest to prove that override works
+            rootless: true
+            registry: example.com
+            repository: example/image
+            tag: "1.0.0"
+            digest: sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -80,9 +84,11 @@ tests:
   - it: digest for root-based image
     template: templates/gitea/deployment.yaml
     set:
-      image:
-        rootless: false
-        digest: sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a
+      deployment:
+        gitea:
+          image:
+            rootless: false
+            digest: sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -91,7 +97,7 @@ tests:
     template: templates/gitea/deployment.yaml
     set:
       global.imageRegistry: "global.example.com"
-      image.digest: "sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
+      deployment.gitea.image.digest: "sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -99,7 +105,7 @@ tests:
   - it: correctly renders floating tag references
     template: templates/gitea/deployment.yaml
     set:
-      image.tag: 1.21 # use non-quoted value on purpose. See: https://gitea.com/gitea/helm-gitea/issues/631
+      deployment.gitea.image.tag: 1.21 # use non-quoted value on purpose. See: https://gitea.com/gitea/helm-gitea/issues/631
     asserts:
       - equal:
           path: spec.template.spec.initContainers[0].image

@@ -80,7 +80,7 @@ There might be times when the chart is behind the latest Gitea release.
 This might be caused by different reasons, most often due to time constraints of the maintainers (remember, all work here is done voluntarily in the spare time of people).
 If you're eager to use the latest Gitea version earlier than this chart catches up, then change the tag in `values.yaml` to the latest Gitea version.
 Note that besides the exact Gitea version one can also use the `:1` tag to automatically follow the latest Gitea version.
-This should be combined with `image.pullPolicy: "Always"`.
+This should be combined with `deployment.gitea.image.pullPolicy: "Always"`.
 Important: Using the `:1` will also automatically jump to new minor release (e.g. from 1.13 to 1.14) which may eventually cause incompatibilities if major/breaking changes happened between these versions.
 This is due to Gitea not strictly following [semantic versioning](https://semver.org/#summary) as breaking changes do not increase the major version.
 I.e., "minor" version bumps are considered "major".
@@ -261,7 +261,7 @@ ENABLED = false
 
 #### Rootless Defaults
 
-If `.Values.image.rootless: true`, then the following will occur. In case you use `.Values.image.fullOverride`, check that this works in your image:
+If `.Values.deployment.gitea.image.rootless: true`, then the following will occur. In case you use `.Values.deployment.gitea.image.fullOverride`, check that this works in your image:
 
 - `$HOME` becomes `/data/gitea/git`
 
@@ -961,10 +961,12 @@ To be able to use a digest value which is automatically updated by `Renovate` a 
 Here's an examplary `values.yml` definition which makes use of a digest:
 
 ```yaml
-image:
-  repository: gitea/gitea
-  tag: 1.20.2
-  digest: sha256:6e3b85a36653894d6741d0aefb41dfaac39044e028a42e0a520cc05ebd7bfc3f
+deployment:
+  gitea:
+    image:
+      repository: gitea/gitea
+      tag: 1.20.2
+      digest: sha256:6e3b85a36653894d6741d0aefb41dfaac39044e028a42e0a520cc05ebd7bfc3f
 ```
 
 By default Renovate adds digest after the `tag`.
@@ -996,26 +998,33 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### deployment
 
-| Name                                               | Description                                                                                                       | Value           |
-| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------- |
-| `deployment.enabled`                               | Enable the deployment of Gitea.                                                                                   | `true`          |
-| `deployment.annotations`                           | Annotations for the Gitea deployment to be created                                                                | `{}`            |
-| `deployment.labels`                                | Labels for the deployment                                                                                         | `{}`            |
-| `deployment.affinity`                              | Affinity for the deployment.                                                                                      | `{}`            |
-| `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                | `{}`            |
-| `deployment.gitea.env`                             | Additional environment variables to pass to the Gitea container.                                                  | `[]`            |
-| `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                 | `nil`           |
-| `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                   | `{}`            |
-| `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                              | `""`            |
-| `deployment.replicas`                              | Number of replicas for the Gitea deployment.                                                                      | `1`             |
-| `deployment.resources`                             | Resources is the total amount of CPU and Memory resources required by all containers in the pod.                  | `{}`            |
-| `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork"                                                                          | `""`            |
-| `deployment.strategy.type`                         | Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.                               | `RollingUpdate` |
-| `deployment.strategy.rollingUpdate.maxSurge`       | Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`. | `100%`          |
-| `deployment.strategy.rollingUpdate.maxUnavailable` | Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.           | `0`             |
-| `deployment.terminationGracePeriodSeconds`         | How long to wait until forcefully kill the pod                                                                    | `60`            |
-| `deployment.tolerations`                           | Tolerations of the Gitea deployment.                                                                              | `[]`            |
-| `deployment.topologySpreadConstraints`             | TopologySpreadConstraints for the deployment                                                                      | `[]`            |
+| Name                                               | Description                                                                                                                                                                       | Value              |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `deployment.enabled`                               | Enable the deployment of Gitea.                                                                                                                                                   | `true`             |
+| `deployment.annotations`                           | Annotations for the Gitea deployment to be created                                                                                                                                | `{}`               |
+| `deployment.labels`                                | Labels for the deployment                                                                                                                                                         | `{}`               |
+| `deployment.affinity`                              | Affinity for the deployment.                                                                                                                                                      | `{}`               |
+| `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                                                                                | `{}`               |
+| `deployment.gitea.env`                             | Additional environment variables to pass to the Gitea container.                                                                                                                  | `[]`               |
+| `deployment.gitea.image.registry`                  | image registry, e.g. gcr.io,docker.io                                                                                                                                             | `docker.gitea.com` |
+| `deployment.gitea.image.repository`                | Image to start for this pod                                                                                                                                                       | `gitea`            |
+| `deployment.gitea.image.tag`                       | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                           | `""`               |
+| `deployment.gitea.image.digest`                    | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                                        | `""`               |
+| `deployment.gitea.image.pullPolicy`                | Image pull policy                                                                                                                                                                 | `IfNotPresent`     |
+| `deployment.gitea.image.rootless`                  | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                         | `true`             |
+| `deployment.gitea.image.fullOverride`              | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
+| `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                                                                                 | `nil`              |
+| `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                                                                                   | `{}`               |
+| `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                                                                                              | `""`               |
+| `deployment.replicas`                              | Number of replicas for the Gitea deployment.                                                                                                                                      | `1`                |
+| `deployment.resources`                             | Resources is the total amount of CPU and Memory resources required by all containers in the pod.                                                                                  | `{}`               |
+| `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork"                                                                                                                                          | `""`               |
+| `deployment.strategy.type`                         | Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.                                                                                               | `RollingUpdate`    |
+| `deployment.strategy.rollingUpdate.maxSurge`       | Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`.                                                                 | `100%`             |
+| `deployment.strategy.rollingUpdate.maxUnavailable` | Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.                                                                           | `0`                |
+| `deployment.terminationGracePeriodSeconds`         | How long to wait until forcefully kill the pod                                                                                                                                    | `60`               |
+| `deployment.tolerations`                           | Tolerations of the Gitea deployment.                                                                                                                                              | `[]`               |
+| `deployment.topologySpreadConstraints`             | TopologySpreadConstraints for the deployment                                                                                                                                      | `[]`               |
 
 ### Gateway API
 
@@ -1068,16 +1077,9 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Image
 
-| Name                 | Description                                                                                                                                                      | Value              |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `image.registry`     | image registry, e.g. gcr.io,docker.io                                                                                                                            | `docker.gitea.com` |
-| `image.repository`   | Image to start for this pod                                                                                                                                      | `gitea`            |
-| `image.tag`          | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                          | `""`               |
-| `image.digest`       | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                       | `""`               |
-| `image.pullPolicy`   | Image pull policy                                                                                                                                                | `IfNotPresent`     |
-| `image.rootless`     | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                        | `true`             |
-| `image.fullOverride` | Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
-| `imagePullSecrets`   | Secret to use for pulling the image                                                                                                                              | `[]`               |
+| Name               | Description                         | Value |
+| ------------------ | ----------------------------------- | ----- |
+| `imagePullSecrets` | Secret to use for pulling the image | `[]`  |
 
 ### Security
 
@@ -1570,7 +1572,7 @@ gitea:
 <!-- prettier-ignore-end -->
 
 If you are facing errors like `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED` due to this automatic transition:
-Have a look at [this discussion](https://gitea.com/gitea/helm-gitea/issues/487#issue-220660) and either set `image.rootless: false` or manually update your `~/.ssh/known_hosts` file(s).
+Have a look at [this discussion](https://gitea.com/gitea/helm-gitea/issues/487#issue-220660) and either set `deployment.gitea.image.rootless: false` or manually update your `~/.ssh/known_hosts` file(s).
 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable-next-line -->

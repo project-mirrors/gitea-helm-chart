@@ -7,7 +7,7 @@ templates:
 tests:
   - it: runs gpg in batch mode
     set:
-      image.rootless: false
+      deployment.gitea.image.rootless: false
       secrets.gpg.enabled: true
       secrets.gpg.new.privateKey: |-
         -----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -23,7 +23,7 @@ tests:
             gpg --batch --import "$TMP_RAW_GPG_KEY"
   - it: skips gpg script block for disabled signing
     set:
-      image.rootless: false
+      deployment.gitea.image.rootless: false
     asserts:
       - equal:
           path: stringData["init_directory_structure.sh"]
@@ -42,7 +42,7 @@ tests:
             chmod -v ug+rwx "${GITEA_TEMP}"
   - it: adds gpg script block for enabled signing
     set:
-      image.rootless: false
+      deployment.gitea.image.rootless: false
       secrets.gpg.enabled: true
       secrets.gpg.new.privateKey: |-
         -----BEGIN PGP PRIVATE KEY BLOCK-----

@@ -89,7 +89,7 @@ spec:
         {{- end }}
         - name: init-directories
           image: "{{ include "gitea.image" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.deployment.gitea.image.pullPolicy }}
           command:
             - "{{ .Values.initContainersScriptsVolumeMountPath }}/init_directory_structure.sh"
           env:
@@ -130,7 +130,7 @@ spec:
             {{- toYaml .Values.initContainers.resources | nindent 12 }}
         - name: init-app-ini
           image: "{{ include "gitea.image" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.deployment.gitea.image.pullPolicy }}
           {{- if .Values.gitea.extraEnvSourceFile }}
           command:
           - "/bin/bash"
@@ -196,7 +196,7 @@ spec:
           command:
           - "{{ .Values.initContainersScriptsVolumeMountPath }}/configure_gpg_environment.sh"
           {{- end }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.deployment.gitea.image.pullPolicy }}
           {{- if $commandInitContainerSecurityContext }}
           securityContext:
             {{- $commandInitContainerSecurityContext | nindent 12 }}
@@ -238,7 +238,7 @@ spec:
           command:
           - "{{ .Values.initContainersScriptsVolumeMountPath }}/configure_gitea.sh"
           {{- end }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.deployment.gitea.image.pullPolicy }}
           {{- if $commandInitContainerSecurityContext }}
           securityContext:
             {{- $commandInitContainerSecurityContext | nindent 12 }}
@@ -252,7 +252,7 @@ spec:
               value: /data
             - name: GITEA_TEMP
               value: /tmp/gitea
-            {{- if .Values.image.rootless }}
+            {{- if .Values.deployment.gitea.image.rootless }}
             - name: HOME
               value: /data/gitea/git
             {{- end }}
@@ -335,14 +335,14 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ include "gitea.image" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.deployment.gitea.image.pullPolicy }}
           env:
             # SSH Port values have to be set here as well for openssh configuration
             - name: SSH_LISTEN_PORT
               value: {{ .Values.gitea.config.server.SSH_LISTEN_PORT | quote }}
             - name: SSH_PORT
               value: {{ .Values.gitea.config.server.SSH_PORT | quote }}
-            {{- if not .Values.image.rootless }}
+            {{- if not .Values.deployment.gitea.image.rootless }}
             - name: SSH_LOG_LEVEL
               value: {{ .Values.gitea.ssh.logLevel | quote }}
             {{- end }}
@@ -365,7 +365,7 @@ spec:
             {{- end }}
             - name: TMPDIR
               value: /tmp/gitea
-            {{- if .Values.image.rootless }}
+            {{- if .Values.deployment.gitea.image.rootless }}
             - name: HOME
               value: /data/gitea/git
             {{- end }}

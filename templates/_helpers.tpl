@@ -43,15 +43,15 @@ Create chart name and version as used by the chart label.
 Create image name and tag used by the deployment.
 */}}
 {{- define "gitea.image" -}}
-{{- $fullOverride := .Values.image.fullOverride | default "" -}}
-{{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
-{{- $repository := .Values.image.repository -}}
+{{- $fullOverride := .Values.deployment.gitea.image.fullOverride | default "" -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.deployment.gitea.image.registry -}}
+{{- $repository := .Values.deployment.gitea.image.repository -}}
 {{- $separator := ":" -}}
-{{- $tag := .Values.image.tag | default .Chart.AppVersion | toString -}}
-{{- $rootless := ternary "-rootless" "" (.Values.image.rootless) -}}
+{{- $tag := .Values.deployment.gitea.image.tag | default .Chart.AppVersion | toString -}}
+{{- $rootless := ternary "-rootless" "" (.Values.deployment.gitea.image.rootless) -}}
 {{- $digest := "" -}}
-{{- if .Values.image.digest }}
-    {{- $digest = (printf "@%s" (.Values.image.digest | toString)) -}}
+{{- if .Values.deployment.gitea.image.digest }}
+    {{- $digest = (printf "@%s" (.Values.deployment.gitea.image.digest | toString)) -}}
 {{- end -}}
 {{- if $fullOverride }}
     {{- printf "%s" $fullOverride -}}
@@ -175,8 +175,8 @@ Common labels
 helm.sh/chart: {{ include "gitea.chart" . }}
 app: {{ include "gitea.name" . }}
 {{ include "gitea.selectorLabels" . }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
-version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ .Values.deployment.gitea.image.tag | default .Chart.AppVersion | quote }}
+version: {{ .Values.deployment.gitea.image.tag | default .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
@@ -184,8 +184,8 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ include "gitea.chart" . }}
 app: {{ include "gitea.name" . }}-act-runner
 {{ include "gitea.selectorLabels.actRunner" . }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
-version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ .Values.deployment.gitea.image.tag | default .Chart.AppVersion | quote }}
+version: {{ .Values.deployment.gitea.image.tag | default .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
@@ -316,7 +316,7 @@ https
   {{- $generals := list -}}
   {{- $inlines := dict -}}
 
-  {{- range $key, $value := .Values.gitea.config  }}
+  {{- range $key, $value := .Values.gitea.config }}
     {{- if kindIs "map" $value }}
       {{- if gt (len $value) 0 }}
         {{- $section := default list (get $inlines $key) -}}
@@ -447,7 +447,7 @@ https
     {{- $_ := set .Values.gitea.config.server "SSH_PORT" .Values.service.ssh.port -}}
   {{- end -}}
   {{- if not (hasKey .Values.gitea.config.server "START_SSH_SERVER") -}}
-    {{- if .Values.image.rootless -}}
+    {{- if .Values.deployment.gitea.image.rootless -}}
       {{- $_ := set .Values.gitea.config.server "START_SSH_SERVER" "true" -}}
       {{- if not (hasKey .Values.gitea.config.server "SSH_LISTEN_PORT") -}}
         {{- if not .Values.gitea.config.server.SSH_LISTEN_PORT -}}
@@ -540,4 +540,3 @@ https
   {{- end -}}
   {{- toYaml $probe -}}
 {{- end -}}
-

@@ -67,6 +67,23 @@ deployment:
     # - name: VARIABLE
     #   value: my-value
 
+    ## @param deployment.gitea.image.registry image registry, e.g. gcr.io,docker.io
+    ## @param deployment.gitea.image.repository Image to start for this pod
+    ## @param deployment.gitea.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+    ## @param deployment.gitea.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+    ## @param deployment.gitea.image.pullPolicy Image pull policy
+    ## @param deployment.gitea.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+    ## @param deployment.gitea.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+    image:
+      registry: "docker.gitea.com"
+      repository: gitea
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: ""
+      digest: ""
+      pullPolicy: IfNotPresent
+      rootless: true
+      fullOverride: ""
+
     ## @param deployment.gitea.resources Compute Resources required by Gitea container. Cannot be updated.
     ## @skip deployment.gitea.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
     ## @skip deployment.gitea.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
@@ -253,23 +270,6 @@ namespace: ""
 clusterDomain: cluster.local
 
 ## @section Image
-## @param image.registry image registry, e.g. gcr.io,docker.io
-## @param image.repository Image to start for this pod
-## @param image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-## @param image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
-## @param image.pullPolicy Image pull policy
-## @param image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
-## @param image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
-image:
-  registry: "docker.gitea.com"
-  repository: gitea
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-  digest: ""
-  pullPolicy: IfNotPresent
-  rootless: true
-  fullOverride: ""
-
 ## @param imagePullSecrets Secret to use for pulling the image
 imagePullSecrets: []
 

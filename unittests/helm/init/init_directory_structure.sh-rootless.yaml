@@ -65,7 +65,7 @@ tests:
   - it: it does not chown /data even when image.fullOverride is set
     template: templates/gitea/secret_init.yaml
     set:
-      image.fullOverride: docker.gitea.com/gitea:1.20.5
+      deployment.gitea.image.fullOverride: docker.gitea.com/gitea:1.20.5
     asserts:
       - equal:
           path: stringData["init_directory_structure.sh"]
