@@ -90,6 +90,11 @@
     {{- fail "`schedulerName` does no longer exist. Please refer to the changelog and configure `deployment.schedulerName` instead." -}}
   {{- end -}}
 
+  {{/* SECURITY CONTEXT */}}
+  {{- if .Values.securityContext -}}
+    {{- fail "`securityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` and `deployment.gitea.securityContext` instead." -}}
+  {{- end -}}
+
   {{/* STRATEGY */}}
   {{- if .Values.strategy -}}
     {{- fail "`strategy` does no longer exist. Please refer to the changelog and configure `deployment.strategy` instead." -}}

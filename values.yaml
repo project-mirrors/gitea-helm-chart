@@ -306,8 +306,6 @@ openshift:
 ## @deprecated The securityContext variable has been split two:
 ## - deployment.gitea.securityContext
 ## - deployment.securityContext.
-## @param securityContext Run init and Gitea containers as a specific securityContext
-securityContext: {}
 
 ## @param podDisruptionBudget Pod disruption budget
 podDisruptionBudget: {}

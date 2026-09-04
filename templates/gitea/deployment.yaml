@@ -65,7 +65,6 @@ spec:
       {{- $securityContext := include "gitea.deployment.securityContext" . | trim }}
       {{- $containerSecurityContext := include "gitea.containerSecurityContext" (list . (deepCopy .Values.deployment.gitea.securityContext)) | trim }}
       {{- $commandInitContainerSecurityContext := include "gitea.commandInitContainerSecurityContext" (list . (deepCopy .Values.deployment.gitea.securityContext)) | trim }}
-      {{- $runtimeContainerSecurityContext := include "gitea.runtimeContainerSecurityContext" . | trim }}
       {{- if .Values.deployment.schedulerName }}
       schedulerName: "{{ .Values.deployment.schedulerName }}"
       {{- end }}
@@ -405,9 +404,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml (.Values.deployment.gitea.resources | default dict) | nindent 12 }}
-          {{- if $runtimeContainerSecurityContext }}
+          {{- if $containerSecurityContext }}
           securityContext:
-            {{- $runtimeContainerSecurityContext | nindent 12 }}
+            {{- $containerSecurityContext | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: temp

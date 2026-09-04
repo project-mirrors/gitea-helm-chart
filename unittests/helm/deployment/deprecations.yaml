@@ -86,6 +86,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`schedulerName` does no longer exist. Please refer to the changelog and configure `deployment.schedulerName` instead."
+  - it: fails when the removed `securityContext` value is set
+    set:
+      securityContext:
+        runAsUser: 1000
+    asserts:
+      - failedTemplate:
+          errorMessage: "`securityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` and `deployment.gitea.securityContext` instead."
   - it: fails when the removed `strategy` value is set
     set:
       strategy:
@@ -133,6 +140,8 @@ tests:
         limits:
           cpu: 100m
       schedulerName: stork
+      securityContext:
+        runAsUser: 1000
       strategy:
         type: Recreate
       tolerations:

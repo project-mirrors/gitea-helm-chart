@@ -146,17 +146,6 @@ These default to runAsUser 1000 outside OpenShift to preserve existing behavior.
 {{- include "gitea.containerSecurityContext" (list $root $containerSecurityContext) -}}
 {{- end -}}
 
-{{/*
-Render the runtime container securityContext while honoring the deprecated securityContext value.
-*/}}
-{{- define "gitea.runtimeContainerSecurityContext" -}}
-{{- $containerSecurityContext := deepCopy .Values.deployment.gitea.securityContext -}}
-{{- if and (eq (len $containerSecurityContext) 0) .Values.securityContext -}}
-{{- $containerSecurityContext = deepCopy .Values.securityContext -}}
-{{- end -}}
-{{- include "gitea.containerSecurityContext" (list . $containerSecurityContext) -}}
-{{- end -}}
-
 
 {{/*
 Storage Class

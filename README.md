@@ -1089,7 +1089,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
 | `openshift.enabled`   | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
 | `openshift.hostUsers` | Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.       | `nil` |
-| `securityContext`     | Run init and Gitea containers as a specific securityContext                                                                          | `{}`  |
 | `podDisruptionBudget` | Pod disruption budget                                                                                                                | `{}`  |
 
 ### Route
