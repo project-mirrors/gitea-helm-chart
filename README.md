@@ -1118,7 +1118,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gatewayAPI.nginx.clientSettingsPolicies.labels`                | Additional labels applied to the ClientSettingsPolicy                                                                                                                      | `{}`    |
 | `gatewayAPI.nginx.clientSettingsPolicies.targetRef`             | Target reference for the ClientSettingsPolicy. Defaults to the chart's HTTPRoute.                                                                                          | `{}`    |
 | `gatewayAPI.nginx.clientSettingsPolicies.body`                  | Client body settings (required when enabled), e.g. `maxSize`. See `docs/gateway-api.md`.                                                                                   | `{}`    |
-| `schedulerName`                                                 | Use an alternate scheduler, e.g. "stork"                                                                                                                                   | `""`    |
 
 ### deployment
 
@@ -1134,6 +1133,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.nodeSelector`                  | NodeSelector for the deployment                                                                  | `{}`   |
 | `deployment.priorityClassName`             | priorityClassName for the deployment                                                             | `""`   |
 | `deployment.resources`                     | Resources is the total amount of CPU and Memory resources required by all containers in the pod. | `{}`   |
+| `deployment.schedulerName`                 | Use an alternate scheduler, e.g. "stork"                                                         | `""`   |
 | `deployment.terminationGracePeriodSeconds` | How long to wait until forcefully kill the pod                                                   | `60`   |
 | `deployment.tolerations`                   | Tolerations of the Gitea deployment.                                                             | `[]`   |
 | `deployment.topologySpreadConstraints`     | TopologySpreadConstraints for the deployment                                                     | `[]`   |

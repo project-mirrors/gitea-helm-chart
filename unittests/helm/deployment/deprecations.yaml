@@ -60,6 +60,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead."
+  - it: fails when the removed `schedulerName` value is set
+    set:
+      schedulerName: stork
+    asserts:
+      - failedTemplate:
+          errorMessage: "`schedulerName` does no longer exist. Please refer to the changelog and configure `deployment.schedulerName` instead."
   - it: fails when the removed `tolerations` value is set
     set:
       tolerations:
@@ -94,6 +100,7 @@ tests:
       resources:
         limits:
           cpu: 100m
+      schedulerName: stork
       tolerations:
         - key: database/type
           operator: Equal

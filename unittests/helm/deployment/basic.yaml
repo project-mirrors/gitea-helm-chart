@@ -139,6 +139,19 @@ tests:
       - equal:
           path: spec.template.spec.priorityClassName
           value: high-priority
+  - it: schedulerName is undefined
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.schedulerName
+  - it: schedulerName is defined
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.schedulerName: stork
+    asserts:
+      - equal:
+          path: spec.template.spec.schedulerName
+          value: stork
   - it: tolerations are undefined
     template: templates/gitea/deployment.yaml
     asserts:

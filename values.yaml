@@ -293,12 +293,6 @@ gatewayAPI:
       #   maxSize: 100m
 
 
-## Use an alternate scheduler, e.g. "stork".
-## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-##
-## @param schedulerName Use an alternate scheduler, e.g. "stork"
-schedulerName: ""
-
 ## @section deployment
 deployment:
   ## @param deployment.enabled Enable the deployment of Gitea.
@@ -380,6 +374,9 @@ deployment:
     #   ephemeral: 100Mi
     #   cpu: 100m
     #   memory: 128Mi
+
+  ## @param deployment.schedulerName Use an alternate scheduler, e.g. "stork"
+  schedulerName: ""
 
   ## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
   terminationGracePeriodSeconds: 60

@@ -66,8 +66,8 @@ spec:
       {{- $containerSecurityContext := include "gitea.containerSecurityContext" (list . (deepCopy .Values.containerSecurityContext)) | trim }}
       {{- $commandInitContainerSecurityContext := include "gitea.commandInitContainerSecurityContext" (list . (deepCopy .Values.containerSecurityContext)) | trim }}
       {{- $runtimeContainerSecurityContext := include "gitea.runtimeContainerSecurityContext" . | trim }}
-      {{- if .Values.schedulerName }}
-      schedulerName: "{{ .Values.schedulerName }}"
+      {{- if .Values.deployment.schedulerName }}
+      schedulerName: "{{ .Values.deployment.schedulerName }}"
       {{- end }}
       {{- if (or .Values.serviceAccount.create .Values.serviceAccount.name) }}
       serviceAccountName: {{ include "gitea.serviceAccountName" . }}
