@@ -64,7 +64,7 @@ tests:
         template: templates/gitea/deployment.yaml
   - it: nodeSelector is defined
     set:
-      nodeSelector:
+      deployment.nodeSelector:
         foo: bar
         bar: foo
     asserts:

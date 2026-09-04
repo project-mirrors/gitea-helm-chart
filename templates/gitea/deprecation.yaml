@@ -54,4 +54,9 @@
   {{- if .Values.dnsConfig -}}
     {{- fail "`dnsConfig` does no longer exist. Please refer to the changelog and configure `deployment.dnsConfig` instead." -}}
   {{- end -}}
+
+  {{/* NODE SELECTOR */}}
+  {{- if .Values.nodeSelector -}}
+    {{- fail "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead." -}}
+  {{- end -}}
 {{- end -}}

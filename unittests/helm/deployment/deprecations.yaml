@@ -39,6 +39,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`dnsConfig` does no longer exist. Please refer to the changelog and configure `deployment.dnsConfig` instead."
+  - it: fails when the removed `nodeSelector` value is set
+    set:
+      nodeSelector:
+        foo: bar
+    asserts:
+      - failedTemplate:
+          errorMessage: "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead."
   - it: skips the deprecation checks when `checkDeprecation` is disabled
     set:
       checkDeprecation: false
@@ -50,6 +57,8 @@ tests:
       dnsConfig:
         nameservers:
           - 192.0.2.1
+      nodeSelector:
+        foo: bar
     asserts:
       - hasDocuments:
           count: 0

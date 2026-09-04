@@ -313,9 +313,6 @@ resources: {}
 ## @param schedulerName Use an alternate scheduler, e.g. "stork"
 schedulerName: ""
 
-## @param nodeSelector NodeSelector for the deployment
-nodeSelector: {}
-
 ## @param tolerations Tolerations for the deployment
 tolerations: []
 
@@ -325,17 +322,15 @@ topologySpreadConstraints: []
 ## @param priorityClassName priorityClassName for the deployment
 priorityClassName: ""
 
-## @param deployment.enabled Enable the deployment of Gitea.
-## @param deployment.annotations Annotations for the Gitea deployment to be created
-## @param deployment.labels Labels for the deployment
-## @param deployment.affinity Affinity for the deployment.
-## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
-
 deployment:
+  ## @param deployment.enabled Enable the deployment of Gitea.
+  ## @param deployment.annotations Annotations for the Gitea deployment to be created
+  ## @param deployment.labels Labels for the deployment
   enabled: true
   annotations: {}
   labels: {}
 
+  ## @param deployment.affinity Affinity for the deployment.
   affinity: {}
     # nodeAffinity:
     #   requiredDuringSchedulingIgnoredDuringExecution:
@@ -372,6 +367,10 @@ deployment:
     # - name: VARIABLE
     #   value: my-value
 
+  ## @param deployment.nodeSelector NodeSelector for the deployment
+  nodeSelector: {}
+
+  ## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
   terminationGracePeriodSeconds: 60
 
 
