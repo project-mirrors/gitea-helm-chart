@@ -70,6 +70,11 @@
     {{- fail "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead." -}}
   {{- end -}}
 
+  {{/* TOLERATIONS */}}
+  {{- if .Values.tolerations -}}
+    {{- fail "`tolerations` does no longer exist. Please refer to the changelog and configure `deployment.tolerations` instead." -}}
+  {{- end -}}
+
   {{/* TOPOLOGY SPREAD CONSTRAINTS */}}
   {{- if .Values.topologySpreadConstraints -}}
     {{- fail "`topologySpreadConstraints` does no longer exist. Please refer to the changelog and configure `deployment.topologySpreadConstraints` instead." -}}

@@ -60,6 +60,16 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead."
+  - it: fails when the removed `tolerations` value is set
+    set:
+      tolerations:
+        - key: database/type
+          operator: Equal
+          value: postgres
+          effect: NoSchedule
+    asserts:
+      - failedTemplate:
+          errorMessage: "`tolerations` does no longer exist. Please refer to the changelog and configure `deployment.tolerations` instead."
   - it: fails when the removed `topologySpreadConstraints` value is set
     set:
       topologySpreadConstraints:
@@ -84,6 +94,11 @@ tests:
       resources:
         limits:
           cpu: 100m
+      tolerations:
+        - key: database/type
+          operator: Equal
+          value: postgres
+          effect: NoSchedule
       topologySpreadConstraints:
         - topologyKey: kubernetes.io/hostname
     asserts:
