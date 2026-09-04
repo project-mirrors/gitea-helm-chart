@@ -16,11 +16,11 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
-    type: {{ .Values.strategy.type }}
-    {{- if eq .Values.strategy.type "RollingUpdate" }}
+    type: {{ .Values.deployment.strategy.type }}
+    {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}
     rollingUpdate:
-      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
-      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.deployment.strategy.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.rollingUpdate.maxSurge }}
     {{- end }}
   selector:
     matchLabels:

@@ -66,6 +66,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`schedulerName` does no longer exist. Please refer to the changelog and configure `deployment.schedulerName` instead."
+  - it: fails when the removed `strategy` value is set
+    set:
+      strategy:
+        type: Recreate
+    asserts:
+      - failedTemplate:
+          errorMessage: "`strategy` does no longer exist. Please refer to the changelog and configure `deployment.strategy` instead."
   - it: fails when the removed `tolerations` value is set
     set:
       tolerations:
@@ -101,6 +108,8 @@ tests:
         limits:
           cpu: 100m
       schedulerName: stork
+      strategy:
+        type: Recreate
       tolerations:
         - key: database/type
           operator: Equal

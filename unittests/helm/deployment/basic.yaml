@@ -152,6 +152,25 @@ tests:
       - equal:
           path: spec.template.spec.schedulerName
           value: stork
+  - it: strategy defaults to a rolling update
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.strategy
+          value:
+            type: RollingUpdate
+            rollingUpdate:
+              maxUnavailable: 0
+              maxSurge: 100%
+  - it: strategy omits rollingUpdate for other strategy types
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.strategy.type: Recreate
+    asserts:
+      - equal:
+          path: spec.strategy
+          value:
+            type: Recreate
   - it: tolerations are undefined
     template: templates/gitea/deployment.yaml
     asserts:

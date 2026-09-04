@@ -75,6 +75,11 @@
     {{- fail "`schedulerName` does no longer exist. Please refer to the changelog and configure `deployment.schedulerName` instead." -}}
   {{- end -}}
 
+  {{/* STRATEGY */}}
+  {{- if .Values.strategy -}}
+    {{- fail "`strategy` does no longer exist. Please refer to the changelog and configure `deployment.strategy` instead." -}}
+  {{- end -}}
+
   {{/* TOLERATIONS */}}
   {{- if .Values.tolerations -}}
     {{- fail "`tolerations` does no longer exist. Please refer to the changelog and configure `deployment.tolerations` instead." -}}

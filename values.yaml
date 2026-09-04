@@ -106,6 +106,15 @@ deployment:
   ## @param deployment.schedulerName Use an alternate scheduler, e.g. "stork"
   schedulerName: ""
 
+  ## @param deployment.strategy.type Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.
+  ## @param deployment.strategy.rollingUpdate.maxSurge Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`.
+  ## @param deployment.strategy.rollingUpdate.maxUnavailable Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: "100%"
+      maxUnavailable: 0
+
   ## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
   terminationGracePeriodSeconds: 60
 
@@ -239,17 +248,8 @@ namespace: ""
 ## @param replicaCount number of replicas for the deployment
 replicaCount: 1
 
-## @section strategy
-## @param strategy.type strategy type
-## @param strategy.rollingUpdate.maxSurge maxSurge
-## @param strategy.rollingUpdate.maxUnavailable maxUnavailable
-strategy:
-  type: "RollingUpdate"
-  rollingUpdate:
-    maxSurge: "100%"
-    maxUnavailable: 0
-
-## @param clusterDomain cluster domain
+## @section Network
+## @param clusterDomain Domain of the Cluster. Domain is part of internally issued certificates.
 clusterDomain: cluster.local
 
 ## @section Image

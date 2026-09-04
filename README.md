@@ -38,15 +38,15 @@
 - [Renovate](#renovate)
 - [Parameters](#parameters)
   - [Global](#global)
-  - [strategy](#strategy)
+  - [deployment](#deployment)
+  - [Gateway API](#gateway-api)
+  - [Ingress](#ingress)
+  - [Network](#network)
   - [Image](#image)
   - [Security](#security)
-  - [Service](#service)
-  - [Ingress](#ingress)
   - [Route](#route)
-  - [Gateway API](#gateway-api)
-  - [deployment](#deployment)
-  - [Secret](#secret)
+  - [Secrets](#secrets)
+  - [Service](#service)
   - [ServiceAccount](#serviceaccount)
   - [Persistence](#persistence-1)
   - [Init](#init)
@@ -987,107 +987,34 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Global
 
-| Name                      | Description                                                                                    | Value |
-| ------------------------- | ---------------------------------------------------------------------------------------------- | ----- |
-| `global.imageRegistry`    | global image registry override                                                                 | `""`  |
-| `global.imagePullSecrets` | global image pull secrets override; can be extended by `imagePullSecrets`                      | `[]`  |
-| `global.storageClass`     | global storage class override                                                                  | `""`  |
-| `global.hostAliases`      | global hostAliases which will be added to the pod's hosts files                                | `[]`  |
-| `namespace`               | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified | `""`  |
-| `replicaCount`            | number of replicas for the deployment                                                          | `1`   |
+| Name                      | Description                                                               | Value |
+| ------------------------- | ------------------------------------------------------------------------- | ----- |
+| `global.imageRegistry`    | global image registry override                                            | `""`  |
+| `global.imagePullSecrets` | global image pull secrets override; can be extended by `imagePullSecrets` | `[]`  |
+| `global.storageClass`     | global storage class override                                             | `""`  |
+| `global.hostAliases`      | global hostAliases which will be added to the pod's hosts files           | `[]`  |
 
-### strategy
+### deployment
 
-| Name                                    | Description    | Value           |
-| --------------------------------------- | -------------- | --------------- |
-| `strategy.type`                         | strategy type  | `RollingUpdate` |
-| `strategy.rollingUpdate.maxSurge`       | maxSurge       | `100%`          |
-| `strategy.rollingUpdate.maxUnavailable` | maxUnavailable | `0`             |
-| `clusterDomain`                         | cluster domain | `cluster.local` |
-
-### Image
-
-| Name                 | Description                                                                                                                                                      | Value              |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `image.registry`     | image registry, e.g. gcr.io,docker.io                                                                                                                            | `docker.gitea.com` |
-| `image.repository`   | Image to start for this pod                                                                                                                                      | `gitea`            |
-| `image.tag`          | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                          | `""`               |
-| `image.digest`       | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                       | `""`               |
-| `image.pullPolicy`   | Image pull policy                                                                                                                                                | `IfNotPresent`     |
-| `image.rootless`     | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                        | `true`             |
-| `image.fullOverride` | Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
-| `imagePullSecrets`   | Secret to use for pulling the image                                                                                                                              | `[]`               |
-
-### Security
-
-| Name                       | Description                                                                                                                          | Value |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
-| `openshift.enabled`        | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
-| `openshift.hostUsers`      | Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.       | `nil` |
-| `podSecurityContext`       | Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.                       | `{}`  |
-| `containerSecurityContext` | Security context                                                                                                                     | `{}`  |
-| `securityContext`          | Run init and Gitea containers as a specific securityContext                                                                          | `{}`  |
-| `podDisruptionBudget`      | Pod disruption budget                                                                                                                | `{}`  |
-
-### Service
-
-| Name                                    | Description                                                                                                                                                                                          | Value       |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `service.http.type`                     | Kubernetes service type for web traffic                                                                                                                                                              | `ClusterIP` |
-| `service.http.port`                     | Port number for web traffic                                                                                                                                                                          | `3000`      |
-| `service.http.clusterIP`                | ClusterIP setting for http autosetup for deployment is None                                                                                                                                          | `None`      |
-| `service.http.loadBalancerIP`           | LoadBalancer IP setting                                                                                                                                                                              | `nil`       |
-| `service.http.nodePort`                 | NodePort for http service                                                                                                                                                                            | `nil`       |
-| `service.http.externalTrafficPolicy`    | If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                         | `nil`       |
-| `service.http.externalIPs`              | External IPs for service                                                                                                                                                                             | `nil`       |
-| `service.http.ipFamilyPolicy`           | HTTP service dual-stack policy                                                                                                                                                                       | `nil`       |
-| `service.http.ipFamilies`               | HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). | `nil`       |
-| `service.http.loadBalancerSourceRanges` | Source range filter for http loadbalancer                                                                                                                                                            | `[]`        |
-| `service.http.annotations`              | HTTP service annotations                                                                                                                                                                             | `{}`        |
-| `service.http.labels`                   | HTTP service additional labels                                                                                                                                                                       | `{}`        |
-| `service.http.loadBalancerClass`        | Loadbalancer class                                                                                                                                                                                   | `nil`       |
-| `service.ssh.type`                      | Kubernetes service type for ssh traffic                                                                                                                                                              | `ClusterIP` |
-| `service.ssh.port`                      | Port number for ssh traffic                                                                                                                                                                          | `22`        |
-| `service.ssh.clusterIP`                 | ClusterIP setting for ssh autosetup for deployment is None                                                                                                                                           | `None`      |
-| `service.ssh.loadBalancerIP`            | LoadBalancer IP setting                                                                                                                                                                              | `nil`       |
-| `service.ssh.nodePort`                  | NodePort for ssh service                                                                                                                                                                             | `nil`       |
-| `service.ssh.externalTrafficPolicy`     | If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                          | `nil`       |
-| `service.ssh.externalIPs`               | External IPs for service                                                                                                                                                                             | `nil`       |
-| `service.ssh.ipFamilyPolicy`            | SSH service dual-stack policy                                                                                                                                                                        | `nil`       |
-| `service.ssh.ipFamilies`                | SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).  | `nil`       |
-| `service.ssh.hostPort`                  | HostPort for ssh service                                                                                                                                                                             | `nil`       |
-| `service.ssh.loadBalancerSourceRanges`  | Source range filter for ssh loadbalancer                                                                                                                                                             | `[]`        |
-| `service.ssh.annotations`               | SSH service annotations                                                                                                                                                                              | `{}`        |
-| `service.ssh.labels`                    | SSH service additional labels                                                                                                                                                                        | `{}`        |
-| `service.ssh.loadBalancerClass`         | Loadbalancer class                                                                                                                                                                                   | `nil`       |
-
-### Ingress
-
-| Name                             | Description                     | Value             |
-| -------------------------------- | ------------------------------- | ----------------- |
-| `ingress.enabled`                | Enable ingress                  | `false`           |
-| `ingress.className`              | DEPRECATED: Ingress class name. | `""`              |
-| `ingress.pathType`               | Ingress Path Type               | `Prefix`          |
-| `ingress.annotations`            | Ingress annotations             | `{}`              |
-| `ingress.hosts[0].host`          | Default Ingress host            | `git.example.com` |
-| `ingress.hosts[0].paths[0].path` | Default Ingress path            | `/`               |
-| `ingress.tls`                    | Ingress tls settings            | `[]`              |
-
-### Route
-
-| Name                                      | Description                                                                                                    | Value   |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------- |
-| `route.enabled`                           | Enable OpenShift Route                                                                                         | `false` |
-| `route.annotations`                       | Route annotations                                                                                              | `{}`    |
-| `route.host`                              | Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values. | `""`    |
-| `route.path`                              | Route path                                                                                                     | `""`    |
-| `route.wildcardPolicy`                    | Route wildcard policy                                                                                          | `None`  |
-| `route.tls.termination`                   | Route TLS termination type                                                                                     | `nil`   |
-| `route.tls.insecureEdgeTerminationPolicy` | Route insecure edge termination policy                                                                         | `nil`   |
-| `route.tls.key`                           | Route TLS key                                                                                                  | `nil`   |
-| `route.tls.certificate`                   | Route TLS certificate                                                                                          | `nil`   |
-| `route.tls.caCertificate`                 | Route TLS CA certificate                                                                                       | `nil`   |
-| `route.tls.destinationCACertificate`      | Route destination CA certificate                                                                               | `nil`   |
+| Name                                               | Description                                                                                                       | Value           |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------- |
+| `deployment.enabled`                               | Enable the deployment of Gitea.                                                                                   | `true`          |
+| `deployment.annotations`                           | Annotations for the Gitea deployment to be created                                                                | `{}`            |
+| `deployment.labels`                                | Labels for the deployment                                                                                         | `{}`            |
+| `deployment.affinity`                              | Affinity for the deployment.                                                                                      | `{}`            |
+| `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                | `{}`            |
+| `deployment.gitea.env`                             | Additional environment variables to pass to the Gitea container.                                                  | `[]`            |
+| `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                 | `nil`           |
+| `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                   | `{}`            |
+| `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                              | `""`            |
+| `deployment.resources`                             | Resources is the total amount of CPU and Memory resources required by all containers in the pod.                  | `{}`            |
+| `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork"                                                                          | `""`            |
+| `deployment.strategy.type`                         | Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.                               | `RollingUpdate` |
+| `deployment.strategy.rollingUpdate.maxSurge`       | Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`. | `100%`          |
+| `deployment.strategy.rollingUpdate.maxUnavailable` | Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.           | `0`             |
+| `deployment.terminationGracePeriodSeconds`         | How long to wait until forcefully kill the pod                                                                    | `60`            |
+| `deployment.tolerations`                           | Tolerations of the Gitea deployment.                                                                              | `[]`            |
+| `deployment.topologySpreadConstraints`             | TopologySpreadConstraints for the deployment                                                                      | `[]`            |
 
 ### Gateway API
 
@@ -1119,26 +1046,67 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gatewayAPI.nginx.clientSettingsPolicies.targetRef`             | Target reference for the ClientSettingsPolicy. Defaults to the chart's HTTPRoute.                                                                                          | `{}`    |
 | `gatewayAPI.nginx.clientSettingsPolicies.body`                  | Client body settings (required when enabled), e.g. `maxSize`. See `docs/gateway-api.md`.                                                                                   | `{}`    |
 
-### deployment
+### Ingress
 
-| Name                                       | Description                                                                                      | Value  |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------ |
-| `deployment.enabled`                       | Enable the deployment of Gitea.                                                                  | `true` |
-| `deployment.annotations`                   | Annotations for the Gitea deployment to be created                                               | `{}`   |
-| `deployment.labels`                        | Labels for the deployment                                                                        | `{}`   |
-| `deployment.affinity`                      | Affinity for the deployment.                                                                     | `{}`   |
-| `deployment.dnsConfig`                     | dnsConfig of the Gitea deployment.                                                               | `{}`   |
-| `deployment.gitea.env`                     | Additional environment variables to pass to the Gitea container.                                 | `[]`   |
-| `deployment.gitea.resources`               | Compute Resources required by Gitea container. Cannot be updated.                                | `nil`  |
-| `deployment.nodeSelector`                  | NodeSelector for the deployment                                                                  | `{}`   |
-| `deployment.priorityClassName`             | priorityClassName for the deployment                                                             | `""`   |
-| `deployment.resources`                     | Resources is the total amount of CPU and Memory resources required by all containers in the pod. | `{}`   |
-| `deployment.schedulerName`                 | Use an alternate scheduler, e.g. "stork"                                                         | `""`   |
-| `deployment.terminationGracePeriodSeconds` | How long to wait until forcefully kill the pod                                                   | `60`   |
-| `deployment.tolerations`                   | Tolerations of the Gitea deployment.                                                             | `[]`   |
-| `deployment.topologySpreadConstraints`     | TopologySpreadConstraints for the deployment                                                     | `[]`   |
+| Name                             | Description                                                                                    | Value             |
+| -------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |
+| `ingress.enabled`                | Enable ingress                                                                                 | `false`           |
+| `ingress.className`              | DEPRECATED: Ingress class name.                                                                | `""`              |
+| `ingress.pathType`               | Ingress Path Type                                                                              | `Prefix`          |
+| `ingress.annotations`            | Ingress annotations                                                                            | `{}`              |
+| `ingress.hosts[0].host`          | Default Ingress host                                                                           | `git.example.com` |
+| `ingress.hosts[0].paths[0].path` | Default Ingress path                                                                           | `/`               |
+| `ingress.tls`                    | Ingress tls settings                                                                           | `[]`              |
+| `namespace`                      | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified | `""`              |
+| `replicaCount`                   | number of replicas for the deployment                                                          | `1`               |
 
-### Secret
+### Network
+
+| Name            | Description                                                              | Value           |
+| --------------- | ------------------------------------------------------------------------ | --------------- |
+| `clusterDomain` | Domain of the Cluster. Domain is part of internally issued certificates. | `cluster.local` |
+
+### Image
+
+| Name                 | Description                                                                                                                                                      | Value              |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `image.registry`     | image registry, e.g. gcr.io,docker.io                                                                                                                            | `docker.gitea.com` |
+| `image.repository`   | Image to start for this pod                                                                                                                                      | `gitea`            |
+| `image.tag`          | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                          | `""`               |
+| `image.digest`       | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                       | `""`               |
+| `image.pullPolicy`   | Image pull policy                                                                                                                                                | `IfNotPresent`     |
+| `image.rootless`     | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                        | `true`             |
+| `image.fullOverride` | Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
+| `imagePullSecrets`   | Secret to use for pulling the image                                                                                                                              | `[]`               |
+
+### Security
+
+| Name                       | Description                                                                                                                          | Value |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| `openshift.enabled`        | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
+| `openshift.hostUsers`      | Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.       | `nil` |
+| `podSecurityContext`       | Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.                       | `{}`  |
+| `containerSecurityContext` | Security context                                                                                                                     | `{}`  |
+| `securityContext`          | Run init and Gitea containers as a specific securityContext                                                                          | `{}`  |
+| `podDisruptionBudget`      | Pod disruption budget                                                                                                                | `{}`  |
+
+### Route
+
+| Name                                      | Description                                                                                                    | Value   |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------- |
+| `route.enabled`                           | Enable OpenShift Route                                                                                         | `false` |
+| `route.annotations`                       | Route annotations                                                                                              | `{}`    |
+| `route.host`                              | Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values. | `""`    |
+| `route.path`                              | Route path                                                                                                     | `""`    |
+| `route.wildcardPolicy`                    | Route wildcard policy                                                                                          | `None`  |
+| `route.tls.termination`                   | Route TLS termination type                                                                                     | `nil`   |
+| `route.tls.insecureEdgeTerminationPolicy` | Route insecure edge termination policy                                                                         | `nil`   |
+| `route.tls.key`                           | Route TLS key                                                                                                  | `nil`   |
+| `route.tls.certificate`                   | Route TLS certificate                                                                                          | `nil`   |
+| `route.tls.caCertificate`                 | Route TLS CA certificate                                                                                       | `nil`   |
+| `route.tls.destinationCACertificate`      | Route destination CA certificate                                                                               | `nil`   |
+
+### Secrets
 
 | Name                                             | Description                                                                                                                   | Value                |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | -------------------- |
@@ -1185,6 +1153,38 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                                                   | `""`                 |
 | `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                                            | `{}`                 |
 | `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                                                 | `{}`                 |
+
+### Service
+
+| Name                                    | Description                                                                                                                                                                                          | Value       |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `service.http.type`                     | Kubernetes service type for web traffic                                                                                                                                                              | `ClusterIP` |
+| `service.http.port`                     | Port number for web traffic                                                                                                                                                                          | `3000`      |
+| `service.http.clusterIP`                | ClusterIP setting for http autosetup for deployment is None                                                                                                                                          | `None`      |
+| `service.http.loadBalancerIP`           | LoadBalancer IP setting                                                                                                                                                                              | `nil`       |
+| `service.http.nodePort`                 | NodePort for http service                                                                                                                                                                            | `nil`       |
+| `service.http.externalTrafficPolicy`    | If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                         | `nil`       |
+| `service.http.externalIPs`              | External IPs for service                                                                                                                                                                             | `nil`       |
+| `service.http.ipFamilyPolicy`           | HTTP service dual-stack policy                                                                                                                                                                       | `nil`       |
+| `service.http.ipFamilies`               | HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). | `nil`       |
+| `service.http.loadBalancerSourceRanges` | Source range filter for http loadbalancer                                                                                                                                                            | `[]`        |
+| `service.http.annotations`              | HTTP service annotations                                                                                                                                                                             | `{}`        |
+| `service.http.labels`                   | HTTP service additional labels                                                                                                                                                                       | `{}`        |
+| `service.http.loadBalancerClass`        | Loadbalancer class                                                                                                                                                                                   | `nil`       |
+| `service.ssh.type`                      | Kubernetes service type for ssh traffic                                                                                                                                                              | `ClusterIP` |
+| `service.ssh.port`                      | Port number for ssh traffic                                                                                                                                                                          | `22`        |
+| `service.ssh.clusterIP`                 | ClusterIP setting for ssh autosetup for deployment is None                                                                                                                                           | `None`      |
+| `service.ssh.loadBalancerIP`            | LoadBalancer IP setting                                                                                                                                                                              | `nil`       |
+| `service.ssh.nodePort`                  | NodePort for ssh service                                                                                                                                                                             | `nil`       |
+| `service.ssh.externalTrafficPolicy`     | If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                          | `nil`       |
+| `service.ssh.externalIPs`               | External IPs for service                                                                                                                                                                             | `nil`       |
+| `service.ssh.ipFamilyPolicy`            | SSH service dual-stack policy                                                                                                                                                                        | `nil`       |
+| `service.ssh.ipFamilies`                | SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).  | `nil`       |
+| `service.ssh.hostPort`                  | HostPort for ssh service                                                                                                                                                                             | `nil`       |
+| `service.ssh.loadBalancerSourceRanges`  | Source range filter for ssh loadbalancer                                                                                                                                                             | `[]`        |
+| `service.ssh.annotations`               | SSH service annotations                                                                                                                                                                              | `{}`        |
+| `service.ssh.labels`                    | SSH service additional labels                                                                                                                                                                        | `{}`        |
+| `service.ssh.loadBalancerClass`         | Loadbalancer class                                                                                                                                                                                   | `nil`       |
 
 ### ServiceAccount
 
