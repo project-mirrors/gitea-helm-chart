@@ -69,4 +69,9 @@
   {{- if .Values.resources -}}
     {{- fail "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead." -}}
   {{- end -}}
+
+  {{/* TOPOLOGY SPREAD CONSTRAINTS */}}
+  {{- if .Values.topologySpreadConstraints -}}
+    {{- fail "`topologySpreadConstraints` does no longer exist. Please refer to the changelog and configure `deployment.topologySpreadConstraints` instead." -}}
+  {{- end -}}
 {{- end -}}

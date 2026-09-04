@@ -139,6 +139,31 @@ tests:
       - equal:
           path: spec.template.spec.priorityClassName
           value: high-priority
+  - it: topologySpreadConstraints are undefined
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.topologySpreadConstraints
+  - it: topologySpreadConstraints are defined
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.topologySpreadConstraints:
+        - topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          maxSkew: 1
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: gitea-unittests
+    asserts:
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints
+          value:
+            - topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              maxSkew: 1
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: gitea-unittests
 
   - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
     template: templates/gitea/deployment.yaml

@@ -302,9 +302,6 @@ schedulerName: ""
 ## @param tolerations Tolerations for the deployment
 tolerations: []
 
-## @param topologySpreadConstraints TopologySpreadConstraints for the deployment
-topologySpreadConstraints: []
-
 ## @section deployment
 deployment:
   ## @param deployment.enabled Enable the deployment of Gitea.
@@ -390,6 +387,13 @@ deployment:
   ## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
   terminationGracePeriodSeconds: 60
 
+  ## @param deployment.topologySpreadConstraints TopologySpreadConstraints for the deployment
+  topologySpreadConstraints: []
+  # - topologyKey: kubernetes.io/hostname
+  #   whenUnsatisfiable: DoNotSchedule
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/instance: athens-proxy
 
 ## @section Secret
 secrets:
