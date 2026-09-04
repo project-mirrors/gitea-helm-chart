@@ -80,11 +80,13 @@ tests:
       openshift:
         enabled: true
         hostUsers: true
-      podSecurityContext:
-        fsGroup: 1000620000
-      containerSecurityContext:
-        runAsUser: 1000620000
-        runAsGroup: 1000620000
+      deployment:
+        securityContext:
+          fsGroup: 1000620000
+        gitea:
+          securityContext:
+            runAsUser: 1000620000
+            runAsGroup: 1000620000
     asserts:
       - equal:
           path: spec.template.spec.hostUsers

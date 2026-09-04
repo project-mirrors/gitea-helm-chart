@@ -23,6 +23,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`affinity` does no longer exist. Please refer to the changelog and configure `deployment.affinity` instead."
+  - it: fails when the removed `containerSecurityContext` value is set
+    set:
+      containerSecurityContext:
+        runAsUser: 1000
+    asserts:
+      - failedTemplate:
+          errorMessage: "`containerSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.gitea.securityContext` instead."
   - it: fails when the removed `deployment.env` value is set
     set:
       deployment.env:
@@ -52,6 +59,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead."
+  - it: fails when the removed `podSecurityContext` value is set
+    set:
+      podSecurityContext:
+        fsGroup: 1000
+    asserts:
+      - failedTemplate:
+          errorMessage: "`podSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` instead."
   - it: fails when the removed `resources` value is set
     set:
       resources:
@@ -101,6 +115,8 @@ tests:
       checkDeprecation: false
       affinity:
         nodeAffinity: {}
+      containerSecurityContext:
+        runAsUser: 1000
       deployment.env:
         - name: VARIABLE
           value: my-value
@@ -109,6 +125,8 @@ tests:
           - 192.0.2.1
       nodeSelector:
         foo: bar
+      podSecurityContext:
+        fsGroup: 1000
       priorityClassName: high-priority
       replicaCount: 2
       resources:

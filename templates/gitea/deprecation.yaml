@@ -45,6 +45,11 @@
     {{- fail "`affinity` does no longer exist. Please refer to the changelog and configure `deployment.affinity` instead." -}}
   {{- end -}}
 
+  {{/* CONTAINER SECURITY CONTEXT */}}
+  {{- if .Values.containerSecurityContext -}}
+    {{- fail "`containerSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.gitea.securityContext` instead." -}}
+  {{- end -}}
+
   {{/* DEPLOYMENT ENV */}}
   {{- if .Values.deployment.env -}}
     {{- fail "`deployment.env` does no longer exist. Please refer to the changelog and configure `deployment.gitea.env` instead." -}}
@@ -63,6 +68,11 @@
   {{/* PRIORITY CLASS NAME */}}
   {{- if .Values.priorityClassName -}}
     {{- fail "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead." -}}
+  {{- end -}}
+
+  {{/* POD SECURITY CONTEXT */}}
+  {{- if .Values.podSecurityContext -}}
+    {{- fail "`podSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` instead." -}}
   {{- end -}}
 
   {{/* RESOURCES */}}

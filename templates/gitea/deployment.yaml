@@ -62,9 +62,9 @@ spec:
         {{- end }}
     spec:
       {{- $hostUsers := include "gitea.hostUsers" . | trim }}
-      {{- $podSecurityContext := include "gitea.podSecurityContext" . | trim }}
-      {{- $containerSecurityContext := include "gitea.containerSecurityContext" (list . (deepCopy .Values.containerSecurityContext)) | trim }}
-      {{- $commandInitContainerSecurityContext := include "gitea.commandInitContainerSecurityContext" (list . (deepCopy .Values.containerSecurityContext)) | trim }}
+      {{- $securityContext := include "gitea.deployment.securityContext" . | trim }}
+      {{- $containerSecurityContext := include "gitea.containerSecurityContext" (list . (deepCopy .Values.deployment.gitea.securityContext)) | trim }}
+      {{- $commandInitContainerSecurityContext := include "gitea.commandInitContainerSecurityContext" (list . (deepCopy .Values.deployment.gitea.securityContext)) | trim }}
       {{- $runtimeContainerSecurityContext := include "gitea.runtimeContainerSecurityContext" . | trim }}
       {{- if .Values.deployment.schedulerName }}
       schedulerName: "{{ .Values.deployment.schedulerName }}"
@@ -79,9 +79,9 @@ spec:
       hostUsers: {{ $hostUsers }}
       {{- end }}
       {{- include "gitea.images.pullSecrets" . | nindent 6 }}
-      {{- if $podSecurityContext }}
+      {{- if $securityContext }}
       securityContext:
-        {{- $podSecurityContext | nindent 8 }}
+        {{- $securityContext | nindent 8 }}
       {{- end }}
       initContainers:
         {{- if .Values.preExtraInitContainers }}

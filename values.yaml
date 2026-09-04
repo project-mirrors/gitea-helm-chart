@@ -101,6 +101,25 @@ deployment:
     #   cpu: 100m
     #   memory: 128Mi
 
+    ## @param deployment.gitea.securityContext Security context of the Gitea container and the chart-managed init containers.
+    securityContext: {}
+    #   allowPrivilegeEscalation: false
+    #   capabilities:
+    #     drop:
+    #       - ALL
+    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+    #   # get an error message from the SSH server that it is not possible to read from
+    #   # the repository.
+    #   # https://gitea.com/gitea/helm-gitea/issues/161
+    #     add:
+    #       - SYS_CHROOT
+    #   privileged: false
+    #   readOnlyRootFilesystem: true
+    #   runAsGroup: 1000
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+
   ## @param deployment.nodeSelector NodeSelector for the deployment
   nodeSelector: {}
 
@@ -125,6 +144,9 @@ deployment:
 
   ## @param deployment.schedulerName Use an alternate scheduler, e.g. "stork"
   schedulerName: ""
+
+  ## @param deployment.securityContext Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.
+  securityContext: {}
 
   ## @param deployment.strategy.type Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.
   ## @param deployment.strategy.rollingUpdate.maxSurge Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`.
@@ -281,31 +303,9 @@ openshift:
   enabled: null
   hostUsers: null
 
-## @param podSecurityContext Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.
-podSecurityContext: {}
-
-## @param containerSecurityContext Security context
-containerSecurityContext: {}
-#   allowPrivilegeEscalation: false
-#   capabilities:
-#     drop:
-#       - ALL
-#   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-#   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-#   # get an error message from the SSH server that it is not possible to read from
-#   # the repository.
-#   # https://gitea.com/gitea/helm-gitea/issues/161
-#     add:
-#       - SYS_CHROOT
-#   privileged: false
-#   readOnlyRootFilesystem: true
-#   runAsGroup: 1000
-#   runAsNonRoot: true
-#   runAsUser: 1000
-
 ## @deprecated The securityContext variable has been split two:
-## - containerSecurityContext
-## - podSecurityContext.
+## - deployment.gitea.securityContext
+## - deployment.securityContext.
 ## @param securityContext Run init and Gitea containers as a specific securityContext
 securityContext: {}
 

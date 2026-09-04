@@ -1014,11 +1014,13 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.gitea.image.rootless`                  | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                         | `true`             |
 | `deployment.gitea.image.fullOverride`              | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
 | `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                                                                                 | `nil`              |
+| `deployment.gitea.securityContext`                 | Security context of the Gitea container and the chart-managed init containers.                                                                                                    | `{}`               |
 | `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                                                                                   | `{}`               |
 | `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                                                                                              | `""`               |
 | `deployment.replicas`                              | Number of replicas for the Gitea deployment.                                                                                                                                      | `1`                |
 | `deployment.resources`                             | Resources is the total amount of CPU and Memory resources required by all containers in the pod.                                                                                  | `{}`               |
 | `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork"                                                                                                                                          | `""`               |
+| `deployment.securityContext`                       | Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.                                                                    | `{}`               |
 | `deployment.strategy.type`                         | Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.                                                                                               | `RollingUpdate`    |
 | `deployment.strategy.rollingUpdate.maxSurge`       | Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`.                                                                 | `100%`             |
 | `deployment.strategy.rollingUpdate.maxUnavailable` | Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.                                                                           | `0`                |
@@ -1083,14 +1085,12 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Security
 
-| Name                       | Description                                                                                                                          | Value |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
-| `openshift.enabled`        | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
-| `openshift.hostUsers`      | Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.       | `nil` |
-| `podSecurityContext`       | Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.                       | `{}`  |
-| `containerSecurityContext` | Security context                                                                                                                     | `{}`  |
-| `securityContext`          | Run init and Gitea containers as a specific securityContext                                                                          | `{}`  |
-| `podDisruptionBudget`      | Pod disruption budget                                                                                                                | `{}`  |
+| Name                  | Description                                                                                                                          | Value |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| `openshift.enabled`   | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
+| `openshift.hostUsers` | Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.       | `nil` |
+| `securityContext`     | Run init and Gitea containers as a specific securityContext                                                                          | `{}`  |
+| `podDisruptionBudget` | Pod disruption budget                                                                                                                | `{}`  |
 
 ### Route
 

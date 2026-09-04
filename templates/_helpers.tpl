@@ -104,13 +104,13 @@ Return the pod's hostUsers setting when OpenShift compatibility is enabled.
 {{/*
 Render pod securityContext. On non-OpenShift clusters an empty map defaults fsGroup to 1000.
 */}}
-{{- define "gitea.podSecurityContext" -}}
-{{- $podSecurityContext := deepCopy .Values.podSecurityContext -}}
-{{- if and (ne (include "gitea.openshift.enabled" . | trim) "true") (not (hasKey $podSecurityContext "fsGroup")) -}}
-{{- $_ := set $podSecurityContext "fsGroup" 1000 -}}
+{{- define "gitea.deployment.securityContext" -}}
+{{- $securityContext := deepCopy .Values.deployment.securityContext -}}
+{{- if and (ne (include "gitea.openshift.enabled" . | trim) "true") (not (hasKey $securityContext "fsGroup")) -}}
+{{- $_ := set $securityContext "fsGroup" 1000 -}}
 {{- end -}}
-{{- if gt (len $podSecurityContext) 0 -}}
-{{ toYaml $podSecurityContext }}
+{{- if gt (len $securityContext) 0 -}}
+{{ toYaml $securityContext }}
 {{- end -}}
 {{- end -}}
 
@@ -150,7 +150,7 @@ These default to runAsUser 1000 outside OpenShift to preserve existing behavior.
 Render the runtime container securityContext while honoring the deprecated securityContext value.
 */}}
 {{- define "gitea.runtimeContainerSecurityContext" -}}
-{{- $containerSecurityContext := deepCopy .Values.containerSecurityContext -}}
+{{- $containerSecurityContext := deepCopy .Values.deployment.gitea.securityContext -}}
 {{- if and (eq (len $containerSecurityContext) 0) .Values.securityContext -}}
 {{- $containerSecurityContext = deepCopy .Values.securityContext -}}
 {{- end -}}
