@@ -1,17 +1,18 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "gitea.fullname" . -}}
-{{- $httpPort := .Values.service.http.port -}}
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  namespace: {{ .Values.namespace | default .Release.Namespace }}
-  labels:
-    {{- include "gitea.labels" . | nindent 4 }}
+  {{- with (include "gitea.ingress.annotations" .) }}
   annotations:
-    {{- range $key, $value := .Values.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    {{- . | nindent 4 }}
+  {{- end }}
+  {{- with (include "gitea.ingress.labels" .) }}
+  labels:
+    {{- . | nindent 4 }}
+  {{- end }}
+  name: {{ include "gitea.ingress.name" . }}
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
 spec:
   ingressClassName: {{ tpl .Values.ingress.className . }}
 {{- if .Values.ingress.tls }}
@@ -38,7 +39,7 @@ spec:
               service:
                 name: {{ include "gitea.service.http.name" $ }}
                 port:
-                  number: {{ $httpPort }}
+                  number: {{ $.Values.service.http.port }}
           {{- else }}
           - path: {{ .path | default "/" }}
             pathType: {{ .pathType | default "Prefix" }}
@@ -46,7 +47,7 @@ spec:
               service:
                 name: {{ include "gitea.service.http.name" $ }}
                 port:
-                  number: {{ $httpPort }}
+                  number: {{ $.Values.service.http.port }}
           {{- end }}
           {{- end }}
           {{- else }}
@@ -56,7 +57,7 @@ spec:
               service:
                 name: {{ include "gitea.service.http.name" $ }}
                 port:
-                  number: {{ $httpPort }}
+                  number: {{ $.Values.service.http.port }}
           {{- end }}
     {{- end }}
 {{- end }}
