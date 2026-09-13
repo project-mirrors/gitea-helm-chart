@@ -1,19 +1,16 @@
-name: commitlint
+name: Commit Linter
 
 on:
   pull_request:
-    branches:
-      - "*"
-    types:
-      - opened
-      - edited
+    branches: [ "*" ]
+    types: [ "opened", "edited" ]
 
 jobs:
   check-and-test:
     runs-on: ubuntu-latest
     container: docker.io/commitlint/commitlint:21.2.1
     steps:
-      - uses: actions/checkout@v7.0.0
-      - name: check PR title
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Verify PR title
         run: |
           echo "${{ gitea.event.pull_request.title }}" | commitlint --config .commitlintrc.json
