@@ -133,6 +133,9 @@ deployment:
     #   mountPath: /configmap
     #   readOnly: true
 
+  ## @param deployment.hostUsers Use the host's user namespace. When unset, the field is omitted so the platform default is used.
+  hostUsers: ~
+
   ## @param deployment.initContainers [array] List of initContainers. The order is important. First init container in the list will be executed first. The link refers to the corresponding init container configuration.
   initContainers:
   # - container:
@@ -609,25 +612,23 @@ ingress:
 ## @param namespace An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified
 namespace: ""
 
+
 ## @section Network
 ## @param clusterDomain Domain of the Cluster. Domain is part of internally issued certificates.
 clusterDomain: cluster.local
+
 
 ## @section Image
 ## @param imagePullSecrets Secret to use for pulling the image
 imagePullSecrets: []
 
+
 ## @section Security
 # Security context is only usable with rootless image due to image design
 ## @param openshift.enabled Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API.
-## @param openshift.hostUsers Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.
 openshift:
   enabled: null
-  hostUsers: null
 
-## @deprecated The securityContext variable has been split two:
-## - deployment.gitea.securityContext
-## - deployment.securityContext.
 
 ## @param podDisruptionBudget Pod disruption budget
 podDisruptionBudget: {}

@@ -70,6 +70,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead."
+  - it: fails when the removed `openshift.hostUsers` value is set
+    set:
+      openshift.hostUsers: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "`openshift.hostUsers` does no longer exist. Please refer to the changelog and configure `deployment.hostUsers` instead."
   - it: fails when the removed `priorityClassName` value is set
     set:
       priorityClassName: high-priority

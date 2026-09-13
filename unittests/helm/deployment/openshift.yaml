@@ -79,8 +79,8 @@ tests:
     set:
       openshift:
         enabled: true
-        hostUsers: true
       deployment:
+        hostUsers: true
         securityContext:
           fsGroup: 1000620000
         gitea:
@@ -107,6 +107,7 @@ tests:
     set:
       openshift:
         enabled: true
+      deployment:
         hostUsers: false
     asserts:
       - equal:

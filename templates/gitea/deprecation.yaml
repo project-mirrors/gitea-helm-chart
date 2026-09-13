@@ -75,6 +75,11 @@
     {{- fail "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead." -}}
   {{- end -}}
 
+  {{/* OPENSHIFT HOST USERS */}}
+  {{- if hasKey .Values.openshift "hostUsers" -}}
+    {{- fail "`openshift.hostUsers` does no longer exist. Please refer to the changelog and configure `deployment.hostUsers` instead." -}}
+  {{- end -}}
+
   {{/* PRIORITY CLASS NAME */}}
   {{- if .Values.priorityClassName -}}
     {{- fail "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead." -}}

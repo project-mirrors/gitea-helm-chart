@@ -101,13 +101,11 @@ false
 {{- end -}}
 
 {{/*
-Return the pod's hostUsers setting when OpenShift compatibility is enabled.
+Return the pod's hostUsers setting. Renders nothing unless explicitly set to a boolean.
 */}}
 {{- define "gitea.hostUsers" -}}
-{{- if eq (include "gitea.openshift.enabled" . | trim) "true" -}}
-{{- if kindIs "bool" .Values.openshift.hostUsers -}}
-{{ ternary "true" "false" .Values.openshift.hostUsers }}
-{{- end -}}
+{{- if kindIs "bool" .Values.deployment.hostUsers -}}
+{{ ternary "true" "false" .Values.deployment.hostUsers }}
 {{- end -}}
 {{- end -}}
 

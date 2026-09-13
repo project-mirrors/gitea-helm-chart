@@ -289,14 +289,17 @@ openshift:
 ```
 
 When enabled, the chart applies `allowPrivilegeEscalation: false`, drops all
-Linux capabilities, sets `runAsNonRoot: true`, uses
-`seccompProfile.type: RuntimeDefault`, and leaves `hostUsers` unset unless
-`openshift.hostUsers` is explicitly overridden.
+Linux capabilities, sets `runAsNonRoot: true` and uses
+`seccompProfile.type: RuntimeDefault`.
 
 The deployment keeps the existing vanilla Kubernetes behavior when OpenShift
 compatibility is disabled. Auto-detection relies on the
 `security.openshift.io/v1/SecurityContextConstraints` API, so set
 `openshift.enabled: true` explicitly when rendering outside a live cluster.
+
+The PodSpec `hostUsers` field is independent of the OpenShift profile and is only
+rendered when `deployment.hostUsers` is set to a boolean. When left unset, the
+field is omitted so the platform default applies.
 
 If you also want to expose Gitea through an OpenShift Route, enable the optional Route resource:
 
@@ -1042,6 +1045,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                                                                                              | `nil`              |
 | `deployment.gitea.securityContext`                 | Security context of the Gitea container. Used as fallback for the chart-managed init containers.                                                                                               | `{}`               |
 | `deployment.gitea.volumeMounts`                    | Additional volume mounts.                                                                                                                                                                      | `[]`               |
+| `deployment.hostUsers`                             | Use the host's user namespace. When unset, the field is omitted so the platform default is used.                                                                                               | `nil`              |
 | `deployment.initContainers`                        | List of initContainers. The order is important. First init container in the list will be executed first. The link refers to the corresponding init container configuration.                    | `[]`               |
 | `deployment.initDirectories.env`                   | Additional environment variables to pass to the init container.                                                                                                                                | `[]`               |
 | `deployment.initDirectories.envFrom`               | List of environment variables mounted from configMaps or secrets for the initDirectories container.                                                                                            | `[]`               |
@@ -1165,7 +1169,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | Name                  | Description                                                                                                                          | Value |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
 | `openshift.enabled`   | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
-| `openshift.hostUsers` | Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.       | `nil` |
 | `podDisruptionBudget` | Pod disruption budget                                                                                                                | `{}`  |
 
 ### Route
