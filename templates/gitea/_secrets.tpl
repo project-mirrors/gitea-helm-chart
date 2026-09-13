@@ -38,6 +38,27 @@
 {{- end }}
 {{- end }}
 
+{{/* checksums */}}
+
+{{/*
+SHA sum of a Secret, used to trigger a rollout whenever its content changes.
+User-provided Secrets are looked up in the cluster, chart-managed ones are rendered, because the
+cluster still holds their pre-upgrade state.
+Arguments: (list $root $key)
+*/}}
+{{- define "gitea.secret.checksum" -}}
+{{- $root := index . 0 -}}
+{{- $key := index . 1 -}}
+{{- if (index $root.Values.secrets $key).existingSecret.enabled -}}
+{{- $namespace := $root.Values.namespace | default $root.Release.Namespace -}}
+{{- $name := include (printf "gitea.secret.%s.name" $key) $root -}}
+{{- lookup "v1" "Secret" $namespace $name | toYaml | sha256sum -}}
+{{- else -}}
+{{- include (printf "%s/gitea/secret_%s.yaml" $root.Template.BasePath $key) $root | sha256sum -}}
+{{- end -}}
+{{- end }}
+
+
 {{/* labels */}}
 
 {{- define "gitea.secret.admin.labels" -}}

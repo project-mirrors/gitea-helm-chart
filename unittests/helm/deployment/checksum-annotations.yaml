@@ -11,29 +11,18 @@ templates:
   - templates/gitea/secret_inlineConfig.yaml
   - templates/gitea/secret_metrics.yaml
 tests:
-  - it: adds a checksum annotation for every Secret by default
-    template: templates/gitea/deployment.yaml
-    asserts:
-      - exists:
-          path: spec.template.metadata.annotations["checksum/admin"]
-      - exists:
-          path: spec.template.metadata.annotations["checksum/config"]
-      - exists:
-          path: spec.template.metadata.annotations["checksum/init"]
-      - exists:
-          path: spec.template.metadata.annotations["checksum/inlineConfig"]
-      - exists:
-          path: spec.template.metadata.annotations["checksum/metrics"]
-
-  - it: omits the checksum annotations when addSHASumAnnotation is disabled
+  - it: omits the checksum annotations by default
     template: templates/gitea/deployment.yaml
     set:
-      secrets.admin.addSHASumAnnotation: false
-      secrets.config.addSHASumAnnotation: false
-      secrets.gpg.addSHASumAnnotation: false
-      secrets.init.addSHASumAnnotation: false
-      secrets.inlineConfig.addSHASumAnnotation: false
-      secrets.metrics.addSHASumAnnotation: false
+      secrets.admin.enabled: true
+      secrets.config.enabled: true
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |
+        -----BEGIN PGP PRIVATE KEY BLOCK-----
+        -----END PGP PRIVATE KEY BLOCK-----
+      secrets.init.enabled: true
+      secrets.inlineConfig.enabled: true
+      secrets.metrics.enabled: true
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/admin"]
@@ -46,35 +35,68 @@ tests:
       - notExists:
           path: spec.template.metadata.annotations["checksum/inlineConfig"]
       - notExists:
+          path: spec.template.metadata.annotations["checksum/metrics"]
+
+  - it: adds a checksum annotation for every Secret when addSHASumAnnotation is enabled
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.admin.addSHASumAnnotation: true
+      secrets.admin.enabled: true
+
+      secrets.config.addSHASumAnnotation: true
+      secrets.config.enabled: true
+
+      secrets.gpg.addSHASumAnnotation: true
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |
+        -----BEGIN PGP PRIVATE KEY BLOCK-----
+        -----END PGP PRIVATE KEY BLOCK-----
+
+      secrets.init.addSHASumAnnotation: true
+      secrets.init.enabled: true
+
+      secrets.inlineConfig.addSHASumAnnotation: true
+      secrets.inlineConfig.enabled: true
+
+      secrets.metrics.addSHASumAnnotation: true
+      secrets.metrics.enabled: true
+    asserts:
+      - exists:
+          path: spec.template.metadata.annotations["checksum/admin"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/gpg"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/init"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+      - exists:
           path: spec.template.metadata.annotations["checksum/metrics"]
 
   - it: omits the checksum annotation of a single disabled Secret only
     template: templates/gitea/deployment.yaml
     set:
-      secrets.init.addSHASumAnnotation: false
-    asserts:
-      - exists:
-          path: spec.template.metadata.annotations["checksum/config"]
-      - notExists:
-          path: spec.template.metadata.annotations["checksum/init"]
-      - exists:
-          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+      secrets.admin.addSHASumAnnotation: false
+      secrets.admin.enabled: true
 
-  - it: omits the checksum annotations of Secrets provided by the user
-    template: templates/gitea/deployment.yaml
-    set:
-      secrets.admin.existingSecret.enabled: true
-      secrets.admin.existingSecret.secretName: custom-admin
-      secrets.config.existingSecret.enabled: true
-      secrets.config.existingSecret.secretName: custom-config
-      secrets.gpg.existingSecret.enabled: true
-      secrets.gpg.existingSecret.secretName: custom-gpg
-      secrets.init.existingSecret.enabled: true
-      secrets.init.existingSecret.secretName: custom-init
-      secrets.inlineConfig.existingSecret.enabled: true
-      secrets.inlineConfig.existingSecret.secretName: custom-inline-config
-      secrets.metrics.existingSecret.enabled: true
-      secrets.metrics.existingSecret.secretName: custom-metrics
+      secrets.config.addSHASumAnnotation: false
+      secrets.config.enabled: true
+
+      secrets.gpg.addSHASumAnnotation: false
+      secrets.gpg.enabled: true
+      secrets.gpg.new.privateKey: |
+        -----BEGIN PGP PRIVATE KEY BLOCK-----
+        -----END PGP PRIVATE KEY BLOCK-----
+
+      secrets.init.addSHASumAnnotation: false
+      secrets.init.enabled: true
+
+      secrets.inlineConfig.addSHASumAnnotation: false
+      secrets.inlineConfig.enabled: true
+
+      secrets.metrics.addSHASumAnnotation: false
+      secrets.metrics.enabled: true
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/admin"]
@@ -87,4 +109,50 @@ tests:
       - notExists:
           path: spec.template.metadata.annotations["checksum/inlineConfig"]
       - notExists:
+          path: spec.template.metadata.annotations["checksum/metrics"]
+
+  - it: adds the checksum of Secrets provided by the user
+    template: templates/gitea/deployment.yaml
+    set:
+      secrets.admin.enabled: true
+      secrets.admin.addSHASumAnnotation: true
+      secrets.admin.existingSecret.enabled: true
+      secrets.admin.existingSecret.secretName: custom-admin
+
+      secrets.config.enabled: true
+      secrets.config.addSHASumAnnotation: true
+      secrets.config.existingSecret.enabled: true
+      secrets.config.existingSecret.secretName: custom-config
+
+      secrets.gpg.enabled: true
+      secrets.gpg.addSHASumAnnotation: true
+      secrets.gpg.existingSecret.enabled: true
+      secrets.gpg.existingSecret.secretName: custom-gpg
+
+      secrets.init.enabled: true
+      secrets.init.addSHASumAnnotation: true
+      secrets.init.existingSecret.enabled: true
+      secrets.init.existingSecret.secretName: custom-init
+
+      secrets.inlineConfig.enabled: true
+      secrets.inlineConfig.addSHASumAnnotation: true
+      secrets.inlineConfig.existingSecret.enabled: true
+      secrets.inlineConfig.existingSecret.secretName: custom-inline-config
+
+      secrets.metrics.enabled: true
+      secrets.metrics.addSHASumAnnotation: true
+      secrets.metrics.existingSecret.enabled: true
+      secrets.metrics.existingSecret.secretName: custom-metrics
+    asserts:
+      - exists:
+          path: spec.template.metadata.annotations["checksum/admin"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/gpg"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/init"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/inlineConfig"]
+      - exists:
           path: spec.template.metadata.annotations["checksum/metrics"]

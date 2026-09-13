@@ -43,15 +43,25 @@ Create chart name and version as used by the chart label.
 Create image name and tag used by the deployment.
 */}}
 {{- define "gitea.image" -}}
-{{- $fullOverride := .Values.deployment.gitea.image.fullOverride | default "" -}}
-{{- $registry := .Values.global.imageRegistry | default .Values.deployment.gitea.image.registry -}}
-{{- $repository := .Values.deployment.gitea.image.repository -}}
+{{- include "gitea.image.name" (list . .Values.deployment.gitea.image) -}}
+{{- end -}}
+
+{{/*
+Create image name and tag from an arbitrary `image` dict.
+Arguments: (list $root $image)
+*/}}
+{{- define "gitea.image.name" -}}
+{{- $root := index . 0 -}}
+{{- $image := index . 1 -}}
+{{- $fullOverride := $image.fullOverride | default "" -}}
+{{- $registry := $root.Values.global.imageRegistry | default $image.registry -}}
+{{- $repository := $image.repository -}}
 {{- $separator := ":" -}}
-{{- $tag := .Values.deployment.gitea.image.tag | default .Chart.AppVersion | toString -}}
-{{- $rootless := ternary "-rootless" "" (.Values.deployment.gitea.image.rootless) -}}
+{{- $tag := $image.tag | default $root.Chart.AppVersion | toString -}}
+{{- $rootless := ternary "-rootless" "" ($image.rootless) -}}
 {{- $digest := "" -}}
-{{- if .Values.deployment.gitea.image.digest }}
-    {{- $digest = (printf "@%s" (.Values.deployment.gitea.image.digest | toString)) -}}
+{{- if $image.digest }}
+    {{- $digest = (printf "@%s" ($image.digest | toString)) -}}
 {{- end -}}
 {{- if $fullOverride }}
     {{- printf "%s" $fullOverride -}}

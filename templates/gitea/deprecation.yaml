@@ -85,6 +85,16 @@
     {{- fail "`podSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` instead." -}}
   {{- end -}}
 
+  {{/* POST EXTRA INIT CONTAINERS */}}
+  {{- if .Values.postExtraInitContainers -}}
+    {{- fail "`postExtraInitContainers` does no longer exist. Please refer to the changelog and append an entry with a `container` key to `deployment.initContainers` instead." -}}
+  {{- end -}}
+
+  {{/* PRE EXTRA INIT CONTAINERS */}}
+  {{- if .Values.preExtraInitContainers -}}
+    {{- fail "`preExtraInitContainers` does no longer exist. Please refer to the changelog and prepend an entry with a `container` key to `deployment.initContainers` instead." -}}
+  {{- end -}}
+
   {{/* RESOURCES */}}
   {{- if .Values.resources -}}
     {{- fail "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead." -}}

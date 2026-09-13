@@ -1,0 +1,130 @@
+suite: deployment template (init container configuration)
+release:
+  name: gitea-unittests
+  namespace: testing
+templates:
+  - templates/gitea/deployment.yaml
+  - templates/gitea/secret_admin.yaml
+  - templates/gitea/secret_config.yaml
+  - templates/gitea/secret_gpg.yaml
+  - templates/gitea/secret_init.yaml
+  - templates/gitea/secret_inlineConfig.yaml
+  - templates/gitea/secret_metrics.yaml
+tests:
+  - it: appends the per-container env
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initDirectories.env:
+        - name: INIT_DIRECTORIES
+          value: "1"
+      deployment.gitea.env:
+        - name: SHARED
+          value: "1"
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: INIT_DIRECTORIES
+            value: "1"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: SHARED
+            value: "1"
+      - notContains:
+          path: spec.template.spec.initContainers[1].env
+          content:
+            name: INIT_DIRECTORIES
+            value: "1"
+
+  - it: renders the per-container envFrom
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initAppIni.envFrom:
+        - secretRef:
+            name: special-secret
+    asserts:
+      - notExists:
+          path: spec.template.spec.initContainers[0].envFrom
+      - equal:
+          path: spec.template.spec.initContainers[1].envFrom
+          value:
+            - secretRef:
+                name: special-secret
+
+  - it: appends the per-container volumeMounts
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initConfigureGitea.volumeMounts:
+        - name: my-configmap-volume
+          mountPath: /configmap
+          readOnly: true
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[2].volumeMounts
+          content:
+            name: my-configmap-volume
+            mountPath: /configmap
+            readOnly: true
+      - notContains:
+          path: spec.template.spec.initContainers[0].volumeMounts
+          content:
+            name: my-configmap-volume
+            mountPath: /configmap
+            readOnly: true
+
+  - it: overrides the resources of a single init container
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initDirectories.resources:
+        requests:
+          cpu: 500m
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].resources
+          value:
+            requests:
+              cpu: 500m
+      - equal:
+          path: spec.template.spec.initContainers[1].resources
+          value:
+            limits: {}
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+  - it: overrides the security context of a single init container
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.gitea.securityContext:
+        runAsUser: 1000
+      deployment.initDirectories.securityContext:
+        runAsUser: 2000
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].securityContext.runAsUser
+          value: 2000
+      - equal:
+          path: spec.template.spec.initContainers[1].securityContext.runAsUser
+          value: 1000
+
+  - it: renders the envFrom of the gitea container
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.gitea.envFrom:
+        - configMapRef:
+            name: special-config
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].envFrom
+          value:
+            - configMapRef:
+                name: special-config
+
+  - it: omits envFrom when unset
+    template: templates/gitea/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].envFrom
+      - notExists:
+          path: spec.template.spec.initContainers[0].envFrom

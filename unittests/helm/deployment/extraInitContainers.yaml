@@ -37,12 +37,17 @@ tests:
 
   - it: Render the deployment (extraInitContainers)
     set:
-      postExtraInitContainers:
-        - name: foo
-          image: docker.io/library/busybox:latest
-      preExtraInitContainers:
-        - name: bar
-          image: docker.io/library/busybox:latest
+      deployment.initContainers:
+        - container:
+            name: bar
+            image: docker.io/library/busybox:latest
+        - link: "initDirectories"
+        - link: "initAppIni"
+        - link: "initConfigureGPG"
+        - link: "initConfigureGitea"
+        - container:
+            name: foo
+            image: docker.io/library/busybox:latest
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
       secrets.gpg.existingSecret.secretName: "custom-gpg-secret"
@@ -54,15 +59,55 @@ tests:
           path: spec.template.spec.initContainers
           count: 6
         template: templates/gitea/deployment.yaml
-      - contains:
-          path: spec.template.spec.initContainers
-          content:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: bar
+        template: templates/gitea/deployment.yaml
+      - equal:
+          path: spec.template.spec.initContainers[5].name
+          value: foo
+        template: templates/gitea/deployment.yaml
+
+  - it: renders the chart-managed init containers in the configured order
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initContainers:
+        - link: "initConfigureGitea"
+        - link: "initDirectories"
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: configure-gitea
+      - equal:
+          path: spec.template.spec.initContainers[1].name
+          value: init-directories
+
+  - it: fails when an init container entry sets both container and link
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initContainers:
+        - link: "initDirectories"
+          container:
             name: foo
             image: docker.io/library/busybox:latest
-        template: templates/gitea/deployment.yaml
-      - contains:
-          path: spec.template.spec.initContainers
-          content:
-            name: bar
-            image: docker.io/library/busybox:latest
-        template: templates/gitea/deployment.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "deployment.initContainers[0]: `container` and `link` are mutually exclusive"
+
+  - it: fails when an init container entry sets neither container nor link
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initContainers:
+        - name: foo
+    asserts:
+      - failedTemplate:
+          errorMessage: "deployment.initContainers[0]: either `container` or `link` must be set"
+
+  - it: fails when an init container links to an unknown configuration
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initContainers:
+        - link: "initSomething"
+    asserts:
+      - failedTemplate:
+          errorMessage: "deployment.initContainers[0]: unknown link `initSomething`, expected one of: initAppIni, initConfigureGPG, initConfigureGitea, initDirectories"

@@ -83,6 +83,22 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`podSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` instead."
+  - it: fails when the removed `postExtraInitContainers` value is set
+    set:
+      postExtraInitContainers:
+        - name: post-init-container
+          image: docker.io/library/busybox
+    asserts:
+      - failedTemplate:
+          errorMessage: "`postExtraInitContainers` does no longer exist. Please refer to the changelog and append an entry with a `container` key to `deployment.initContainers` instead."
+  - it: fails when the removed `preExtraInitContainers` value is set
+    set:
+      preExtraInitContainers:
+        - name: pre-init-container
+          image: docker.io/library/busybox
+    asserts:
+      - failedTemplate:
+          errorMessage: "`preExtraInitContainers` does no longer exist. Please refer to the changelog and prepend an entry with a `container` key to `deployment.initContainers` instead."
   - it: fails when the removed `resources` value is set
     set:
       resources:
@@ -158,6 +174,12 @@ tests:
         foo: bar
       podSecurityContext:
         fsGroup: 1000
+      postExtraInitContainers:
+        - name: post-init-container
+          image: docker.io/library/busybox
+      preExtraInitContainers:
+        - name: pre-init-container
+          image: docker.io/library/busybox
       priorityClassName: high-priority
       replicaCount: 2
       resources:

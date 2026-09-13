@@ -105,7 +105,11 @@ tests:
   - it: correctly renders floating tag references
     template: templates/gitea/deployment.yaml
     set:
-      deployment.gitea.image.tag: 1.21 # use non-quoted value on purpose. See: https://gitea.com/gitea/helm-gitea/issues/631
+      # use non-quoted values on purpose. See: https://gitea.com/gitea/helm-gitea/issues/631
+      deployment.gitea.image.tag: 1.21
+      deployment.initDirectories.image.tag: 1.21
+      deployment.initAppIni.image.tag: 1.21
+      deployment.initConfigureGitea.image.tag: 1.21
     asserts:
       - equal:
           path: spec.template.spec.initContainers[0].image
@@ -119,3 +123,18 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.21-rootless"
+  - it: init containers use their own image configuration
+    template: templates/gitea/deployment.yaml
+    set:
+      deployment.initDirectories.image.registry: "init.example.com"
+      deployment.initDirectories.image.tag: "1.19.4"
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: "init.example.com/gitea:1.19.4-rootless"
+      - equal:
+          path: spec.template.spec.initContainers[1].image
+          value: "docker.gitea.com/gitea:1.19.3-rootless"
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "docker.gitea.com/gitea:1.19.3-rootless"

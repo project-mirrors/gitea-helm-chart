@@ -67,6 +67,13 @@ deployment:
     # - name: VARIABLE
     #   value: my-value
 
+    ## @param deployment.gitea.envFrom List of environment variables mounted from configMaps or secrets for the gitea container.
+    envFrom: []
+    # - configMapRef:
+    #     name: special-config
+    # - secretRef:
+    #     name: special-secret
+
     ## @param deployment.gitea.image.registry image registry, e.g. gcr.io,docker.io
     ## @param deployment.gitea.image.repository Image to start for this pod
     ## @param deployment.gitea.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
@@ -101,7 +108,7 @@ deployment:
     #   cpu: 100m
     #   memory: 128Mi
 
-    ## @param deployment.gitea.securityContext Security context of the Gitea container and the chart-managed init containers.
+    ## @param deployment.gitea.securityContext Security context of the Gitea container. Used as fallback for the chart-managed init containers.
     securityContext: {}
     #   allowPrivilegeEscalation: false
     #   capabilities:
@@ -121,6 +128,305 @@ deployment:
     #   runAsUser: 1000
 
     ## @param deployment.gitea.volumeMounts Additional volume mounts.
+    volumeMounts: []
+    # - name: my-configmap-volume
+    #   mountPath: /configmap
+    #   readOnly: true
+
+  ## @param deployment.initContainers [array] List of initContainers. The order is important. First init container in the list will be executed first. The link refers to the corresponding init container configuration.
+  initContainers:
+  # - container:
+  #     command: [ "sh", "-c", "echo hello world" ]
+  #     image: "docker.io/library/busybox:latest"
+  #     name: pre-task
+  - link: "initDirectories"
+  - link: "initAppIni"
+  - link: "initConfigureGPG"
+  - link: "initConfigureGitea"
+  # - container:
+  #     command: [ "sh", "-c", "echo hello world" ]
+  #     image: "docker.io/library/busybox:latest"
+  #     name: post-task
+
+  initDirectories:
+    ## @param deployment.initDirectories.env Additional environment variables to pass to the init container.
+    env: []
+    # - name: VARIABLE
+    #   value: my-value
+
+    ## @param deployment.initDirectories.envFrom List of environment variables mounted from configMaps or secrets for the initDirectories container.
+    envFrom: []
+    # - configMapRef:
+    #     name: special-config
+    # - secretRef:
+    #     name: special-secret
+
+    ## @param deployment.initDirectories.image.registry image registry, e.g. gcr.io,docker.io
+    ## @param deployment.initDirectories.image.repository Image to start for this pod
+    ## @param deployment.initDirectories.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+    ## @param deployment.initDirectories.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+    ## @param deployment.initDirectories.image.pullPolicy Image pull policy
+    ## @param deployment.initDirectories.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+    ## @param deployment.initDirectories.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initDirectories.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+    image:
+      registry: "docker.gitea.com"
+      repository: gitea
+      tag: ""
+      digest: ""
+      pullPolicy: IfNotPresent
+      rootless: true
+      fullOverride: ""
+
+    ## @param deployment.initDirectories.resources Compute Resources required by the initDirectories container. Defaults to `initContainers.resources`. Cannot be updated.
+    ## @skip deployment.initDirectories.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
+    ## @skip deployment.initDirectories.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
+    ## @skip deployment.initDirectories.resources.requests Requests describes the minimum amount of compute resources required for this container.
+    resources:
+    # claims: []
+    #   - name: ""
+    #     request: ""
+    # limits:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+
+    ## @param deployment.initDirectories.securityContext Security context of the initDirectories container. Defaults to `deployment.gitea.securityContext`.
+    securityContext: {}
+    #   allowPrivilegeEscalation: false
+    #   capabilities:
+    #     drop:
+    #       - ALL
+    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+    #   # get an error message from the SSH server that it is not possible to read from
+    #   # the repository.
+    #   # https://gitea.com/gitea/helm-gitea/issues/161
+    #     add:
+    #       - SYS_CHROOT
+    #   privileged: false
+    #   readOnlyRootFilesystem: true
+    #   runAsGroup: 1000
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+
+    ## @param deployment.initDirectories.volumeMounts Additional volume mounts.
+    volumeMounts: []
+    # - name: my-configmap-volume
+    #   mountPath: /configmap
+    #   readOnly: true
+
+  initAppIni:
+    ## @param deployment.initAppIni.env Additional environment variables to pass to the init container.
+    env: []
+    # - name: VARIABLE
+    #   value: my-value
+
+    ## @param deployment.initAppIni.envFrom List of environment variables mounted from configMaps or secrets for the initAppIni container.
+    envFrom: []
+    # - configMapRef:
+    #     name: special-config
+    # - secretRef:
+    #     name: special-secret
+
+    ## @param deployment.initAppIni.image.registry image registry, e.g. gcr.io,docker.io
+    ## @param deployment.initAppIni.image.repository Image to start for this pod
+    ## @param deployment.initAppIni.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+    ## @param deployment.initAppIni.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+    ## @param deployment.initAppIni.image.pullPolicy Image pull policy
+    ## @param deployment.initAppIni.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+    ## @param deployment.initAppIni.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initAppIni.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+    image:
+      registry: "docker.gitea.com"
+      repository: gitea
+      tag: ""
+      digest: ""
+      pullPolicy: IfNotPresent
+      rootless: true
+      fullOverride: ""
+
+    ## @param deployment.initAppIni.resources Compute Resources required by the initAppIni container. Defaults to `initContainers.resources`. Cannot be updated.
+    ## @skip deployment.initAppIni.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
+    ## @skip deployment.initAppIni.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
+    ## @skip deployment.initAppIni.resources.requests Requests describes the minimum amount of compute resources required for this container.
+    resources:
+    # claims: []
+    #   - name: ""
+    #     request: ""
+    # limits:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+
+    ## @param deployment.initAppIni.securityContext Security context of the initAppIni container. Defaults to `deployment.gitea.securityContext`.
+    securityContext: {}
+    #   allowPrivilegeEscalation: false
+    #   capabilities:
+    #     drop:
+    #       - ALL
+    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+    #   # get an error message from the SSH server that it is not possible to read from
+    #   # the repository.
+    #   # https://gitea.com/gitea/helm-gitea/issues/161
+    #     add:
+    #       - SYS_CHROOT
+    #   privileged: false
+    #   readOnlyRootFilesystem: true
+    #   runAsGroup: 1000
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+
+    ## @param deployment.initAppIni.volumeMounts Additional volume mounts.
+    volumeMounts: []
+    # - name: my-configmap-volume
+    #   mountPath: /configmap
+    #   readOnly: true
+
+  initConfigureGPG:
+    ## @param deployment.initConfigureGPG.env Additional environment variables to pass to the init container.
+    env: []
+    # - name: VARIABLE
+    #   value: my-value
+
+    ## @param deployment.initConfigureGPG.envFrom List of environment variables mounted from configMaps or secrets for the initConfigureGPG container.
+    envFrom: []
+    # - configMapRef:
+    #     name: special-config
+    # - secretRef:
+    #     name: special-secret
+
+    ## @param deployment.initConfigureGPG.image.registry image registry, e.g. gcr.io,docker.io
+    ## @param deployment.initConfigureGPG.image.repository Image to start for this pod
+    ## @param deployment.initConfigureGPG.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+    ## @param deployment.initConfigureGPG.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+    ## @param deployment.initConfigureGPG.image.pullPolicy Image pull policy
+    ## @param deployment.initConfigureGPG.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+    ## @param deployment.initConfigureGPG.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGPG.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+    image:
+      registry: "docker.gitea.com"
+      repository: gitea
+      tag: ""
+      digest: ""
+      pullPolicy: IfNotPresent
+      rootless: true
+      fullOverride: ""
+
+    ## @param deployment.initConfigureGPG.resources Compute Resources required by the initConfigureGPG container. Defaults to `initContainers.resources`. Cannot be updated.
+    ## @skip deployment.initConfigureGPG.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
+    ## @skip deployment.initConfigureGPG.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
+    ## @skip deployment.initConfigureGPG.resources.requests Requests describes the minimum amount of compute resources required for this container.
+    resources:
+    # claims: []
+    #   - name: ""
+    #     request: ""
+    # limits:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+
+    ## @param deployment.initConfigureGPG.securityContext Security context of the initConfigureGPG container. Defaults to `deployment.gitea.securityContext`.
+    securityContext: {}
+    #   allowPrivilegeEscalation: false
+    #   capabilities:
+    #     drop:
+    #       - ALL
+    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+    #   # get an error message from the SSH server that it is not possible to read from
+    #   # the repository.
+    #   # https://gitea.com/gitea/helm-gitea/issues/161
+    #     add:
+    #       - SYS_CHROOT
+    #   privileged: false
+    #   readOnlyRootFilesystem: true
+    #   runAsGroup: 1000
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+
+    ## @param deployment.initConfigureGPG.volumeMounts Additional volume mounts.
+    volumeMounts: []
+    # - name: my-configmap-volume
+    #   mountPath: /configmap
+    #   readOnly: true
+
+  initConfigureGitea:
+    ## @param deployment.initConfigureGitea.env Additional environment variables to pass to the init container.
+    env: []
+    # - name: VARIABLE
+    #   value: my-value
+
+    ## @param deployment.initConfigureGitea.envFrom List of environment variables mounted from configMaps or secrets for the initConfigureGitea container.
+    envFrom: []
+    # - configMapRef:
+    #     name: special-config
+    # - secretRef:
+    #     name: special-secret
+
+    ## @param deployment.initConfigureGitea.image.registry image registry, e.g. gcr.io,docker.io
+    ## @param deployment.initConfigureGitea.image.repository Image to start for this pod
+    ## @param deployment.initConfigureGitea.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+    ## @param deployment.initConfigureGitea.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+    ## @param deployment.initConfigureGitea.image.pullPolicy Image pull policy
+    ## @param deployment.initConfigureGitea.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+    ## @param deployment.initConfigureGitea.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+    image:
+      registry: "docker.gitea.com"
+      repository: gitea
+      tag: ""
+      digest: ""
+      pullPolicy: IfNotPresent
+      rootless: true
+      fullOverride: ""
+
+    ## @param deployment.initConfigureGitea.resources Compute Resources required by the initConfigureGitea container. Defaults to `initContainers.resources`. Cannot be updated.
+    ## @skip deployment.initConfigureGitea.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
+    ## @skip deployment.initConfigureGitea.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
+    ## @skip deployment.initConfigureGitea.resources.requests Requests describes the minimum amount of compute resources required for this container.
+    resources:
+    # claims: []
+    #   - name: ""
+    #     request: ""
+    # limits:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   ephemeral: 100Mi
+    #   cpu: 100m
+    #   memory: 128Mi
+
+    ## @param deployment.initConfigureGitea.securityContext Security context of the initConfigureGitea container. Defaults to `deployment.gitea.securityContext`.
+    securityContext: {}
+    #   allowPrivilegeEscalation: false
+    #   capabilities:
+    #     drop:
+    #       - ALL
+    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+    #   # get an error message from the SSH server that it is not possible to read from
+    #   # the repository.
+    #   # https://gitea.com/gitea/helm-gitea/issues/161
+    #     add:
+    #       - SYS_CHROOT
+    #   privileged: false
+    #   readOnlyRootFilesystem: true
+    #   runAsGroup: 1000
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+
+    ## @param deployment.initConfigureGitea.volumeMounts Additional volume mounts.
     volumeMounts: []
     # - name: my-configmap-volume
     #   mountPath: /configmap
@@ -362,8 +668,8 @@ secrets:
     ## @param secrets.admin.enabled Create and keep the Gitea admin user in sync
     enabled: true
 
-    ## @param secrets.admin.addSHASumAnnotation Add a pod annotation with the SHA sum of the admin Secret to trigger a rollout on change
-    addSHASumAnnotation: true
+    ## @param secrets.admin.addSHASumAnnotation Add a pod annotation with the SHA sum of the admin Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
 
     ## @param secrets.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
     passwordMode: keepUpdated
@@ -393,8 +699,11 @@ secrets:
       username: gitea_admin
 
   config:
-    ## @param secrets.config.addSHASumAnnotation Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change
-    addSHASumAnnotation: true
+    ## @param secrets.config.enabled Enable mounting of the config Secret.
+    enabled: true
+
+    ## @param secrets.config.addSHASumAnnotation Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
 
     ## @param secrets.config.existingSecret.enabled Use an already existing Secret instead of creating the config Secret
     ## @param secrets.config.existingSecret.secretName Name of the already existing config Secret
@@ -412,8 +721,8 @@ secrets:
     ## @param secrets.gpg.enabled Enable mounting of a GPG key to sign git commits.
     enabled: false
 
-    ## @param secrets.gpg.addSHASumAnnotation Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change
-    addSHASumAnnotation: true
+    ## @param secrets.gpg.addSHASumAnnotation Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
 
     ## @param secrets.gpg.existingSecret.enabled Use an already existing Secret instead of creating the GPG key Secret
     ## @param secrets.gpg.existingSecret.secretName Name of the already existing GPG key Secret
@@ -440,8 +749,11 @@ secrets:
       #   -----END PGP PRIVATE KEY BLOCK-----
 
   init:
-    ## @param secrets.init.addSHASumAnnotation Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change
-    addSHASumAnnotation: true
+    ## @param secrets.init.enabled Enable mounting of the init Secret.
+    enabled: true
+
+    ## @param secrets.init.addSHASumAnnotation Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
 
     ## @param secrets.init.existingSecret.enabled Use an already existing Secret instead of creating the init Secret
     ## @param secrets.init.existingSecret.secretName Name of the already existing init Secret
@@ -456,8 +768,11 @@ secrets:
       labels: {}
 
   inlineConfig:
-    ## @param secrets.inlineConfig.addSHASumAnnotation Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change
-    addSHASumAnnotation: true
+    ## @param secrets.inlineConfig.enabled Enable mounting of the inline configuration Secret.
+    enabled: true
+
+    ## @param secrets.inlineConfig.addSHASumAnnotation Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
 
     ## @param secrets.inlineConfig.existingSecret.enabled Use an already existing Secret instead of creating the inline configuration Secret
     ## @param secrets.inlineConfig.existingSecret.secretName Name of the already existing inline configuration Secret
@@ -472,8 +787,11 @@ secrets:
       labels: {}
 
   metrics:
-    ## @param secrets.metrics.addSHASumAnnotation Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change
-    addSHASumAnnotation: true
+    ## @param secrets.metrics.enabled Enable mounting of the metrics Secret.
+    enabled: true
+
+    ## @param secrets.metrics.addSHASumAnnotation Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
 
     ## @param secrets.metrics.existingSecret.enabled Use an already existing Secret instead of creating the metrics Secret
     ## @param secrets.metrics.existingSecret.secretName Name of the already existing metrics Secret
@@ -598,17 +916,9 @@ extraContainers: []
 #    image: busybox
 #    command: [/bin/sh, -c, 'echo "Hello world"']
 
-## @param preExtraInitContainers Additional init containers to run in the pod before gitea runs it owns init containers.
-preExtraInitContainers: []
-# - name: pre-init-container
-#   image: docker.io/library/busybox
-#   command: [ /bin/sh, -c, 'echo "Hello world! I am a pre init container."' ]
-
-## @param postExtraInitContainers Additional init containers to run in the pod after gitea runs it owns init containers.
-postExtraInitContainers: []
-# - name: post-init-container
-#   image: docker.io/library/busybox
-#   command: [ /bin/sh, -c, 'echo "Hello world! I am a post init container."' ]
+## @deprecated The preExtraInitContainers and postExtraInitContainers variables have been replaced by
+## deployment.initContainers. Add an entry with a `container` key before or after the linked
+## chart-managed init containers to achieve the same result.
 
 ## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
 extraInitVolumeMounts: []
