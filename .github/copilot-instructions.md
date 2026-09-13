@@ -41,6 +41,7 @@ image:
 - Ensure, that the attributes `annotations`, `labels`, `name` and `namespace` are alphabetically sorted.
 - Render all attributes, even if they are empty, to prevent drift in Argo CD. For example, `labels` must be rendered, while `annotations` are defined as `yaml:"annotations,omitempty"`.
 - Use plural for `*.tpl` files, because they may contain functions for multiple resources of the same kind (e.g. `_services.tpl` for `httpService.yaml` or `sshService.yaml`, `_backendTLSPolicies.tpl` for `backendTLSPolicy.yaml`).
+- Use as prefix of YAML files the resource kind (e.g., `deployment.yaml` for `Deployment` resources). If there are multiple resources of the same kind, use a descriptive suffix (e.g., `deployment_metrics.yaml` for a `Deployment` related to metrics).
 
 ### Unit Tests
 
