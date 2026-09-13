@@ -7,14 +7,14 @@ Kubernetes Helm chart for deploying [Gitea](https://gitea.com). Uses Go/Helm tem
 ## Build & Test
 
 ```bash
-make readme            # Regenerate README.md parameter table + lint
-make unittests-helm    # Run Helm unit tests (helm-unittest plugin required)
-make unittests-bash    # Run bash/bats script tests (requires git submodule init)
-make unittests         # Both of the above
+make missing-dot       # Check if the @param annotations are missing a trailing dot.
+make readme            # Regenerate README.md parameter table + lint + link checker
+make helm/unittest     # Run Helm unit tests (helm-unittest plugin required)
+make bash/unittest     # Run bash/bats script tests (requires git submodule init)
 ```
 
 Always run `make readme` after changing `values.yaml` `@param` annotations.
-Always run `make unittests-helm` after changing templates or unit tests.
+Always run `make helm/unittest` after changing templates or unit tests.
 
 ## Conventions
 
@@ -49,7 +49,7 @@ image:
 - Helm unit tests live in `unittests/helm/` mirroring the template structure.
 - Test files are YAML using the [helm-unittest](https://github.com/helm-unittest/helm-unittest) format.
 - Each test must set all required values explicitly — do not rely on cross-test state.
-- The `values.yaml` file must pass `yamllint`. The configuration is in `.yamllint`. Use `make yamllint` to run the linter.
+- The `values.yaml` file must pass `yamllint`. The configuration is in `.yamllint.yaml`. Use `make yamllint` to run the linter.
 - The title of the unit test should clearly describe the scenario being tested. As title must be use a short sentence starting with a capital letter and ending without a period.
 - Each unit test must explicitly set a custom namespace and release name, rather than relying on defaults.
 
