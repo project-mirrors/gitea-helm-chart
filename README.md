@@ -1019,31 +1019,31 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Global
 
-| Name                      | Description                                                               | Value |
-| ------------------------- | ------------------------------------------------------------------------- | ----- |
-| `global.imageRegistry`    | global image registry override                                            | `""`  |
-| `global.imagePullSecrets` | global image pull secrets override; can be extended by `imagePullSecrets` | `[]`  |
-| `global.storageClass`     | global storage class override                                             | `""`  |
-| `global.hostAliases`      | global hostAliases which will be added to the pod's hosts files           | `[]`  |
+| Name                      | Description                                                                | Value |
+| ------------------------- | -------------------------------------------------------------------------- | ----- |
+| `global.imageRegistry`    | global image registry override.                                            | `""`  |
+| `global.imagePullSecrets` | global image pull secrets override; can be extended by `imagePullSecrets`. | `[]`  |
+| `global.storageClass`     | global storage class override.                                             | `""`  |
+| `global.hostAliases`      | global hostAliases which will be added to the pod's hosts files.           | `[]`  |
 
 ### deployment
 
 | Name                                               | Description                                                                                                                                                                                    | Value              |
 | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
 | `deployment.enabled`                               | Enable the deployment of Gitea.                                                                                                                                                                | `true`             |
-| `deployment.annotations`                           | Annotations for the Gitea deployment to be created                                                                                                                                             | `{}`               |
-| `deployment.labels`                                | Labels for the deployment                                                                                                                                                                      | `{}`               |
+| `deployment.annotations`                           | Annotations for the Gitea deployment to be created.                                                                                                                                            | `{}`               |
+| `deployment.labels`                                | Labels for the deployment.                                                                                                                                                                     | `{}`               |
 | `deployment.affinity`                              | Affinity for the deployment.                                                                                                                                                                   | `{}`               |
 | `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                                                                                             | `{}`               |
 | `deployment.gitea.env`                             | Additional environment variables to pass to the gitea container.                                                                                                                               | `[]`               |
 | `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the gitea container.                                                                                                      | `[]`               |
-| `deployment.gitea.image.registry`                  | image registry, e.g. gcr.io,docker.io                                                                                                                                                          | `docker.gitea.com` |
-| `deployment.gitea.image.repository`                | Image to start for this pod                                                                                                                                                                    | `gitea`            |
+| `deployment.gitea.image.registry`                  | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
+| `deployment.gitea.image.repository`                | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.gitea.image.tag`                       | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
-| `deployment.gitea.image.digest`                    | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                                                     | `""`               |
-| `deployment.gitea.image.pullPolicy`                | Image pull policy                                                                                                                                                                              | `IfNotPresent`     |
-| `deployment.gitea.image.rootless`                  | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                                      | `true`             |
-| `deployment.gitea.image.fullOverride`              | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**              | `""`               |
+| `deployment.gitea.image.digest`                    | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.                                                                                    | `""`               |
+| `deployment.gitea.image.pullPolicy`                | Image pull policy.                                                                                                                                                                             | `IfNotPresent`     |
+| `deployment.gitea.image.rootless`                  | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.                                                                                                     | `true`             |
+| `deployment.gitea.image.fullOverride`              | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.              | `""`               |
 | `deployment.gitea.resources`                       | Compute Resources required by Gitea container. Cannot be updated.                                                                                                                              | `nil`              |
 | `deployment.gitea.securityContext`                 | Security context of the Gitea container. Used as fallback for the chart-managed init containers.                                                                                               | `{}`               |
 | `deployment.gitea.volumeMounts`                    | Additional volume mounts.                                                                                                                                                                      | `[]`               |
@@ -1051,109 +1051,109 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.initContainers`                        | List of initContainers. The order is important. First init container in the list will be executed first. The link refers to the corresponding init container configuration.                    | `[]`               |
 | `deployment.initDirectories.env`                   | Additional environment variables to pass to the init container.                                                                                                                                | `[]`               |
 | `deployment.initDirectories.envFrom`               | List of environment variables mounted from configMaps or secrets for the initDirectories container.                                                                                            | `[]`               |
-| `deployment.initDirectories.image.registry`        | image registry, e.g. gcr.io,docker.io                                                                                                                                                          | `docker.gitea.com` |
-| `deployment.initDirectories.image.repository`      | Image to start for this pod                                                                                                                                                                    | `gitea`            |
+| `deployment.initDirectories.image.registry`        | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
+| `deployment.initDirectories.image.repository`      | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.initDirectories.image.tag`             | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
-| `deployment.initDirectories.image.digest`          | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                                                     | `""`               |
-| `deployment.initDirectories.image.pullPolicy`      | Image pull policy                                                                                                                                                                              | `IfNotPresent`     |
-| `deployment.initDirectories.image.rootless`        | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                                      | `true`             |
-| `deployment.initDirectories.image.fullOverride`    | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initDirectories.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**    | `""`               |
+| `deployment.initDirectories.image.digest`          | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.                                                                                    | `""`               |
+| `deployment.initDirectories.image.pullPolicy`      | Image pull policy.                                                                                                                                                                             | `IfNotPresent`     |
+| `deployment.initDirectories.image.rootless`        | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.                                                                                                     | `true`             |
+| `deployment.initDirectories.image.fullOverride`    | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initDirectories.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.    | `""`               |
 | `deployment.initDirectories.resources`             | Compute Resources required by the initDirectories container. Defaults to `initContainers.resources`. Cannot be updated.                                                                        | `nil`              |
 | `deployment.initDirectories.securityContext`       | Security context of the initDirectories container. Defaults to `deployment.gitea.securityContext`.                                                                                             | `{}`               |
 | `deployment.initDirectories.volumeMounts`          | Additional volume mounts.                                                                                                                                                                      | `[]`               |
 | `deployment.initAppIni.env`                        | Additional environment variables to pass to the init container.                                                                                                                                | `[]`               |
 | `deployment.initAppIni.envFrom`                    | List of environment variables mounted from configMaps or secrets for the initAppIni container.                                                                                                 | `[]`               |
-| `deployment.initAppIni.image.registry`             | image registry, e.g. gcr.io,docker.io                                                                                                                                                          | `docker.gitea.com` |
-| `deployment.initAppIni.image.repository`           | Image to start for this pod                                                                                                                                                                    | `gitea`            |
+| `deployment.initAppIni.image.registry`             | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
+| `deployment.initAppIni.image.repository`           | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.initAppIni.image.tag`                  | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
-| `deployment.initAppIni.image.digest`               | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                                                     | `""`               |
-| `deployment.initAppIni.image.pullPolicy`           | Image pull policy                                                                                                                                                                              | `IfNotPresent`     |
-| `deployment.initAppIni.image.rootless`             | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                                      | `true`             |
-| `deployment.initAppIni.image.fullOverride`         | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initAppIni.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**         | `""`               |
+| `deployment.initAppIni.image.digest`               | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.                                                                                    | `""`               |
+| `deployment.initAppIni.image.pullPolicy`           | Image pull policy.                                                                                                                                                                             | `IfNotPresent`     |
+| `deployment.initAppIni.image.rootless`             | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.                                                                                                     | `true`             |
+| `deployment.initAppIni.image.fullOverride`         | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initAppIni.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.         | `""`               |
 | `deployment.initAppIni.resources`                  | Compute Resources required by the initAppIni container. Defaults to `initContainers.resources`. Cannot be updated.                                                                             | `nil`              |
 | `deployment.initAppIni.securityContext`            | Security context of the initAppIni container. Defaults to `deployment.gitea.securityContext`.                                                                                                  | `{}`               |
 | `deployment.initAppIni.volumeMounts`               | Additional volume mounts.                                                                                                                                                                      | `[]`               |
 | `deployment.initConfigureGPG.env`                  | Additional environment variables to pass to the init container.                                                                                                                                | `[]`               |
 | `deployment.initConfigureGPG.envFrom`              | List of environment variables mounted from configMaps or secrets for the initConfigureGPG container.                                                                                           | `[]`               |
-| `deployment.initConfigureGPG.image.registry`       | image registry, e.g. gcr.io,docker.io                                                                                                                                                          | `docker.gitea.com` |
-| `deployment.initConfigureGPG.image.repository`     | Image to start for this pod                                                                                                                                                                    | `gitea`            |
+| `deployment.initConfigureGPG.image.registry`       | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
+| `deployment.initConfigureGPG.image.repository`     | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.initConfigureGPG.image.tag`            | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
-| `deployment.initConfigureGPG.image.digest`         | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                                                     | `""`               |
-| `deployment.initConfigureGPG.image.pullPolicy`     | Image pull policy                                                                                                                                                                              | `IfNotPresent`     |
-| `deployment.initConfigureGPG.image.rootless`       | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                                      | `true`             |
-| `deployment.initConfigureGPG.image.fullOverride`   | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGPG.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**   | `""`               |
+| `deployment.initConfigureGPG.image.digest`         | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.                                                                                    | `""`               |
+| `deployment.initConfigureGPG.image.pullPolicy`     | Image pull policy.                                                                                                                                                                             | `IfNotPresent`     |
+| `deployment.initConfigureGPG.image.rootless`       | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.                                                                                                     | `true`             |
+| `deployment.initConfigureGPG.image.fullOverride`   | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGPG.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.   | `""`               |
 | `deployment.initConfigureGPG.resources`            | Compute Resources required by the initConfigureGPG container. Defaults to `initContainers.resources`. Cannot be updated.                                                                       | `nil`              |
 | `deployment.initConfigureGPG.securityContext`      | Security context of the initConfigureGPG container. Defaults to `deployment.gitea.securityContext`.                                                                                            | `{}`               |
 | `deployment.initConfigureGPG.volumeMounts`         | Additional volume mounts.                                                                                                                                                                      | `[]`               |
 | `deployment.initConfigureGitea.env`                | Additional environment variables to pass to the init container.                                                                                                                                | `[]`               |
 | `deployment.initConfigureGitea.envFrom`            | List of environment variables mounted from configMaps or secrets for the initConfigureGitea container.                                                                                         | `[]`               |
-| `deployment.initConfigureGitea.image.registry`     | image registry, e.g. gcr.io,docker.io                                                                                                                                                          | `docker.gitea.com` |
-| `deployment.initConfigureGitea.image.repository`   | Image to start for this pod                                                                                                                                                                    | `gitea`            |
+| `deployment.initConfigureGitea.image.registry`     | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
+| `deployment.initConfigureGitea.image.repository`   | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.initConfigureGitea.image.tag`          | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
-| `deployment.initConfigureGitea.image.digest`       | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`                                                                                     | `""`               |
-| `deployment.initConfigureGitea.image.pullPolicy`   | Image pull policy                                                                                                                                                                              | `IfNotPresent`     |
-| `deployment.initConfigureGitea.image.rootless`     | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher                                                                                                      | `true`             |
-| `deployment.initConfigureGitea.image.fullOverride` | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).** | `""`               |
+| `deployment.initConfigureGitea.image.digest`       | Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.                                                                                    | `""`               |
+| `deployment.initConfigureGitea.image.pullPolicy`   | Image pull policy.                                                                                                                                                                             | `IfNotPresent`     |
+| `deployment.initConfigureGitea.image.rootless`     | Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.                                                                                                     | `true`             |
+| `deployment.initConfigureGitea.image.fullOverride` | Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**. | `""`               |
 | `deployment.initConfigureGitea.resources`          | Compute Resources required by the initConfigureGitea container. Defaults to `initContainers.resources`. Cannot be updated.                                                                     | `nil`              |
 | `deployment.initConfigureGitea.securityContext`    | Security context of the initConfigureGitea container. Defaults to `deployment.gitea.securityContext`.                                                                                          | `{}`               |
 | `deployment.initConfigureGitea.volumeMounts`       | Additional volume mounts.                                                                                                                                                                      | `[]`               |
-| `deployment.nodeSelector`                          | NodeSelector for the deployment                                                                                                                                                                | `{}`               |
-| `deployment.priorityClassName`                     | priorityClassName for the deployment                                                                                                                                                           | `""`               |
+| `deployment.nodeSelector`                          | NodeSelector for the deployment.                                                                                                                                                               | `{}`               |
+| `deployment.priorityClassName`                     | priorityClassName for the deployment.                                                                                                                                                          | `""`               |
 | `deployment.replicas`                              | Number of replicas for the Gitea deployment.                                                                                                                                                   | `1`                |
 | `deployment.resources`                             | Resources is the total amount of CPU and Memory resources required by all containers in the pod.                                                                                               | `{}`               |
-| `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork"                                                                                                                                                       | `""`               |
+| `deployment.schedulerName`                         | Use an alternate scheduler, e.g. "stork".                                                                                                                                                      | `""`               |
 | `deployment.securityContext`                       | Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.                                                                                 | `{}`               |
 | `deployment.strategy.type`                         | Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.                                                                                                            | `RollingUpdate`    |
 | `deployment.strategy.rollingUpdate.maxSurge`       | Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`.                                                                              | `100%`             |
 | `deployment.strategy.rollingUpdate.maxUnavailable` | Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.                                                                                        | `0`                |
-| `deployment.terminationGracePeriodSeconds`         | How long to wait until forcefully kill the pod                                                                                                                                                 | `60`               |
+| `deployment.terminationGracePeriodSeconds`         | How long to wait until forcefully kill the pod.                                                                                                                                                | `60`               |
 | `deployment.tolerations`                           | Tolerations of the Gitea deployment.                                                                                                                                                           | `[]`               |
-| `deployment.topologySpreadConstraints`             | TopologySpreadConstraints for the deployment                                                                                                                                                   | `[]`               |
+| `deployment.topologySpreadConstraints`             | TopologySpreadConstraints for the deployment.                                                                                                                                                  | `[]`               |
 | `deployment.volumes`                               | Additional volumes to mount into the pods of the Gitea deployment.                                                                                                                             | `[]`               |
 
 ### Gateway API
 
 | Name                                                            | Description                                                                                                                                                                | Value   |
 | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `gatewayAPI.enabled`                                            | Enable deployment of Gateway API resources                                                                                                                                 | `false` |
-| `gatewayAPI.core.backendTLSPolicy.enabled`                      | Render a BackendTLSPolicy resource for encrypted backend traffic                                                                                                           | `false` |
-| `gatewayAPI.core.backendTLSPolicy.annotations`                  | Annotations applied to the BackendTLSPolicy                                                                                                                                | `{}`    |
-| `gatewayAPI.core.backendTLSPolicy.labels`                       | Additional labels applied to the BackendTLSPolicy                                                                                                                          | `{}`    |
+| `gatewayAPI.enabled`                                            | Enable deployment of Gateway API resources.                                                                                                                                | `false` |
+| `gatewayAPI.core.backendTLSPolicy.enabled`                      | Render a BackendTLSPolicy resource for encrypted backend traffic.                                                                                                          | `false` |
+| `gatewayAPI.core.backendTLSPolicy.annotations`                  | Annotations applied to the BackendTLSPolicy.                                                                                                                               | `{}`    |
+| `gatewayAPI.core.backendTLSPolicy.labels`                       | Additional labels applied to the BackendTLSPolicy.                                                                                                                         | `{}`    |
 | `gatewayAPI.core.backendTLSPolicy.targetRefs`                   | Target references for the BackendTLSPolicy. Defaults to the HTTP service.                                                                                                  | `[]`    |
 | `gatewayAPI.core.backendTLSPolicy.validation`                   | Validation configuration (required when enabled). See `docs/gateway-api.md`.                                                                                               | `{}`    |
 | `gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs` | CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.                                                                                  |         |
 | `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`. |         |
-| `gatewayAPI.core.httpRoute.enabled`                             | Render an HTTPRoute resource                                                                                                                                               | `false` |
-| `gatewayAPI.core.httpRoute.annotations`                         | Annotations applied to the HTTPRoute                                                                                                                                       | `{}`    |
-| `gatewayAPI.core.httpRoute.labels`                              | Additional labels applied to the HTTPRoute                                                                                                                                 | `{}`    |
+| `gatewayAPI.core.httpRoute.enabled`                             | Render an HTTPRoute resource.                                                                                                                                              | `false` |
+| `gatewayAPI.core.httpRoute.annotations`                         | Annotations applied to the HTTPRoute.                                                                                                                                      | `{}`    |
+| `gatewayAPI.core.httpRoute.labels`                              | Additional labels applied to the HTTPRoute.                                                                                                                                | `{}`    |
 | `gatewayAPI.core.httpRoute.tls`                                 | When true, treat the upstream Gateway as terminating TLS so `ROOT_URL` uses `https`.                                                                                       | `false` |
 | `gatewayAPI.core.httpRoute.parentRefs`                          | Parent gateway references (required when enabled).                                                                                                                         | `[]`    |
 | `gatewayAPI.core.httpRoute.hostnames`                           | List of hostnames for the HTTPRoute.                                                                                                                                       | `[]`    |
 | `gatewayAPI.core.httpRoute.rules`                               | Custom routing rules. Defaults to a PathPrefix `/` rule targeting the HTTP service.                                                                                        | `[]`    |
-| `gatewayAPI.core.tcpRoute.enabled`                              | Render a TCPRoute resource (typically for SSH)                                                                                                                             | `false` |
-| `gatewayAPI.core.tcpRoute.annotations`                          | Annotations applied to the TCPRoute                                                                                                                                        | `{}`    |
-| `gatewayAPI.core.tcpRoute.labels`                               | Additional labels applied to the TCPRoute                                                                                                                                  | `{}`    |
+| `gatewayAPI.core.tcpRoute.enabled`                              | Render a TCPRoute resource (typically for SSH).                                                                                                                            | `false` |
+| `gatewayAPI.core.tcpRoute.annotations`                          | Annotations applied to the TCPRoute.                                                                                                                                       | `{}`    |
+| `gatewayAPI.core.tcpRoute.labels`                               | Additional labels applied to the TCPRoute.                                                                                                                                 | `{}`    |
 | `gatewayAPI.core.tcpRoute.parentRefs`                           | Parent gateway references (required when enabled).                                                                                                                         | `[]`    |
 | `gatewayAPI.core.tcpRoute.rules`                                | Custom routing rules. Defaults to a rule targeting the SSH service.                                                                                                        | `[]`    |
-| `gatewayAPI.nginx.clientSettingsPolicies.enabled`               | Render a ClientSettingsPolicy (NGINX Gateway Fabric) to raise the client request body limit                                                                                | `false` |
-| `gatewayAPI.nginx.clientSettingsPolicies.annotations`           | Annotations applied to the ClientSettingsPolicy                                                                                                                            | `{}`    |
-| `gatewayAPI.nginx.clientSettingsPolicies.labels`                | Additional labels applied to the ClientSettingsPolicy                                                                                                                      | `{}`    |
+| `gatewayAPI.nginx.clientSettingsPolicies.enabled`               | Render a ClientSettingsPolicy (NGINX Gateway Fabric) to raise the client request body limit.                                                                               | `false` |
+| `gatewayAPI.nginx.clientSettingsPolicies.annotations`           | Annotations applied to the ClientSettingsPolicy.                                                                                                                           | `{}`    |
+| `gatewayAPI.nginx.clientSettingsPolicies.labels`                | Additional labels applied to the ClientSettingsPolicy.                                                                                                                     | `{}`    |
 | `gatewayAPI.nginx.clientSettingsPolicies.targetRef`             | Target reference for the ClientSettingsPolicy. Defaults to the chart's HTTPRoute.                                                                                          | `{}`    |
 | `gatewayAPI.nginx.clientSettingsPolicies.body`                  | Client body settings (required when enabled), e.g. `maxSize`. See `docs/gateway-api.md`.                                                                                   | `{}`    |
 
 ### Ingress
 
-| Name                             | Description                                                                                    | Value             |
-| -------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |
-| `ingress.enabled`                | Enable ingress                                                                                 | `false`           |
-| `ingress.annotations`            | Additional annotations.                                                                        | `{}`              |
-| `ingress.labels`                 | Additional labels.                                                                             | `{}`              |
-| `ingress.className`              | DEPRECATED: Ingress class name.                                                                | `nginx`           |
-| `ingress.pathType`               | Ingress Path Type                                                                              | `Prefix`          |
-| `ingress.hosts[0].host`          | Default Ingress host                                                                           | `git.example.com` |
-| `ingress.hosts[0].paths[0].path` | Default Ingress path                                                                           | `/`               |
-| `ingress.tls`                    | Ingress tls settings                                                                           | `[]`              |
-| `namespace`                      | An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified | `""`              |
+| Name                             | Description                                                                                     | Value             |
+| -------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------- |
+| `ingress.enabled`                | Enable ingress.                                                                                 | `false`           |
+| `ingress.annotations`            | Additional annotations.                                                                         | `{}`              |
+| `ingress.labels`                 | Additional labels.                                                                              | `{}`              |
+| `ingress.className`              | DEPRECATED: Ingress class name.                                                                 | `nginx`           |
+| `ingress.pathType`               | Ingress Path Type.                                                                              | `Prefix`          |
+| `ingress.hosts[0].host`          | Default Ingress host.                                                                           | `git.example.com` |
+| `ingress.hosts[0].paths[0].path` | Default Ingress path.                                                                           | `/`               |
+| `ingress.tls`                    | Ingress tls settings.                                                                           | `[]`              |
+| `namespace`                      | An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified. | `""`              |
 
 ### Network
 
@@ -1163,162 +1163,162 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Image
 
-| Name               | Description                         | Value |
-| ------------------ | ----------------------------------- | ----- |
-| `imagePullSecrets` | Secret to use for pulling the image | `[]`  |
+| Name               | Description                          | Value |
+| ------------------ | ------------------------------------ | ----- |
+| `imagePullSecrets` | Secret to use for pulling the image. | `[]`  |
 
 ### Security
 
 | Name                  | Description                                                                                                                          | Value |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
 | `openshift.enabled`   | Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API. | `nil` |
-| `podDisruptionBudget` | Pod disruption budget                                                                                                                | `{}`  |
+| `podDisruptionBudget` | Pod disruption budget.                                                                                                               | `{}`  |
 
 ### Route
 
 | Name                                      | Description                                                                                                    | Value   |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------- |
-| `route.enabled`                           | Enable OpenShift Route                                                                                         | `false` |
-| `route.annotations`                       | Route annotations                                                                                              | `{}`    |
+| `route.enabled`                           | Enable OpenShift Route.                                                                                        | `false` |
+| `route.annotations`                       | Route annotations.                                                                                             | `{}`    |
 | `route.host`                              | Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values. | `""`    |
-| `route.path`                              | Route path                                                                                                     | `""`    |
-| `route.wildcardPolicy`                    | Route wildcard policy                                                                                          | `None`  |
-| `route.tls.termination`                   | Route TLS termination type                                                                                     | `nil`   |
-| `route.tls.insecureEdgeTerminationPolicy` | Route insecure edge termination policy                                                                         | `nil`   |
-| `route.tls.key`                           | Route TLS key                                                                                                  | `nil`   |
-| `route.tls.certificate`                   | Route TLS certificate                                                                                          | `nil`   |
-| `route.tls.caCertificate`                 | Route TLS CA certificate                                                                                       | `nil`   |
-| `route.tls.destinationCACertificate`      | Route destination CA certificate                                                                               | `nil`   |
+| `route.path`                              | Route path.                                                                                                    | `""`    |
+| `route.wildcardPolicy`                    | Route wildcard policy.                                                                                         | `None`  |
+| `route.tls.termination`                   | Route TLS termination type.                                                                                    | `nil`   |
+| `route.tls.insecureEdgeTerminationPolicy` | Route insecure edge termination policy.                                                                        | `nil`   |
+| `route.tls.key`                           | Route TLS key.                                                                                                 | `nil`   |
+| `route.tls.certificate`                   | Route TLS certificate.                                                                                         | `nil`   |
+| `route.tls.caCertificate`                 | Route TLS CA certificate.                                                                                      | `nil`   |
+| `route.tls.destinationCACertificate`      | Route destination CA certificate.                                                                              | `nil`   |
 
 ### Secrets
 
 | Name                                             | Description                                                                                                                                                                                               | Value                |
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| `secrets.admin.enabled`                          | Create and keep the Gitea admin user in sync                                                                                                                                                              | `true`               |
+| `secrets.admin.enabled`                          | Create and keep the Gitea admin user in sync.                                                                                                                                                             | `true`               |
 | `secrets.admin.addSHASumAnnotation`              | Add a pod annotation with the SHA sum of the admin Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).                | `false`              |
-| `secrets.admin.passwordMode`                     | Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated                                                                             | `keepUpdated`        |
-| `secrets.admin.existingSecret.enabled`           | Use an already existing Secret instead of creating the admin Secret                                                                                                                                       | `false`              |
-| `secrets.admin.existingSecret.secretName`        | Name of the already existing admin Secret                                                                                                                                                                 | `""`                 |
-| `secrets.admin.existingSecret.emailKey`          | Key of the email address in the existing admin Secret                                                                                                                                                     | `email`              |
-| `secrets.admin.existingSecret.passwordKey`       | Key of the password in the existing admin Secret                                                                                                                                                          | `password`           |
-| `secrets.admin.existingSecret.usernameKey`       | Key of the username in the existing admin Secret                                                                                                                                                          | `username`           |
-| `secrets.admin.new.annotations`                  | Annotations for the admin Secret                                                                                                                                                                          | `{}`                 |
-| `secrets.admin.new.labels`                       | Labels for the admin Secret                                                                                                                                                                               | `{}`                 |
-| `secrets.admin.new.email`                        | Email of the Gitea admin user                                                                                                                                                                             | `gitea@local.domain` |
+| `secrets.admin.passwordMode`                     | Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated.                                                                            | `keepUpdated`        |
+| `secrets.admin.existingSecret.enabled`           | Use an already existing Secret instead of creating the admin Secret.                                                                                                                                      | `false`              |
+| `secrets.admin.existingSecret.secretName`        | Name of the already existing admin Secret.                                                                                                                                                                | `""`                 |
+| `secrets.admin.existingSecret.emailKey`          | Key of the email address in the existing admin Secret.                                                                                                                                                    | `email`              |
+| `secrets.admin.existingSecret.passwordKey`       | Key of the password in the existing admin Secret.                                                                                                                                                         | `password`           |
+| `secrets.admin.existingSecret.usernameKey`       | Key of the username in the existing admin Secret.                                                                                                                                                         | `username`           |
+| `secrets.admin.new.annotations`                  | Annotations for the admin Secret.                                                                                                                                                                         | `{}`                 |
+| `secrets.admin.new.labels`                       | Labels for the admin Secret.                                                                                                                                                                              | `{}`                 |
+| `secrets.admin.new.email`                        | Email of the Gitea admin user.                                                                                                                                                                            | `gitea@local.domain` |
 | `secrets.admin.new.password`                     | Password of the Gitea admin user.                                                                                                                                                                         | `r8sA8CPHD9!bt6d`    |
-| `secrets.admin.new.username`                     | Username of the Gitea admin user                                                                                                                                                                          | `gitea_admin`        |
+| `secrets.admin.new.username`                     | Username of the Gitea admin user.                                                                                                                                                                         | `gitea_admin`        |
 | `secrets.config.enabled`                         | Enable mounting of the config Secret.                                                                                                                                                                     | `true`               |
 | `secrets.config.addSHASumAnnotation`             | Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).               | `false`              |
-| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret                                                                                                                                      | `false`              |
-| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                                                                                                                                | `""`                 |
-| `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                                                                                                                         | `{}`                 |
-| `secrets.config.new.labels`                      | Labels for the config Secret                                                                                                                                                                              | `{}`                 |
+| `secrets.config.existingSecret.enabled`          | Use an already existing Secret instead of creating the config Secret.                                                                                                                                     | `false`              |
+| `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret.                                                                                                                                                               | `""`                 |
+| `secrets.config.new.annotations`                 | Annotations for the config Secret.                                                                                                                                                                        | `{}`                 |
+| `secrets.config.new.labels`                      | Labels for the config Secret.                                                                                                                                                                             | `{}`                 |
 | `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign git commits.                                                                                                                                                         | `false`              |
 | `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).              | `false`              |
-| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                                                                                                                     | `false`              |
-| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                                                                                                                               | `""`                 |
-| `secrets.gpg.existingSecret.gpgHomeKey`          | Key of the GPG home directory in the existing GPG key Secret                                                                                                                                              | `gpgHome`            |
+| `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret.                                                                                                                                    | `false`              |
+| `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret.                                                                                                                                                              | `""`                 |
+| `secrets.gpg.existingSecret.gpgHomeKey`          | Key of the GPG home directory in the existing GPG key Secret.                                                                                                                                             | `gpgHome`            |
 | `secrets.gpg.existingSecret.privateKeyKey`       | Key of the private key in the existing GPG key Secret.                                                                                                                                                    | `privateKey`         |
-| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret                                                                                                                                                                        | `{}`                 |
-| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret                                                                                                                                                                             | `{}`                 |
+| `secrets.gpg.new.annotations`                    | Annotations for the GPG key Secret.                                                                                                                                                                       | `{}`                 |
+| `secrets.gpg.new.labels`                         | Labels for the GPG key Secret.                                                                                                                                                                            | `{}`                 |
 | `secrets.gpg.new.gpgHome`                        | Path to the GPG home directory.                                                                                                                                                                           | `/data/git/.gnupg`   |
 | `secrets.gpg.new.privateKey`                     | Content of the private GPG key in armored format.                                                                                                                                                         | `""`                 |
 | `secrets.init.enabled`                           | Enable mounting of the init Secret.                                                                                                                                                                       | `true`               |
 | `secrets.init.addSHASumAnnotation`               | Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).                 | `false`              |
-| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret                                                                                                                                        | `false`              |
-| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret                                                                                                                                                                  | `""`                 |
-| `secrets.init.new.annotations`                   | Annotations for the init Secret                                                                                                                                                                           | `{}`                 |
-| `secrets.init.new.labels`                        | Labels for the init Secret                                                                                                                                                                                | `{}`                 |
+| `secrets.init.existingSecret.enabled`            | Use an already existing Secret instead of creating the init Secret.                                                                                                                                       | `false`              |
+| `secrets.init.existingSecret.secretName`         | Name of the already existing init Secret.                                                                                                                                                                 | `""`                 |
+| `secrets.init.new.annotations`                   | Annotations for the init Secret.                                                                                                                                                                          | `{}`                 |
+| `secrets.init.new.labels`                        | Labels for the init Secret.                                                                                                                                                                               | `{}`                 |
 | `secrets.inlineConfig.enabled`                   | Enable mounting of the inline configuration Secret.                                                                                                                                                       | `true`               |
 | `secrets.inlineConfig.addSHASumAnnotation`       | Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation). | `false`              |
-| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret                                                                                                                        | `false`              |
-| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret                                                                                                                                                  | `""`                 |
-| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret                                                                                                                                                           | `{}`                 |
-| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret                                                                                                                                                                | `{}`                 |
+| `secrets.inlineConfig.existingSecret.enabled`    | Use an already existing Secret instead of creating the inline configuration Secret.                                                                                                                       | `false`              |
+| `secrets.inlineConfig.existingSecret.secretName` | Name of the already existing inline configuration Secret.                                                                                                                                                 | `""`                 |
+| `secrets.inlineConfig.new.annotations`           | Annotations for the inline configuration Secret.                                                                                                                                                          | `{}`                 |
+| `secrets.inlineConfig.new.labels`                | Labels for the inline configuration Secret.                                                                                                                                                               | `{}`                 |
 | `secrets.metrics.enabled`                        | Enable mounting of the metrics Secret.                                                                                                                                                                    | `true`               |
 | `secrets.metrics.addSHASumAnnotation`            | Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).              | `false`              |
-| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret                                                                                                                                     | `false`              |
-| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret                                                                                                                                                               | `""`                 |
-| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret                                                                                                                                                                        | `{}`                 |
-| `secrets.metrics.new.labels`                     | Labels for the metrics Secret                                                                                                                                                                             | `{}`                 |
+| `secrets.metrics.existingSecret.enabled`         | Use an already existing Secret instead of creating the metrics Secret.                                                                                                                                    | `false`              |
+| `secrets.metrics.existingSecret.secretName`      | Name of the already existing metrics Secret.                                                                                                                                                              | `""`                 |
+| `secrets.metrics.new.annotations`                | Annotations for the metrics Secret.                                                                                                                                                                       | `{}`                 |
+| `secrets.metrics.new.labels`                     | Labels for the metrics Secret.                                                                                                                                                                            | `{}`                 |
 
 ### Service
 
 | Name                                    | Description                                                                                                                                                                                          | Value       |
 | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `service.http.type`                     | Kubernetes service type for web traffic                                                                                                                                                              | `ClusterIP` |
-| `service.http.port`                     | Port number for web traffic                                                                                                                                                                          | `3000`      |
-| `service.http.clusterIP`                | ClusterIP setting for http autosetup for deployment is None                                                                                                                                          | `None`      |
-| `service.http.loadBalancerIP`           | LoadBalancer IP setting                                                                                                                                                                              | `nil`       |
-| `service.http.nodePort`                 | NodePort for http service                                                                                                                                                                            | `nil`       |
-| `service.http.externalTrafficPolicy`    | If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                         | `nil`       |
-| `service.http.externalIPs`              | External IPs for service                                                                                                                                                                             | `nil`       |
-| `service.http.ipFamilyPolicy`           | HTTP service dual-stack policy                                                                                                                                                                       | `nil`       |
+| `service.http.type`                     | Kubernetes service type for web traffic.                                                                                                                                                             | `ClusterIP` |
+| `service.http.port`                     | Port number for web traffic.                                                                                                                                                                         | `3000`      |
+| `service.http.clusterIP`                | ClusterIP setting for http autosetup for deployment is None.                                                                                                                                         | `None`      |
+| `service.http.loadBalancerIP`           | LoadBalancer IP setting.                                                                                                                                                                             | `nil`       |
+| `service.http.nodePort`                 | NodePort for http service.                                                                                                                                                                           | `nil`       |
+| `service.http.externalTrafficPolicy`    | If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation.                                                                                        | `nil`       |
+| `service.http.externalIPs`              | External IPs for service.                                                                                                                                                                            | `nil`       |
+| `service.http.ipFamilyPolicy`           | HTTP service dual-stack policy.                                                                                                                                                                      | `nil`       |
 | `service.http.ipFamilies`               | HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). | `nil`       |
-| `service.http.loadBalancerSourceRanges` | Source range filter for http loadbalancer                                                                                                                                                            | `[]`        |
-| `service.http.annotations`              | HTTP service annotations                                                                                                                                                                             | `{}`        |
-| `service.http.labels`                   | HTTP service additional labels                                                                                                                                                                       | `{}`        |
-| `service.http.loadBalancerClass`        | Loadbalancer class                                                                                                                                                                                   | `nil`       |
-| `service.ssh.type`                      | Kubernetes service type for ssh traffic                                                                                                                                                              | `ClusterIP` |
-| `service.ssh.port`                      | Port number for ssh traffic                                                                                                                                                                          | `22`        |
-| `service.ssh.clusterIP`                 | ClusterIP setting for ssh autosetup for deployment is None                                                                                                                                           | `None`      |
-| `service.ssh.loadBalancerIP`            | LoadBalancer IP setting                                                                                                                                                                              | `nil`       |
-| `service.ssh.nodePort`                  | NodePort for ssh service                                                                                                                                                                             | `nil`       |
-| `service.ssh.externalTrafficPolicy`     | If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                          | `nil`       |
-| `service.ssh.externalIPs`               | External IPs for service                                                                                                                                                                             | `nil`       |
-| `service.ssh.ipFamilyPolicy`            | SSH service dual-stack policy                                                                                                                                                                        | `nil`       |
+| `service.http.loadBalancerSourceRanges` | Source range filter for http loadbalancer.                                                                                                                                                           | `[]`        |
+| `service.http.annotations`              | HTTP service annotations.                                                                                                                                                                            | `{}`        |
+| `service.http.labels`                   | HTTP service additional labels.                                                                                                                                                                      | `{}`        |
+| `service.http.loadBalancerClass`        | Loadbalancer class.                                                                                                                                                                                  | `nil`       |
+| `service.ssh.type`                      | Kubernetes service type for ssh traffic.                                                                                                                                                             | `ClusterIP` |
+| `service.ssh.port`                      | Port number for ssh traffic.                                                                                                                                                                         | `22`        |
+| `service.ssh.clusterIP`                 | ClusterIP setting for ssh autosetup for deployment is None.                                                                                                                                          | `None`      |
+| `service.ssh.loadBalancerIP`            | LoadBalancer IP setting.                                                                                                                                                                             | `nil`       |
+| `service.ssh.nodePort`                  | NodePort for ssh service.                                                                                                                                                                            | `nil`       |
+| `service.ssh.externalTrafficPolicy`     | If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation.                                                                                         | `nil`       |
+| `service.ssh.externalIPs`               | External IPs for service.                                                                                                                                                                            | `nil`       |
+| `service.ssh.ipFamilyPolicy`            | SSH service dual-stack policy.                                                                                                                                                                       | `nil`       |
 | `service.ssh.ipFamilies`                | SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).  | `nil`       |
-| `service.ssh.hostPort`                  | HostPort for ssh service                                                                                                                                                                             | `nil`       |
-| `service.ssh.loadBalancerSourceRanges`  | Source range filter for ssh loadbalancer                                                                                                                                                             | `[]`        |
-| `service.ssh.annotations`               | SSH service annotations                                                                                                                                                                              | `{}`        |
-| `service.ssh.labels`                    | SSH service additional labels                                                                                                                                                                        | `{}`        |
-| `service.ssh.loadBalancerClass`         | Loadbalancer class                                                                                                                                                                                   | `nil`       |
+| `service.ssh.hostPort`                  | HostPort for ssh service.                                                                                                                                                                            | `nil`       |
+| `service.ssh.loadBalancerSourceRanges`  | Source range filter for ssh loadbalancer.                                                                                                                                                            | `[]`        |
+| `service.ssh.annotations`               | SSH service annotations.                                                                                                                                                                             | `{}`        |
+| `service.ssh.labels`                    | SSH service additional labels.                                                                                                                                                                       | `{}`        |
+| `service.ssh.loadBalancerClass`         | Loadbalancer class.                                                                                                                                                                                  | `nil`       |
 
 ### ServiceAccount
 
 | Name                                          | Description                                                                                                                               | Value   |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `serviceAccount.create`                       | Enable the creation of a ServiceAccount                                                                                                   | `false` |
+| `serviceAccount.create`                       | Enable the creation of a ServiceAccount.                                                                                                  | `false` |
 | `serviceAccount.name`                         | Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used. | `""`    |
-| `serviceAccount.automountServiceAccountToken` | Enable/disable auto mounting of the service account token                                                                                 | `false` |
-| `serviceAccount.imagePullSecrets`             | Image pull secrets, available to the ServiceAccount                                                                                       | `[]`    |
-| `serviceAccount.annotations`                  | Custom annotations for the ServiceAccount                                                                                                 | `{}`    |
-| `serviceAccount.labels`                       | Custom labels for the ServiceAccount                                                                                                      | `{}`    |
+| `serviceAccount.automountServiceAccountToken` | Enable/disable auto mounting of the service account token.                                                                                | `false` |
+| `serviceAccount.imagePullSecrets`             | Image pull secrets, available to the ServiceAccount.                                                                                      | `[]`    |
+| `serviceAccount.annotations`                  | Custom annotations for the ServiceAccount.                                                                                                | `{}`    |
+| `serviceAccount.labels`                       | Custom labels for the ServiceAccount.                                                                                                     | `{}`    |
 
 ### Persistence
 
 | Name                                              | Description                                                                                        | Value                  |
 | ------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------- |
-| `persistence.enabled`                             | Enable persistent storage                                                                          | `true`                 |
-| `persistence.create`                              | Whether to create the persistentVolumeClaim for shared storage                                     | `true`                 |
-| `persistence.mount`                               | Whether the persistentVolumeClaim should be mounted (even if not created)                          | `true`                 |
-| `persistence.claimName`                           | Use an existing claim to store repository information                                              | `gitea-shared-storage` |
-| `persistence.size`                                | Size for persistence to store repo information                                                     | `10Gi`                 |
-| `persistence.accessModes`                         | AccessMode for persistence                                                                         | `["ReadWriteOnce"]`    |
-| `persistence.labels`                              | Labels for the persistence volume claim to be created                                              | `{}`                   |
-| `persistence.annotations.helm.sh/resource-policy` | Resource policy for the persistence volume claim                                                   | `keep`                 |
-| `persistence.storageClass`                        | Name of the storage class to use                                                                   | `nil`                  |
-| `persistence.subPath`                             | Subdirectory of the volume to mount at                                                             | `nil`                  |
-| `persistence.volumeName`                          | Name of persistent volume in PVC                                                                   | `""`                   |
-| `extraContainers`                                 | Additional sidecar containers to run in the pod                                                    | `[]`                   |
+| `persistence.enabled`                             | Enable persistent storage.                                                                         | `true`                 |
+| `persistence.create`                              | Whether to create the persistentVolumeClaim for shared storage.                                    | `true`                 |
+| `persistence.mount`                               | Whether the persistentVolumeClaim should be mounted (even if not created).                         | `true`                 |
+| `persistence.claimName`                           | Use an existing claim to store repository information.                                             | `gitea-shared-storage` |
+| `persistence.size`                                | Size for persistence to store repo information.                                                    | `10Gi`                 |
+| `persistence.accessModes`                         | AccessMode for persistence.                                                                        | `["ReadWriteOnce"]`    |
+| `persistence.labels`                              | Labels for the persistence volume claim to be created.                                             | `{}`                   |
+| `persistence.annotations.helm.sh/resource-policy` | Resource policy for the persistence volume claim.                                                  | `keep`                 |
+| `persistence.storageClass`                        | Name of the storage class to use.                                                                  | `nil`                  |
+| `persistence.subPath`                             | Subdirectory of the volume to mount at.                                                            | `nil`                  |
+| `persistence.volumeName`                          | Name of persistent volume in PVC.                                                                  | `""`                   |
+| `extraContainers`                                 | Additional sidecar containers to run in the pod.                                                   | `[]`                   |
 | `extraInitVolumeMounts`                           | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration. | `[]`                   |
-| `extraVolumeMounts`                               | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container           | `[]`                   |
+| `extraVolumeMounts`                               | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container.          | `[]`                   |
 
 ### Init
 
-| Name                                       | Description                                                                          | Value        |
-| ------------------------------------------ | ------------------------------------------------------------------------------------ | ------------ |
-| `initPreScript`                            | Bash shell script copied verbatim to the start of the init-container.                | `""`         |
-| `initContainersScriptsVolumeMountPath`     | Path to mount the scripts consumed from the Secrets                                  | `/usr/sbinx` |
-| `initContainers.resources.limits`          | initContainers.limits Kubernetes resource limits for init containers                 | `{}`         |
-| `initContainers.resources.requests.cpu`    | initContainers.requests.cpu Kubernetes cpu resource limits for init containers       | `100m`       |
-| `initContainers.resources.requests.memory` | initContainers.requests.memory Kubernetes memory resource limits for init containers | `128Mi`      |
+| Name                                       | Description                                                                           | Value        |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------ |
+| `initPreScript`                            | Bash shell script copied verbatim to the start of the init-container.                 | `""`         |
+| `initContainersScriptsVolumeMountPath`     | Path to mount the scripts consumed from the Secrets.                                  | `/usr/sbinx` |
+| `initContainers.resources.limits`          | initContainers.limits Kubernetes resource limits for init containers.                 | `{}`         |
+| `initContainers.resources.requests.cpu`    | initContainers.requests.cpu Kubernetes cpu resource limits for init containers.       | `100m`       |
+| `initContainers.resources.requests.memory` | initContainers.requests.memory Kubernetes memory resource limits for init containers. | `128Mi`      |
 
 ### Gitea
 
 | Name                                         | Description                                                                                                                                                                     | Value   |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `gitea.metrics.enabled`                      | Enable Gitea metrics                                                                                                                                                            | `false` |
+| `gitea.metrics.enabled`                      | Enable Gitea metrics.                                                                                                                                                           | `false` |
 | `gitea.metrics.token`                        | used for `bearer` token authentication on metrics endpoint. If not specified or empty metrics endpoint is public.                                                               | `nil`   |
 | `gitea.metrics.serviceMonitor.enabled`       | Enable Gitea metrics service monitor. Requires, that `gitea.metrics.enabled` is also set to true, to enable metrics generally.                                                  | `false` |
 | `gitea.metrics.serviceMonitor.interval`      | Interval at which metrics should be scraped. If not specified Prometheus' global scrape interval is used.                                                                       | `""`    |
@@ -1326,116 +1326,116 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gitea.metrics.serviceMonitor.scheme`        | HTTP scheme to use for scraping. For example `http` or `https`. Default is http.                                                                                                | `""`    |
 | `gitea.metrics.serviceMonitor.scrapeTimeout` | Timeout after which the scrape is ended. If not specified, global Prometheus scrape timeout is used.                                                                            | `""`    |
 | `gitea.metrics.serviceMonitor.tlsConfig`     | TLS configuration to use when scraping the metric endpoint by Prometheus.                                                                                                       | `{}`    |
-| `gitea.ldap`                                 | LDAP configuration                                                                                                                                                              | `[]`    |
-| `gitea.oauth`                                | OAuth configuration                                                                                                                                                             | `[]`    |
-| `gitea.config.server.SSH_PORT`               | SSH port for rootlful Gitea image                                                                                                                                               | `22`    |
-| `gitea.config.server.SSH_LISTEN_PORT`        | SSH port for rootless Gitea image                                                                                                                                               | `2222`  |
-| `gitea.additionalConfigSources`              | Additional configuration from secret or configmap                                                                                                                               | `[]`    |
-| `gitea.additionalConfigFromEnvs`             | Additional configuration sources from environment variables                                                                                                                     | `[]`    |
+| `gitea.ldap`                                 | LDAP configuration.                                                                                                                                                             | `[]`    |
+| `gitea.oauth`                                | OAuth configuration.                                                                                                                                                            | `[]`    |
+| `gitea.config.server.SSH_PORT`               | SSH port for rootlful Gitea image.                                                                                                                                              | `22`    |
+| `gitea.config.server.SSH_LISTEN_PORT`        | SSH port for rootless Gitea image.                                                                                                                                              | `2222`  |
+| `gitea.additionalConfigSources`              | Additional configuration from secret or configmap.                                                                                                                              | `[]`    |
+| `gitea.additionalConfigFromEnvs`             | Additional configuration sources from environment variables.                                                                                                                    | `[]`    |
 | `gitea.extraEnvSourceFile`                   | Source environment variables from a file during init container startup. This is especially useful for reading environment variable files generated by the Vault agent-injector. | `nil`   |
-| `gitea.podAnnotations`                       | Annotations for the Gitea pod                                                                                                                                                   | `{}`    |
+| `gitea.podAnnotations`                       | Annotations for the Gitea pod.                                                                                                                                                  | `{}`    |
 | `gitea.ssh.logLevel`                         | Configure OpenSSH's log level. Only available for root-based Gitea image.                                                                                                       | `INFO`  |
 
 ### LivenessProbe
 
-| Name                                      | Description                                      | Value  |
-| ----------------------------------------- | ------------------------------------------------ | ------ |
-| `gitea.livenessProbe.enabled`             | Enable liveness probe                            | `true` |
-| `gitea.livenessProbe.tcpSocket.port`      | Port to probe for liveness                       | `http` |
-| `gitea.livenessProbe.initialDelaySeconds` | Initial delay before liveness probe is initiated | `200`  |
-| `gitea.livenessProbe.timeoutSeconds`      | Timeout for liveness probe                       | `1`    |
-| `gitea.livenessProbe.periodSeconds`       | Period for liveness probe                        | `10`   |
-| `gitea.livenessProbe.successThreshold`    | Success threshold for liveness probe             | `1`    |
-| `gitea.livenessProbe.failureThreshold`    | Failure threshold for liveness probe             | `10`   |
+| Name                                      | Description                                       | Value  |
+| ----------------------------------------- | ------------------------------------------------- | ------ |
+| `gitea.livenessProbe.enabled`             | Enable liveness probe.                            | `true` |
+| `gitea.livenessProbe.tcpSocket.port`      | Port to probe for liveness.                       | `http` |
+| `gitea.livenessProbe.initialDelaySeconds` | Initial delay before liveness probe is initiated. | `200`  |
+| `gitea.livenessProbe.timeoutSeconds`      | Timeout for liveness probe.                       | `1`    |
+| `gitea.livenessProbe.periodSeconds`       | Period for liveness probe.                        | `10`   |
+| `gitea.livenessProbe.successThreshold`    | Success threshold for liveness probe.             | `1`    |
+| `gitea.livenessProbe.failureThreshold`    | Failure threshold for liveness probe.             | `10`   |
 
 ### ReadinessProbe
 
-| Name                                       | Description                                       | Value  |
-| ------------------------------------------ | ------------------------------------------------- | ------ |
-| `gitea.readinessProbe.enabled`             | Enable readiness probe                            | `true` |
-| `gitea.readinessProbe.tcpSocket.port`      | Port to probe for readiness                       | `http` |
-| `gitea.readinessProbe.initialDelaySeconds` | Initial delay before readiness probe is initiated | `5`    |
-| `gitea.readinessProbe.timeoutSeconds`      | Timeout for readiness probe                       | `1`    |
-| `gitea.readinessProbe.periodSeconds`       | Period for readiness probe                        | `10`   |
-| `gitea.readinessProbe.successThreshold`    | Success threshold for readiness probe             | `1`    |
-| `gitea.readinessProbe.failureThreshold`    | Failure threshold for readiness probe             | `3`    |
+| Name                                       | Description                                        | Value  |
+| ------------------------------------------ | -------------------------------------------------- | ------ |
+| `gitea.readinessProbe.enabled`             | Enable readiness probe.                            | `true` |
+| `gitea.readinessProbe.tcpSocket.port`      | Port to probe for readiness.                       | `http` |
+| `gitea.readinessProbe.initialDelaySeconds` | Initial delay before readiness probe is initiated. | `5`    |
+| `gitea.readinessProbe.timeoutSeconds`      | Timeout for readiness probe.                       | `1`    |
+| `gitea.readinessProbe.periodSeconds`       | Period for readiness probe.                        | `10`   |
+| `gitea.readinessProbe.successThreshold`    | Success threshold for readiness probe.             | `1`    |
+| `gitea.readinessProbe.failureThreshold`    | Failure threshold for readiness probe.             | `3`    |
 
 ### StartupProbe
 
-| Name                                     | Description                                     | Value   |
-| ---------------------------------------- | ----------------------------------------------- | ------- |
-| `gitea.startupProbe.enabled`             | Enable startup probe                            | `false` |
-| `gitea.startupProbe.tcpSocket.port`      | Port to probe for startup                       | `http`  |
-| `gitea.startupProbe.initialDelaySeconds` | Initial delay before startup probe is initiated | `60`    |
-| `gitea.startupProbe.timeoutSeconds`      | Timeout for startup probe                       | `1`     |
-| `gitea.startupProbe.periodSeconds`       | Period for startup probe                        | `10`    |
-| `gitea.startupProbe.successThreshold`    | Success threshold for startup probe             | `1`     |
-| `gitea.startupProbe.failureThreshold`    | Failure threshold for startup probe             | `10`    |
+| Name                                     | Description                                      | Value   |
+| ---------------------------------------- | ------------------------------------------------ | ------- |
+| `gitea.startupProbe.enabled`             | Enable startup probe.                            | `false` |
+| `gitea.startupProbe.tcpSocket.port`      | Port to probe for startup.                       | `http`  |
+| `gitea.startupProbe.initialDelaySeconds` | Initial delay before startup probe is initiated. | `60`    |
+| `gitea.startupProbe.timeoutSeconds`      | Timeout for startup probe.                       | `1`     |
+| `gitea.startupProbe.periodSeconds`       | Period for startup probe.                        | `10`    |
+| `gitea.startupProbe.successThreshold`    | Success threshold for startup probe.             | `1`     |
+| `gitea.startupProbe.failureThreshold`    | Failure threshold for startup probe.             | `10`    |
 
 ### valkey
 
 | Name                                       | Description                                        | Value                      |
 | ------------------------------------------ | -------------------------------------------------- | -------------------------- |
-| `valkey.enabled`                           | Enable valkey standalone or replicated             | `false`                    |
-| `valkey.image.registry`                    | Image registry                                     | `docker.io`                |
-| `valkey.image.repository`                  | Image repository                                   | `valkey/valkey`            |
-| `valkey.image.tag`                         | Image tag                                          | `""`                       |
-| `valkey.auth.enabled`                      | Enable ACL-based authentication                    | `true`                     |
-| `valkey.auth.aclUsers.default.permissions` | ACL permissions for the default user               | `~* &* +@all`              |
-| `valkey.auth.aclUsers.default.password`    | Password for the default user                      | `changeme`                 |
-| `valkey.service.port`                      | Port of Valkey service                             | `6379`                     |
+| `valkey.enabled`                           | Enable valkey standalone or replicated.            | `false`                    |
+| `valkey.image.registry`                    | Image registry.                                    | `docker.io`                |
+| `valkey.image.repository`                  | Image repository.                                  | `valkey/valkey`            |
+| `valkey.image.tag`                         | Image tag.                                         | `""`                       |
+| `valkey.auth.enabled`                      | Enable ACL-based authentication.                   | `true`                     |
+| `valkey.auth.aclUsers.default.permissions` | ACL permissions for the default user.              | `~* &* +@all`              |
+| `valkey.auth.aclUsers.default.password`    | Password for the default user.                     | `changeme`                 |
+| `valkey.service.port`                      | Port of Valkey service.                            | `6379`                     |
 | `valkey.dataStorage.enabled`               | Enable persistence using Persistent Volume Claims. | `false`                    |
 | `valkey.dataStorage.className`             | Persistent Volume storage class.                   | `""`                       |
 | `valkey.dataStorage.requestedSize`         | Persistent Volume size.                            | `8Gi`                      |
-| `valkey.replica.enabled`                   | Enable replication                                 | `false`                    |
-| `valkey.replica.replicas`                  | Number of Valkey replica instances to deploy       | `3`                        |
+| `valkey.replica.enabled`                   | Enable replication.                                | `false`                    |
+| `valkey.replica.replicas`                  | Number of Valkey replica instances to deploy.      | `3`                        |
 | `valkey.replica.persistence.size`          | Persistent Volume size for replicas.               | `8Gi`                      |
 | `valkey.replica.persistence.storageClass`  | Persistent Volume storage class for replicas.      | `""`                       |
-| `valkey.metrics.enabled`                   | Enable Prometheus exporter sidecar                 | `false`                    |
-| `valkey.metrics.exporter.image.registry`   | Image registry                                     | `ghcr.io`                  |
-| `valkey.metrics.exporter.image.repository` | Image repository                                   | `oliver006/redis_exporter` |
-| `valkey.metrics.exporter.image.tag`        | Image tag                                          | `""`                       |
+| `valkey.metrics.enabled`                   | Enable Prometheus exporter sidecar.                | `false`                    |
+| `valkey.metrics.exporter.image.registry`   | Image registry.                                    | `ghcr.io`                  |
+| `valkey.metrics.exporter.image.repository` | Image repository.                                  | `oliver006/redis_exporter` |
+| `valkey.metrics.exporter.image.tag`        | Image tag.                                         | `""`                       |
 
 ### PostgreSQL HA
 
-| Name                                               | Description                                                      | Value                             |
-| -------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------- |
-| `postgresql-ha.enabled`                            | Enable PostgreSQL HA                                             | `true`                            |
-| `postgresql-ha.global.postgresql.database`         | Name for a custom database to create (overrides `auth.database`) | `gitea`                           |
-| `postgresql-ha.global.postgresql.username`         | Name for a custom user to create (overrides `auth.username`)     | `gitea`                           |
-| `postgresql-ha.global.postgresql.password`         | Name for a custom password to create (overrides `auth.password`) | `gitea`                           |
-| `postgresql-ha.metrics.image.repository`           | Image repository, eg. `bitnamilegacy/postgres-exporter`.         | `bitnamilegacy/postgres-exporter` |
-| `postgresql-ha.postgresql.image.repository`        | Image repository, eg. `bitnamilegacy/postgresql-repmgr`.         | `bitnamilegacy/postgresql-repmgr` |
-| `postgresql-ha.postgresql.repmgrPassword`          | Repmgr Password                                                  | `changeme2`                       |
-| `postgresql-ha.postgresql.postgresPassword`        | postgres Password                                                | `changeme1`                       |
-| `postgresql-ha.postgresql.password`                | Password for the `gitea` user (overrides `auth.password`)        | `changeme4`                       |
-| `postgresql-ha.pgpool.adminPassword`               | pgpool adminPassword                                             | `changeme3`                       |
-| `postgresql-ha.pgpool.image.repository`            | Image repository, eg. `bitnamilegacy/pgpool`.                    | `bitnamilegacy/pgpool`            |
-| `postgresql-ha.pgpool.srCheckPassword`             | pgpool srCheckPassword                                           | `changeme4`                       |
-| `postgresql-ha.service.ports.postgresql`           | PostgreSQL service port (overrides `service.ports.postgresql`)   | `5432`                            |
-| `postgresql-ha.persistence.enabled`                | Enable persistence.                                              | `true`                            |
-| `postgresql-ha.persistence.storageClass`           | Persistent Volume Storage Class.                                 | `""`                              |
-| `postgresql-ha.persistence.size`                   | PVC Storage Request for PostgreSQL HA volume                     | `10Gi`                            |
-| `postgresql-ha.volumePermissions.image.repository` | Image repository, eg. `bitnamilegacy/os-shell`.                  | `bitnamilegacy/os-shell`          |
+| Name                                               | Description                                                       | Value                             |
+| -------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------- |
+| `postgresql-ha.enabled`                            | Enable PostgreSQL HA.                                             | `true`                            |
+| `postgresql-ha.global.postgresql.database`         | Name for a custom database to create (overrides `auth.database`). | `gitea`                           |
+| `postgresql-ha.global.postgresql.username`         | Name for a custom user to create (overrides `auth.username`).     | `gitea`                           |
+| `postgresql-ha.global.postgresql.password`         | Name for a custom password to create (overrides `auth.password`). | `gitea`                           |
+| `postgresql-ha.metrics.image.repository`           | Image repository, eg. `bitnamilegacy/postgres-exporter`.          | `bitnamilegacy/postgres-exporter` |
+| `postgresql-ha.postgresql.image.repository`        | Image repository, eg. `bitnamilegacy/postgresql-repmgr`.          | `bitnamilegacy/postgresql-repmgr` |
+| `postgresql-ha.postgresql.repmgrPassword`          | Repmgr Password.                                                  | `changeme2`                       |
+| `postgresql-ha.postgresql.postgresPassword`        | postgres Password.                                                | `changeme1`                       |
+| `postgresql-ha.postgresql.password`                | Password for the `gitea` user (overrides `auth.password`).        | `changeme4`                       |
+| `postgresql-ha.pgpool.adminPassword`               | pgpool adminPassword.                                             | `changeme3`                       |
+| `postgresql-ha.pgpool.image.repository`            | Image repository, eg. `bitnamilegacy/pgpool`.                     | `bitnamilegacy/pgpool`            |
+| `postgresql-ha.pgpool.srCheckPassword`             | pgpool srCheckPassword.                                           | `changeme4`                       |
+| `postgresql-ha.service.ports.postgresql`           | PostgreSQL service port (overrides `service.ports.postgresql`).   | `5432`                            |
+| `postgresql-ha.persistence.enabled`                | Enable persistence.                                               | `true`                            |
+| `postgresql-ha.persistence.storageClass`           | Persistent Volume Storage Class.                                  | `""`                              |
+| `postgresql-ha.persistence.size`                   | PVC Storage Request for PostgreSQL HA volume.                     | `10Gi`                            |
+| `postgresql-ha.volumePermissions.image.repository` | Image repository, eg. `bitnamilegacy/os-shell`.                   | `bitnamilegacy/os-shell`          |
 
 ### PostgreSQL
 
-| Name                                                    | Description                                                      | Value                             |
-| ------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------- |
-| `postgresql.enabled`                                    | Enable PostgreSQL                                                | `false`                           |
-| `postgresql.global.postgresql.auth.password`            | Password for the `gitea` user (overrides `auth.password`)        | `gitea`                           |
-| `postgresql.global.postgresql.auth.database`            | Name for a custom database to create (overrides `auth.database`) | `gitea`                           |
-| `postgresql.global.postgresql.auth.username`            | Name for a custom user to create (overrides `auth.username`)     | `gitea`                           |
-| `postgresql.global.postgresql.service.ports.postgresql` | PostgreSQL service port (overrides `service.ports.postgresql`)   | `5432`                            |
-| `postgresql.image.repository`                           | Image repository, eg. `bitnamilegacy/postgresql`.                | `bitnamilegacy/postgresql`        |
-| `postgresql.primary.persistence.enabled`                | Enable persistence.                                              | `true`                            |
-| `postgresql.primary.persistence.storageClass`           | Persistent Volume storage class.                                 | `""`                              |
-| `postgresql.primary.persistence.size`                   | PVC Storage Request for PostgreSQL volume.                       | `10Gi`                            |
-| `postgresql.readReplicas.persistence.enabled`           | Enable PostgreSQL read only data persistence using PVC.          | `true`                            |
-| `postgresql.readReplicas.persistence.storageClass`      | Persistent Volume storage class.                                 | `""`                              |
-| `postgresql.readReplicas.persistence.size`              | PVC Storage Request for PostgreSQL volume.                       | `""`                              |
-| `postgresql.metrics.image.repository`                   | Image repository, eg. `bitnamilegacy/postgres-exporter`.         | `bitnamilegacy/postgres-exporter` |
-| `postgresql.volumePermissions.image.repository`         | Image repository, eg. `bitnamilegacy/os-shell`.                  | `bitnamilegacy/os-shell`          |
+| Name                                                    | Description                                                       | Value                             |
+| ------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------- |
+| `postgresql.enabled`                                    | Enable PostgreSQL.                                                | `false`                           |
+| `postgresql.global.postgresql.auth.password`            | Password for the `gitea` user (overrides `auth.password`).        | `gitea`                           |
+| `postgresql.global.postgresql.auth.database`            | Name for a custom database to create (overrides `auth.database`). | `gitea`                           |
+| `postgresql.global.postgresql.auth.username`            | Name for a custom user to create (overrides `auth.username`).     | `gitea`                           |
+| `postgresql.global.postgresql.service.ports.postgresql` | PostgreSQL service port (overrides `service.ports.postgresql`).   | `5432`                            |
+| `postgresql.image.repository`                           | Image repository, eg. `bitnamilegacy/postgresql`.                 | `bitnamilegacy/postgresql`        |
+| `postgresql.primary.persistence.enabled`                | Enable persistence.                                               | `true`                            |
+| `postgresql.primary.persistence.storageClass`           | Persistent Volume storage class.                                  | `""`                              |
+| `postgresql.primary.persistence.size`                   | PVC Storage Request for PostgreSQL volume.                        | `10Gi`                            |
+| `postgresql.readReplicas.persistence.enabled`           | Enable PostgreSQL read only data persistence using PVC.           | `true`                            |
+| `postgresql.readReplicas.persistence.storageClass`      | Persistent Volume storage class.                                  | `""`                              |
+| `postgresql.readReplicas.persistence.size`              | PVC Storage Request for PostgreSQL volume.                        | `""`                              |
+| `postgresql.metrics.image.repository`                   | Image repository, eg. `bitnamilegacy/postgres-exporter`.          | `bitnamilegacy/postgres-exporter` |
+| `postgresql.volumePermissions.image.repository`         | Image repository, eg. `bitnamilegacy/os-shell`.                   | `bitnamilegacy/os-shell`          |
 
 ### Advanced
 
@@ -1445,7 +1445,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `test.enabled`     | Set it to false to disable test-connection Pod.                    | `true`    |
 | `test.image.name`  | Image name for the wget container used in the test-connection Pod. | `busybox` |
 | `test.image.tag`   | Image tag for the wget container used in the test-connection Pod.  | `latest`  |
-| `extraDeploy`      | Array of extra objects to deploy with the release                  | `[]`      |
+| `extraDeploy`      | Array of extra objects to deploy with the release.                 | `[]`      |
 
 ## Contributing
 
