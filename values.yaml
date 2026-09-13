@@ -138,18 +138,18 @@ deployment:
 
   ## @param deployment.initContainers [array] List of initContainers. The order is important. First init container in the list will be executed first. The link refers to the corresponding init container configuration.
   initContainers:
-  # - container:
-  #     command: [ "sh", "-c", "echo hello world" ]
-  #     image: "docker.io/library/busybox:latest"
-  #     name: pre-task
-  - link: "initDirectories"
-  - link: "initAppIni"
-  - link: "initConfigureGPG"
-  - link: "initConfigureGitea"
-  # - container:
-  #     command: [ "sh", "-c", "echo hello world" ]
-  #     image: "docker.io/library/busybox:latest"
-  #     name: post-task
+    # - container:
+    #     command: [ "sh", "-c", "echo hello world" ]
+    #     image: "docker.io/library/busybox:latest"
+    #     name: pre-task
+    - link: "initDirectories"
+    - link: "initAppIni"
+    - link: "initConfigureGPG"
+    - link: "initConfigureGitea"
+    # - container:
+    #     command: [ "sh", "-c", "echo hello world" ]
+    #     image: "docker.io/library/busybox:latest"
+    #     name: post-task
 
   initDirectories:
     ## @param deployment.initDirectories.env Additional environment variables to pass to the init container.

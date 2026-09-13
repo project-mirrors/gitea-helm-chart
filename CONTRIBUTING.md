@@ -37,15 +37,14 @@ For local development and testing of pull requests, the following workflow can
 be used:
 
 1. Install `minikube` and `helm`.
-1. Start a `minikube` cluster via `minikube start`.
-1. From the `gitea/helm-gitea` directory execute the following command.
+2. Start a `minikube` cluster via `minikube start`.
+3. From the `gitea/helm-gitea` directory execute the following command.
    This will install the dependencies listed in `Chart.yml` and deploy the current state of the helm chart found locally.
    If you want to test a branch, make sure to switch to the respective branch first.
    `helm install --dependency-update gitea . -f values.yaml`.
-1. Gitea is now deployed in `minikube`.
-   To access it, it's port needs to be forwarded first from `minikube` to localhost first via `kubectl --namespace
-default port-forward svc/gitea-http 3000:3000`.
-   Now Gitea is accessible at [http://localhost:3000](http://localhost:3000).
+4. Gitea is now deployed in `minikube`. To access it, it's port needs to be forwarded first from `minikube` to localhost
+   first via `kubectl --namespace default port-forward svc/gitea-http 3000:3000`. Now Gitea is accessible at
+   `localhost:3000`.
 
 ### Unit tests
 

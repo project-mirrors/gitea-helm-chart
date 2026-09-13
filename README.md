@@ -15,9 +15,10 @@
     - [Server defaults](#server-defaults)
     - [Metrics defaults](#metrics-defaults)
     - [Rootless Defaults](#rootless-defaults)
+    - [OpenShift Compatibility](#openshift-compatibility)
+    - [Gateway API](#gateway-api)
     - [Session, Cache and Queue](#session-cache-and-queue)
   - [Single-Pod Configurations](#single-pod-configurations)
-  - [Additional _app.ini_ settings](#additional-appini-settings)
     - [User defined environment variables in app.ini](#user-defined-environment-variables-in-appini)
   - [External Database](#external-database)
   - [Ports and external url](#ports-and-external-url)
@@ -33,13 +34,14 @@
 - [Metrics and profiling](#metrics-and-profiling)
   - [Secure Metrics Endpoint](#secure-metrics-endpoint)
 - [Pod annotations](#pod-annotations)
+  - [Secret checksum annotations](#secret-checksum-annotations)
 - [TLS certificate rotation](#tls-certificate-rotation)
 - [Themes](#themes)
 - [Renovate](#renovate)
 - [Parameters](#parameters)
   - [Global](#global)
   - [deployment](#deployment)
-  - [Gateway API](#gateway-api)
+  - [Gateway API](#gateway-api-1)
   - [Ingress](#ingress)
   - [Network](#network)
   - [Image](#image)
@@ -483,7 +485,7 @@ Priority (highest to lowest) for defining app.ini variables:
 
 ### External Database
 
-Any external database listed in [https://docs.gitea.com/installation/database-prep](https://docs.gitea.com/installation/database-prep) can be used instead of the built-in PostgreSQL.
+Any external database listed in [https://docs.gitea.com/installation/database-prep/](https://docs.gitea.com/installation/database-prep/) can be used instead of the built-in PostgreSQL.
 In fact, it is **highly recommended** to use an external database to ensure a stable Gitea installation longterm.
 
 If an external database is used, no matter which type, make sure to set `postgresql.enabled` to `false` to disable the use of the built-in PostgreSQL.
@@ -1033,8 +1035,8 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.labels`                                | Labels for the deployment                                                                                                                                                                      | `{}`               |
 | `deployment.affinity`                              | Affinity for the deployment.                                                                                                                                                                   | `{}`               |
 | `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                                                                                             | `{}`               |
-| `deployment.gitea.env`                             | Additional environment variables to pass to the Gitea container.                                                                                                                               | `[]`               |
-| `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the Gitea container.                                                                                                      | `[]`               |
+| `deployment.gitea.env`                             | Additional environment variables to pass to the gitea container.                                                                                                                               | `[]`               |
+| `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the gitea container.                                                                                                      | `[]`               |
 | `deployment.gitea.image.registry`                  | image registry, e.g. gcr.io,docker.io                                                                                                                                                          | `docker.gitea.com` |
 | `deployment.gitea.image.repository`                | Image to start for this pod                                                                                                                                                                    | `gitea`            |
 | `deployment.gitea.image.tag`                       | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
@@ -1120,7 +1122,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gatewayAPI.core.backendTLSPolicy.targetRefs`                   | Target references for the BackendTLSPolicy. Defaults to the HTTP service.                                                                                                  | `[]`    |
 | `gatewayAPI.core.backendTLSPolicy.validation`                   | Validation configuration (required when enabled). See `docs/gateway-api.md`.                                                                                               | `{}`    |
 | `gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs` | CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.                                                                                  |         |
-| `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the Gitea server certificate. See `docs/gateway-api.md`. |         |
+| `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`. |         |
 | `gatewayAPI.core.httpRoute.enabled`                             | Render an HTTPRoute resource                                                                                                                                               | `false` |
 | `gatewayAPI.core.httpRoute.annotations`                         | Annotations applied to the HTTPRoute                                                                                                                                       | `{}`    |
 | `gatewayAPI.core.httpRoute.labels`                              | Additional labels applied to the HTTPRoute                                                                                                                                 | `{}`    |
@@ -1151,7 +1153,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `ingress.hosts[0].host`          | Default Ingress host                                                                           | `git.example.com` |
 | `ingress.hosts[0].paths[0].path` | Default Ingress path                                                                           | `/`               |
 | `ingress.tls`                    | Ingress tls settings                                                                           | `[]`              |
-| `namespace`                      | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified | `""`              |
+| `namespace`                      | An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified | `""`              |
 
 ### Network
 
@@ -1211,7 +1213,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret                                                                                                                                                                | `""`                 |
 | `secrets.config.new.annotations`                 | Annotations for the config Secret                                                                                                                                                                         | `{}`                 |
 | `secrets.config.new.labels`                      | Labels for the config Secret                                                                                                                                                                              | `{}`                 |
-| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign Git commits.                                                                                                                                                         | `false`              |
+| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign git commits.                                                                                                                                                         | `false`              |
 | `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).              | `false`              |
 | `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret                                                                                                                                     | `false`              |
 | `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret                                                                                                                                                               | `""`                 |
