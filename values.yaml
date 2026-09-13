@@ -599,7 +599,7 @@ ingress:
   enabled: false
   annotations: {}
   labels: {}
-  className: ""
+  className: "nginx"
   pathType: Prefix
   hosts:
     - host: git.example.com

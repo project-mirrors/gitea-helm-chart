@@ -1146,7 +1146,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `ingress.enabled`                | Enable ingress                                                                                 | `false`           |
 | `ingress.annotations`            | Additional annotations.                                                                        | `{}`              |
 | `ingress.labels`                 | Additional labels.                                                                             | `{}`              |
-| `ingress.className`              | DEPRECATED: Ingress class name.                                                                | `""`              |
+| `ingress.className`              | DEPRECATED: Ingress class name.                                                                | `nginx`           |
 | `ingress.pathType`               | Ingress Path Type                                                                              | `Prefix`          |
 | `ingress.hosts[0].host`          | Default Ingress host                                                                           | `git.example.com` |
 | `ingress.hosts[0].paths[0].path` | Default Ingress path                                                                           | `/`               |

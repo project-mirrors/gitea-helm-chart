@@ -1,0 +1,143 @@
+suite: Test ingress.yaml
+chart:
+  appVersion: 1.27.3
+release:
+  name: gitea-unittest
+  namespace: gitea-debug
+templates:
+  - templates/gitea/ingress.yaml
+tests:
+  - it: Skip ingress if ingress is disabled
+    set:
+      ingress.enabled: false
+      service.http.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Skip ingress if HTTP Service is disabled
+    set:
+      ingress.enabled: true
+      service.http.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Skip ingress if both ingress and HTTP Service are disabled
+    set:
+      ingress.enabled: false
+      service.http.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Render ingress with default values
+    set:
+      ingress.enabled: true
+      service.http.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - containsDocument:
+          kind: Ingress
+          apiVersion: networking.k8s.io/v1
+          name: gitea-unittest
+          namespace: gitea-debug
+      - notExists:
+          path: metadata.annotations
+      - isSubset:
+          path: metadata.labels
+          content:
+            app: gitea
+            app.kubernetes.io/instance: gitea-unittest
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: gitea
+            app.kubernetes.io/version: 1.27.3
+            helm.sh/chart: gitea-0.0.0
+            version: 1.27.3
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+      - contains:
+          path: spec.rules
+          content:
+            host: git.example.com
+            http:
+              paths:
+                - backend:
+                    service:
+                      name: gitea-unittest-http
+                      port:
+                        number: 3000
+                  path: /
+                  pathType: Prefix
+
+  - it: Render ingress with TLS
+    set:
+      ingress.enabled: true
+      ingress.tls:
+        - hosts:
+            - git.example.com
+          secretName: tls-secret
+      service.http.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - contains:
+          path: spec.tls
+          content:
+            hosts:
+              - git.example.com
+            secretName: tls-secret
+
+  - it: Render ingress with custom HTTP service spec
+    set:
+      ingress.enabled: true
+      service.http.enabled: true
+      service.http.port: 32000
+    asserts:
+      - hasDocuments:
+          count: 1
+      - containsDocument:
+          kind: Ingress
+          apiVersion: networking.k8s.io/v1
+          name: gitea-unittest
+          namespace: gitea-debug
+      - contains:
+          path: spec.rules
+          content:
+            host: git.example.com
+            http:
+              paths:
+                - backend:
+                    service:
+                      name: gitea-unittest-http
+                      port:
+                        number: 32000
+                  path: /
+                  pathType: Prefix
+
+  - it: Render ingress with custom annotations and labels
+    set:
+      ingress.enabled: true
+      ingress.annotations:
+        custom-annotation: custom-value
+      ingress.labels:
+        custom-label: custom-value
+      service.http.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - containsDocument:
+          kind: Ingress
+          apiVersion: networking.k8s.io/v1
+          name: gitea-unittest
+          namespace: gitea-debug
+      - isSubset:
+          path: metadata.annotations
+          content:
+            custom-annotation: custom-value
+      - isSubset:
+          path: metadata.labels
+          content:
+            custom-label: custom-value

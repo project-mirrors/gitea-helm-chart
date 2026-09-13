@@ -50,6 +50,7 @@ image:
 - Each test must set all required values explicitly — do not rely on cross-test state.
 - The `values.yaml` file must pass `yamllint`. The configuration is in `.yamllint`. Use `make yamllint` to run the linter.
 - The title of the unit test should clearly describe the scenario being tested. As title must be use a short sentence starting with a capital letter and ending without a period.
+- Each unit test must explicitly set a custom namespace and release name, rather than relying on defaults.
 
 ### Commits & PRs
 

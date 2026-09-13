@@ -8,6 +8,14 @@
 {{- end }}
 {{- end }}
 
+{{- define "gitea.ingress.enabled" -}}
+{{- if and .Values.ingress.enabled .Values.service.http.enabled -}}
+true
+{{- else -}}
+false
+{{- end }}
+{{- end }}
+
 {{/* labels */}}
 
 {{- define "gitea.ingress.labels" -}}
