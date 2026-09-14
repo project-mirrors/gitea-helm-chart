@@ -1275,14 +1275,15 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### ServiceAccount
 
-| Name                                          | Description                                                                                                                               | Value   |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `serviceAccount.create`                       | Enable the creation of a ServiceAccount.                                                                                                  | `false` |
-| `serviceAccount.name`                         | Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used. | `""`    |
-| `serviceAccount.automountServiceAccountToken` | Enable/disable auto mounting of the service account token.                                                                                | `false` |
-| `serviceAccount.imagePullSecrets`             | Image pull secrets, available to the ServiceAccount.                                                                                      | `[]`    |
-| `serviceAccount.annotations`                  | Custom annotations for the ServiceAccount.                                                                                                | `{}`    |
-| `serviceAccount.labels`                       | Custom labels for the ServiceAccount.                                                                                                     | `{}`    |
+| Name                                                               | Description                                                | Value   |
+| ------------------------------------------------------------------ | ---------------------------------------------------------- | ------- |
+| `serviceAccount.enabled`                                           | Assign the pod to use the ServiceAccount.                  | `true`  |
+| `serviceAccount.existingServiceAccount.enabled`                    | Enable using an existing ServiceAccount.                   | `false` |
+| `serviceAccount.existingServiceAccount.existingServiceAccountName` | Name of the existing ServiceAccount to use.                | `""`    |
+| `serviceAccount.new.annotations`                                   | Custom annotations for the ServiceAccount.                 | `{}`    |
+| `serviceAccount.new.labels`                                        | Custom labels for the ServiceAccount.                      | `{}`    |
+| `serviceAccount.new.automountServiceAccountToken`                  | Enable/disable auto mounting of the service account token. | `false` |
+| `serviceAccount.new.imagePullSecrets`                              | Image pull secrets, available to the ServiceAccount.       | `[]`    |
 
 ### Persistence
 

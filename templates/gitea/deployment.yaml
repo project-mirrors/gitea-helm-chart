@@ -42,8 +42,8 @@ spec:
       {{- if .Values.deployment.schedulerName }}
       schedulerName: "{{ .Values.deployment.schedulerName }}"
       {{- end }}
-      {{- if (or .Values.serviceAccount.create .Values.serviceAccount.name) }}
-      serviceAccountName: {{ include "gitea.serviceAccountName" . }}
+      {{- if .Values.serviceAccount.enabled }}
+      serviceAccountName: {{ include "gitea.serviceAccount.name" . }}
       {{- end }}
       {{- if .Values.deployment.priorityClassName }}
       priorityClassName: "{{ .Values.deployment.priorityClassName }}"

@@ -82,7 +82,6 @@ deployment:
     image:
       registry: "docker.gitea.com"
       repository: gitea
-      # Overrides the image tag whose default is the chart appVersion.
       tag: ""
       digest: ""
       pullPolicy: IfNotPresent
@@ -869,20 +868,26 @@ service:
 
 
 ## @section ServiceAccount
-## @param serviceAccount.create Enable the creation of a ServiceAccount.
-## @param serviceAccount.name Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used.
-## @param serviceAccount.automountServiceAccountToken Enable/disable auto mounting of the service account token.
-## @param serviceAccount.imagePullSecrets Image pull secrets, available to the ServiceAccount.
-## @param serviceAccount.annotations Custom annotations for the ServiceAccount.
-## @param serviceAccount.labels Custom labels for the ServiceAccount.
 serviceAccount:
-  create: false
-  name: ""
-  automountServiceAccountToken: false
-  imagePullSecrets: []
-  # - name: private-registry-access
-  annotations: {}
-  labels: {}
+  ## @param serviceAccount.enabled Assign the pod to use the ServiceAccount.
+  enabled: true
+
+  ## @param serviceAccount.existingServiceAccount.enabled Enable using an existing ServiceAccount.
+  ## @param serviceAccount.existingServiceAccount.existingServiceAccountName Name of the existing ServiceAccount to use.
+  existingServiceAccount:
+    enabled: false
+    existingServiceAccountName: ""
+
+  ## @param serviceAccount.new.annotations Custom annotations for the ServiceAccount.
+  ## @param serviceAccount.new.labels Custom labels for the ServiceAccount.
+  ## @param serviceAccount.new.automountServiceAccountToken Enable/disable auto mounting of the service account token.
+  ## @param serviceAccount.new.imagePullSecrets Image pull secrets, available to the ServiceAccount.
+  new:
+    annotations: {}
+    labels: {}
+    automountServiceAccountToken: false
+    imagePullSecrets: []
+    # - name: private-registry-access
 
 ## @section Persistence
 persistence:

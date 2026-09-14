@@ -493,10 +493,6 @@ https
   {{- end -}}
 {{- end -}}
 
-{{- define "gitea.serviceAccountName" -}}
-{{ .Values.serviceAccount.name | default (include "gitea.fullname" .) }}
-{{- end -}}
-
 {{- define "ingress.annotations" -}}
   {{- if .Values.ingress.annotations }}
   annotations:
