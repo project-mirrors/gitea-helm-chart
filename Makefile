@@ -41,6 +41,13 @@ PHONY+=helm/unittest
 helm/unittest:
 	helm unittest --strict --file 'unittests/helm/**/*.yaml' --file 'unittests/helm/values-conflicting-checks.yaml' ./
 
+# BASH PREPARE
+# ==============================================================================
+PHONY+=bash/prepare
+bash/prepare:
+	git submodule init
+	git submodule update
+
 # BASH UNITTESTS
 # ==============================================================================
 PHONY+=bash/unittest

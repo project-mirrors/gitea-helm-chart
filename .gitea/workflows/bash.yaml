@@ -1,0 +1,21 @@
+name: Bash
+
+on:
+  pull_request:
+    types: [ "opened", "reopened", "synchronize" ]
+  push:
+    branches:
+    - '**'
+    tags-ignore:
+    - '**'
+  workflow_dispatch: {}
+
+jobs:
+  bash-unittest:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      with:
+        submodules: true
+    - name: Run bash unittests
+      run: make bash/unittest
