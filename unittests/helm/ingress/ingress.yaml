@@ -1,9 +1,9 @@
-suite: Test ingress.yaml
 chart:
   appVersion: 1.27.3
 release:
-  name: gitea-unittest
-  namespace: gitea-debug
+  name: gitea-unittests
+  namespace: testing
+suite: Test ingress.yaml
 templates:
   - templates/gitea/ingress.yaml
 tests:
@@ -41,15 +41,15 @@ tests:
       - containsDocument:
           kind: Ingress
           apiVersion: networking.k8s.io/v1
-          name: gitea-unittest
-          namespace: gitea-debug
+          name: gitea-unittests
+          namespace: testing
       - notExists:
           path: metadata.annotations
       - isSubset:
           path: metadata.labels
           content:
             app: gitea
-            app.kubernetes.io/instance: gitea-unittest
+            app.kubernetes.io/instance: gitea-unittests
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: gitea
             app.kubernetes.io/version: 1.27.3
@@ -66,7 +66,7 @@ tests:
               paths:
                 - backend:
                     service:
-                      name: gitea-unittest-http
+                      name: gitea-unittests-http
                       port:
                         number: 3000
                   path: /
@@ -101,8 +101,8 @@ tests:
       - containsDocument:
           kind: Ingress
           apiVersion: networking.k8s.io/v1
-          name: gitea-unittest
-          namespace: gitea-debug
+          name: gitea-unittests
+          namespace: testing
       - contains:
           path: spec.rules
           content:
@@ -111,7 +111,7 @@ tests:
               paths:
                 - backend:
                     service:
-                      name: gitea-unittest-http
+                      name: gitea-unittests-http
                       port:
                         number: 32000
                   path: /
@@ -131,8 +131,8 @@ tests:
       - containsDocument:
           kind: Ingress
           apiVersion: networking.k8s.io/v1
-          name: gitea-unittest
-          namespace: gitea-debug
+          name: gitea-unittests
+          namespace: testing
       - isSubset:
           path: metadata.annotations
           content:
