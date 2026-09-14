@@ -36,6 +36,6 @@ unittests/
 .prettierignore
 .yamllint
 CODEOWNERS
-renovate.json5
+renovate.json
 .commitlintrc.json
 .gitsv/

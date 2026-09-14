@@ -4,8 +4,7 @@
             "/unittests/**/*.yaml"
         ],
         "https://docs.renovatebot.com/renovate-schema.json":[
-          "renovate.json",
-          "renovate.json5"
+          "renovate.json"
         ]
     },
     "yaml.schemaStore.enable": true,
