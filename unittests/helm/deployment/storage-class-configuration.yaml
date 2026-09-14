@@ -1,39 +1,17 @@
-# File: tests/gitea-storageclass-tests.yaml
-
-suite: storage class configuration tests
-
+chart:
+  appVersion: 1.27.3
 release:
-  name: gitea-storageclass-tests
+  name: gitea-unittests
   namespace: testing
-
+suite: Storage class configuration tests
 templates:
   - templates/gitea/persistentVolumeClaim.yaml
-
 tests:
-  - it: should set storageClassName when persistence.storageClass is defined
-    template: templates/gitea/persistentVolumeClaim.yaml
+  - it: Set storageClassName when persistence.new.storageClassName is defined
     set:
-      persistence.storageClass: "my-storage-class"
-    asserts:
-      - equal:
-          path: "spec.storageClassName"
-          value: "my-storage-class"
-
-  - it: should set global.storageClass when persistence.storageClass is not defined
-    template: templates/gitea/persistentVolumeClaim.yaml
-    set:
-      global.storageClass: "default-storage-class"
+      persistence.enabled: true
+      persistence.new.storageClassName: my-storage-class
     asserts:
       - equal:
           path: spec.storageClassName
-          value: "default-storage-class"
-
-  - it: should set storageClassName when persistence.storageClass is defined and global.storageClass is defined
-    template: templates/gitea/persistentVolumeClaim.yaml
-    set:
-      global.storageClass: "default-storage-class"
-      persistence.storageClass: "my-storage-class"
-    asserts:
-      - equal:
-          path: spec.storageClassName
-          value: "my-storage-class"
+          value: my-storage-class

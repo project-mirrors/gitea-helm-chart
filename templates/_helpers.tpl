@@ -154,17 +154,6 @@ These default to runAsUser 1000 outside OpenShift to preserve existing behavior.
 {{- include "gitea.containerSecurityContext" (list $root $containerSecurityContext) -}}
 {{- end -}}
 
-
-{{/*
-Storage Class
-*/}}
-{{- define "gitea.persistence.storageClass" -}}
-{{- $storageClass :=  (tpl ( default "" .Values.persistence.storageClass) .) | default (tpl ( default "" .Values.global.storageClass) .) }}
-{{- if $storageClass }}
-storageClassName: {{ $storageClass | quote }}
-{{- end }}
-{{- end -}}
-
 {{/*
 Common labels
 */}}

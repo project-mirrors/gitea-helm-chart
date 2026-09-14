@@ -40,8 +40,8 @@
       mountPath: /tmp
     - name: data
       mountPath: /data
-      {{- if .Values.persistence.subPath }}
-      subPath: {{ .Values.persistence.subPath }}
+      {{- if .Values.persistence.new.subPath }}
+      subPath: {{ .Values.persistence.new.subPath }}
       {{- end }}
     {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}
@@ -105,8 +105,8 @@
       mountPath: /tmp
     - name: data
       mountPath: /data
-      {{- if .Values.persistence.subPath }}
-      subPath: {{ .Values.persistence.subPath }}
+      {{- if .Values.persistence.new.subPath }}
+      subPath: {{ .Values.persistence.new.subPath }}
       {{- end }}
     - name: inline-config-sources
       mountPath: /env-to-ini-mounts/inlines/
@@ -168,8 +168,8 @@
       mountPath: {{ .Values.initContainersScriptsVolumeMountPath }}
     - name: data
       mountPath: /data
-      {{- if .Values.persistence.subPath }}
-      subPath: {{ .Values.persistence.subPath }}
+      {{- if .Values.persistence.new.subPath }}
+      subPath: {{ .Values.persistence.new.subPath }}
       {{- end }}
     - name: gpg-private-key
       mountPath: /raw
@@ -292,8 +292,8 @@
       mountPath: /tmp
     - name: data
       mountPath: /data
-      {{- if .Values.persistence.subPath }}
-      subPath: {{ .Values.persistence.subPath }}
+      {{- if .Values.persistence.new.subPath }}
+      subPath: {{ .Values.persistence.new.subPath }}
       {{- end }}
     {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}

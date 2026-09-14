@@ -145,8 +145,8 @@ spec:
               mountPath: /tmp
             - name: data
               mountPath: /data
-              {{- if .Values.persistence.subPath }}
-              subPath: {{ .Values.persistence.subPath }}
+              {{- if .Values.persistence.new.subPath }}
+              subPath: {{ .Values.persistence.new.subPath }}
               {{- end }}
             {{- include "gitea.container-additional-mounts" . | nindent 12 }}
         {{- if .Values.extraContainers }}
@@ -211,12 +211,10 @@ spec:
             defaultMode: 0100
         {{- end }}
   {{- if .Values.persistence.enabled }}
-    {{- if .Values.persistence.mount }}
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.claimName }}
-    {{- end }}
-  {{- else if not .Values.persistence.enabled }}
+            claimName: {{ include "gitea.persistentVolumeClaim.name" . }}
+  {{- else }}
         - name: data
           emptyDir: {}
   {{- end }}

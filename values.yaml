@@ -5,7 +5,6 @@
 #
 ## @param global.imageRegistry global image registry override.
 ## @param global.imagePullSecrets global image pull secrets override; can be extended by `imagePullSecrets`.
-## @param global.storageClass global storage class override.
 ## @param global.hostAliases global hostAliases which will be added to the pod's hosts files.
 global:
   imageRegistry: ""
@@ -14,7 +13,6 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: ""
   hostAliases: []
   # - ip: 192.168.137.2
   #   hostnames:
@@ -887,31 +885,33 @@ serviceAccount:
   labels: {}
 
 ## @section Persistence
-## @param persistence.enabled Enable persistent storage.
-## @param persistence.create Whether to create the persistentVolumeClaim for shared storage.
-## @param persistence.mount Whether the persistentVolumeClaim should be mounted (even if not created).
-## @param persistence.claimName Use an existing claim to store repository information.
-## @param persistence.size Size for persistence to store repo information.
-## @param persistence.accessModes AccessMode for persistence.
-## @param persistence.labels Labels for the persistence volume claim to be created.
-## @param persistence.annotations.helm.sh/resource-policy Resource policy for the persistence volume claim.
-## @param persistence.storageClass Name of the storage class to use.
-## @param persistence.subPath Subdirectory of the volume to mount at.
-## @param persistence.volumeName Name of persistent volume in PVC.
 persistence:
-  enabled: true
-  create: true
-  mount: true
-  claimName: gitea-shared-storage
-  size: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  labels: {}
-  storageClass:
-  subPath:
-  volumeName: ""
-  annotations:
-    helm.sh/resource-policy: keep
+  ## @param persistence.enabled Enable persistent storage.
+  enabled: false
+
+  ## @param persistence.existingPersistentVolumeClaim.enabled Enable using an existing persistent volume claim.
+  ## @param persistence.existingPersistentVolumeClaim.persistentVolumeClaimName Name of the existing persistent volume claim to use.
+  existingPersistentVolumeClaim:
+    enabled: false
+    persistentVolumeClaimName: ""
+
+  ## @param persistence.new.annotations.helm.sh/resource-policy Resource policy for the new persistent volume claim.
+  ## @param persistence.new.labels Labels for the new persistent volume claim.
+  ## @param persistence.new.accessModes AccessMode for the new persistent volume claim.
+  ## @param persistence.new.persistentVolumeName Name of the persistent volume for the new persistent volume claim.
+  ## @param persistence.new.size Size for the new persistent volume claim.
+  ## @param persistence.new.storageClassName Name of the storage class to use for the new persistent volume claim.
+  ## @param persistence.new.subPath Subdirectory of the volume to mount at for the new persistent volume claim.
+  new:
+    annotations:
+      helm.sh/resource-policy: keep
+    labels: {}
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeName: ""
+    size: 10Gi
+    storageClassName: ""
+    subPath: ""
 
 ## @param extraContainers Additional sidecar containers to run in the pod.
 extraContainers: []

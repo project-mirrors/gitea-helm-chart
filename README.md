@@ -1023,7 +1023,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | ------------------------- | -------------------------------------------------------------------------- | ----- |
 | `global.imageRegistry`    | global image registry override.                                            | `""`  |
 | `global.imagePullSecrets` | global image pull secrets override; can be extended by `imagePullSecrets`. | `[]`  |
-| `global.storageClass`     | global storage class override.                                             | `""`  |
 | `global.hostAliases`      | global hostAliases which will be added to the pod's hosts files.           | `[]`  |
 
 ### deployment
@@ -1287,22 +1286,21 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Persistence
 
-| Name                                              | Description                                                                                        | Value                  |
-| ------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------- |
-| `persistence.enabled`                             | Enable persistent storage.                                                                         | `true`                 |
-| `persistence.create`                              | Whether to create the persistentVolumeClaim for shared storage.                                    | `true`                 |
-| `persistence.mount`                               | Whether the persistentVolumeClaim should be mounted (even if not created).                         | `true`                 |
-| `persistence.claimName`                           | Use an existing claim to store repository information.                                             | `gitea-shared-storage` |
-| `persistence.size`                                | Size for persistence to store repo information.                                                    | `10Gi`                 |
-| `persistence.accessModes`                         | AccessMode for persistence.                                                                        | `["ReadWriteOnce"]`    |
-| `persistence.labels`                              | Labels for the persistence volume claim to be created.                                             | `{}`                   |
-| `persistence.annotations.helm.sh/resource-policy` | Resource policy for the persistence volume claim.                                                  | `keep`                 |
-| `persistence.storageClass`                        | Name of the storage class to use.                                                                  | `nil`                  |
-| `persistence.subPath`                             | Subdirectory of the volume to mount at.                                                            | `nil`                  |
-| `persistence.volumeName`                          | Name of persistent volume in PVC.                                                                  | `""`                   |
-| `extraContainers`                                 | Additional sidecar containers to run in the pod.                                                   | `[]`                   |
-| `extraInitVolumeMounts`                           | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration. | `[]`                   |
-| `extraVolumeMounts`                               | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container.          | `[]`                   |
+| Name                                                                  | Description                                                                                        | Value               |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------- |
+| `persistence.enabled`                                                 | Enable persistent storage.                                                                         | `false`             |
+| `persistence.existingPersistentVolumeClaim.enabled`                   | Enable using an existing persistent volume claim.                                                  | `false`             |
+| `persistence.existingPersistentVolumeClaim.persistentVolumeClaimName` | Name of the existing persistent volume claim to use.                                               | `""`                |
+| `persistence.new.annotations.helm.sh/resource-policy`                 | Resource policy for the new persistent volume claim.                                               | `keep`              |
+| `persistence.new.labels`                                              | Labels for the new persistent volume claim.                                                        | `{}`                |
+| `persistence.new.accessModes`                                         | AccessMode for the new persistent volume claim.                                                    | `["ReadWriteOnce"]` |
+| `persistence.new.persistentVolumeName`                                | Name of the persistent volume for the new persistent volume claim.                                 | `""`                |
+| `persistence.new.size`                                                | Size for the new persistent volume claim.                                                          | `10Gi`              |
+| `persistence.new.storageClassName`                                    | Name of the storage class to use for the new persistent volume claim.                              | `""`                |
+| `persistence.new.subPath`                                             | Subdirectory of the volume to mount at for the new persistent volume claim.                        | `""`                |
+| `extraContainers`                                                     | Additional sidecar containers to run in the pod.                                                   | `[]`                |
+| `extraInitVolumeMounts`                                               | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration. | `[]`                |
+| `extraVolumeMounts`                                                   | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container.          | `[]`                |
 
 ### Init
 

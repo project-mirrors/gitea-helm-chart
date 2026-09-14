@@ -17,8 +17,9 @@ tests:
       deployment:
         replicas: 2
       persistence:
-        accessModes:
-          - ReadWriteMany
+        new:
+          accessModes:
+            - ReadWriteMany
       gitea:
         config:
           cron:
@@ -34,15 +35,16 @@ tests:
         replicas: 2
     asserts:
       - failedTemplate:
-          errorMessage: "When using multiple replicas, a RWX file system is required and persistence.accessModes[0] must be set to ReadWriteMany."
+          errorMessage: "When using multiple replicas, a RWX file system is required and persistence.new.accessModes[0] must be set to ReadWriteMany."
   - it: fails with multiple replicas and bleve issue indexer
     template: templates/gitea/secret_config.yaml
     set:
       deployment:
         replicas: 2
       persistence:
-        accessModes:
-          - ReadWriteMany
+        new:
+          accessModes:
+            - ReadWriteMany
       gitea:
         config:
           indexer:
@@ -56,8 +58,9 @@ tests:
       deployment:
         replicas: 2
       persistence:
-        accessModes:
-          - ReadWriteMany
+        new:
+          accessModes:
+            - ReadWriteMany
       gitea:
         config:
           indexer:
