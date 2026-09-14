@@ -1,5 +1,11 @@
 SHELL := /usr/bin/env bash -O globstar
 
+# CLEAN
+# ==============================================================================
+PHONY+=clean
+clean:
+	-rm -rf charts *.tar.gz *.tar.gz.sig node_modules
+
 # MISSING DOT
 # ==============================================================================
 PHONY+=missing-dot
