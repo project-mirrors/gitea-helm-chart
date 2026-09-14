@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/secret_init.yaml
+  - templates/secret_init.yaml
 tests:
   - it: renders a secret
     asserts:

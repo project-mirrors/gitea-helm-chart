@@ -3,23 +3,23 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: Render the deployment (default)
     asserts:
       - hasDocuments:
           count: 1
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
       - lengthEqual:
           path: spec.template.spec.initContainers
           count: 3
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
 
   - it: Render the deployment (signing)
     set:
@@ -29,11 +29,11 @@ tests:
     asserts:
       - hasDocuments:
           count: 1
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
       - lengthEqual:
           path: spec.template.spec.initContainers
           count: 4
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
 
   - it: Render the deployment (extraInitContainers)
     set:
@@ -54,22 +54,22 @@ tests:
     asserts:
       - hasDocuments:
           count: 1
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
       - lengthEqual:
           path: spec.template.spec.initContainers
           count: 6
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
       - equal:
           path: spec.template.spec.initContainers[0].name
           value: bar
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
       - equal:
           path: spec.template.spec.initContainers[5].name
           value: foo
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
 
   - it: renders the chart-managed init containers in the configured order
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initContainers:
         - link: "initConfigureGitea"
@@ -83,7 +83,7 @@ tests:
           value: init-directories
 
   - it: fails when an init container entry sets both container and link
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initContainers:
         - link: "initDirectories"
@@ -95,7 +95,7 @@ tests:
           errorMessage: "deployment.initContainers[0]: `container` and `link` are mutually exclusive"
 
   - it: fails when an init container entry sets neither container nor link
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initContainers:
         - name: foo
@@ -104,7 +104,7 @@ tests:
           errorMessage: "deployment.initContainers[0]: either `container` or `link` must be set"
 
   - it: fails when an init container links to an unknown configuration
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initContainers:
         - link: "initSomething"

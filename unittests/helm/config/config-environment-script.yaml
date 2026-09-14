@@ -3,11 +3,11 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
 tests:
   - it: uses `gitea config edit-ini` to write app.ini from environment variables
-    template: templates/gitea/secret_config.yaml
+    template: templates/secret_config.yaml
     asserts:
       - documentIndex: 0
         matchRegex:

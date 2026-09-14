@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: omits the checksum annotations by default
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.enabled: true
       secrets.config.enabled: true
@@ -38,7 +38,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/metrics"]
 
   - it: adds a checksum annotation for every Secret when addSHASumAnnotation is enabled
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.addSHASumAnnotation: true
       secrets.admin.enabled: true
@@ -75,7 +75,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/metrics"]
 
   - it: omits the checksum annotation of a single disabled Secret only
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.addSHASumAnnotation: false
       secrets.admin.enabled: true
@@ -112,7 +112,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/metrics"]
 
   - it: adds the checksum of Secrets provided by the user
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.enabled: true
       secrets.admin.addSHASumAnnotation: true

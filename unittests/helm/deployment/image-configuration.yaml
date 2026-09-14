@@ -6,22 +6,22 @@ chart:
   # Override appVersion to be consistent with used digest :)
   appVersion: 1.19.3
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: default values
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.19.3-rootless"
   - it: tag override
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.image.tag: "1.19.4"
     asserts:
@@ -29,7 +29,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.19.4-rootless"
   - it: root-based image
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.image.rootless: false
     asserts:
@@ -37,7 +37,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.19.3"
   - it: scoped registry
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.image.registry: "example.com"
     asserts:
@@ -45,7 +45,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "example.com/gitea:1.19.3-rootless"
   - it: global registry
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       global.imageRegistry: "global.example.com"
     asserts:
@@ -53,7 +53,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "global.example.com/gitea:1.19.3-rootless"
   - it: digest for rootless image
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment:
         gitea:
@@ -65,7 +65,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.19.3-rootless@sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
   - it: image fullOverride (does not append rootless)
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment:
         gitea:
@@ -82,7 +82,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.19.3"
   - it: digest for root-based image
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment:
         gitea:
@@ -94,7 +94,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.19.3@sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
   - it: digest and global registry
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       global.imageRegistry: "global.example.com"
       deployment.gitea.image.digest: "sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
@@ -103,7 +103,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "global.example.com/gitea:1.19.3-rootless@sha256:b28e8f3089b52ebe6693295df142f8c12eff354e9a4a5bfbb5c10f296c3a537a"
   - it: correctly renders floating tag references
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       # use non-quoted values on purpose. See: https://gitea.com/gitea/helm-gitea/issues/631
       deployment.gitea.image.tag: 1.21
@@ -124,7 +124,7 @@ tests:
           path: spec.template.spec.containers[0].image
           value: "docker.gitea.com/gitea:1.21-rootless"
   - it: init containers use their own image configuration
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initDirectories.image.registry: "init.example.com"
       deployment.initDirectories.image.tag: "1.19.4"

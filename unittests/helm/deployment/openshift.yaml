@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: renders openshift-compatible defaults for chart-managed containers
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       openshift.enabled: true
     asserts:
@@ -62,7 +62,7 @@ tests:
               type: RuntimeDefault
 
   - it: does not force runAsUser 1000 for command init containers on OpenShift
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       openshift.enabled: true
       secrets.gpg.enabled: true
@@ -75,7 +75,7 @@ tests:
           path: spec.template.spec.initContainers[3].securityContext.runAsUser
 
   - it: preserves explicit pod and container security context overrides on OpenShift
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       openshift:
         enabled: true
@@ -103,7 +103,7 @@ tests:
           value: 1000620000
 
   - it: renders an explicit hostUsers=false override on OpenShift
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       openshift:
         enabled: true

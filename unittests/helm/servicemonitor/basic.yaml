@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/serviceMonitor.yaml
+  - templates/serviceMonitor.yaml
 tests:
   - it: skips rendering by default
     asserts:

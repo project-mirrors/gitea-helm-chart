@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/secret_admin.yaml
+  - templates/secret_admin.yaml
 tests:
   - it: skips rendering when the admin user is disabled
     set:

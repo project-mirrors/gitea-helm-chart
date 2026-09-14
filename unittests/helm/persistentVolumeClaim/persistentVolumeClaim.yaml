@@ -5,7 +5,7 @@ release:
   namespace: testing
 suite: PVC template
 templates:
-  - templates/gitea/persistentVolumeClaim.yaml
+  - templates/persistentVolumeClaim.yaml
 tests:
   - it: Skip persistentVolumeClaim if persistentVolumeClaim is disabled
     set:

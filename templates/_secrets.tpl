@@ -54,7 +54,7 @@ Arguments: (list $root $key)
 {{- $name := include (printf "gitea.secret.%s.name" $key) $root -}}
 {{- lookup "v1" "Secret" $namespace $name | toYaml | sha256sum -}}
 {{- else -}}
-{{- include (printf "%s/gitea/secret_%s.yaml" $root.Template.BasePath $key) $root | sha256sum -}}
+{{- include (printf "%s/secret_%s.yaml" $root.Template.BasePath $key) $root | sha256sum -}}
 {{- end -}}
 {{- end }}
 

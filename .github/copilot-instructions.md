@@ -34,7 +34,7 @@ image:
 
 ### Templates
 
-- Helm templates live in `templates/gitea/`. Helpers live in `templates/_helpers.tpl`.
+- Helm templates live in `templates/`. Helpers live in `templates/_helpers.tpl`.
 - Use camelCase for all files and variables (e.g `httpRoute`, `backendTLSPolicy`, `gatewayAPI`, `statefulSet`).
 - Use `include "gitea.fullname"` for naming resources.
 - Use `fail` for required-value validation with clear error messages referencing the full values path.

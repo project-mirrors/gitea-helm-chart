@@ -106,7 +106,7 @@ tests:
           name: gitea-unittests-postgresql-ha-pgpool
           namespace: testing
   - it: "[gitea] connects to pgpool service"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
@@ -115,14 +115,14 @@ tests:
   - it: "[gitea] connects to pgpool service with custom cluster domain"
     set:
       clusterDomain: my-special-cluster.local
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
           path: stringData.database
           pattern: HOST=gitea-unittests-postgresql-ha-pgpool.testing.svc.my-special-cluster.local:1234
   - it: "[gitea] connects to configured database"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:

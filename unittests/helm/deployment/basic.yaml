@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: renders a deployment
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - hasDocuments:
           count: 1
@@ -21,14 +21,14 @@ tests:
           apiVersion: apps/v1
           name: gitea-unittests
   - it: renders no deployment when disabled
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.enabled: false
     asserts:
       - hasDocuments:
           count: 0
   - it: deployment labels are set
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.labels:
         hello: world
@@ -46,7 +46,7 @@ tests:
           content:
             hello: world
   - it: deployment labels are not in selector matchLabels
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.labels:
         custom-label: custom-value
@@ -58,7 +58,7 @@ tests:
             app.kubernetes.io/name: gitea
             app.kubernetes.io/instance: gitea-unittests
   - it: deployment labels are always rendered
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - isSubset:
           path: metadata.labels
@@ -68,12 +68,12 @@ tests:
             app.kubernetes.io/instance: gitea-unittests
             app.kubernetes.io/managed-by: Helm
   - it: deployment annotations are undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: metadata.annotations
   - it: deployment annotations are set
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.annotations:
         hello: world
@@ -86,7 +86,7 @@ tests:
     asserts:
       - notExists:
           path: spec.template.spec.nodeSelector
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
   - it: nodeSelector is defined
     set:
       deployment.nodeSelector:
@@ -98,14 +98,14 @@ tests:
           content:
             foo: bar
             bar: foo
-        template: templates/gitea/deployment.yaml
+        template: templates/deployment.yaml
   - it: affinity is undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.affinity
   - it: affinity is defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.affinity:
         nodeAffinity:
@@ -129,12 +129,12 @@ tests:
                         values:
                           - linux
   - it: dnsConfig is undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.dnsConfig
   - it: dnsConfig is defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.dnsConfig:
         nameservers:
@@ -152,12 +152,12 @@ tests:
               - name: ndots
                 value: "2"
   - it: priorityClassName is undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.priorityClassName
   - it: priorityClassName is defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.priorityClassName: high-priority
     asserts:
@@ -165,12 +165,12 @@ tests:
           path: spec.template.spec.priorityClassName
           value: high-priority
   - it: schedulerName is undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.schedulerName
   - it: schedulerName is defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.schedulerName: stork
     asserts:
@@ -178,7 +178,7 @@ tests:
           path: spec.template.spec.schedulerName
           value: stork
   - it: strategy defaults to a rolling update
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - equal:
           path: spec.strategy
@@ -188,7 +188,7 @@ tests:
               maxUnavailable: 0
               maxSurge: 100%
   - it: strategy omits rollingUpdate for other strategy types
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.strategy.type: Recreate
     asserts:
@@ -197,12 +197,12 @@ tests:
           value:
             type: Recreate
   - it: tolerations are undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.tolerations
   - it: tolerations are defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.tolerations:
         - key: database/type
@@ -218,12 +218,12 @@ tests:
               value: postgres
               effect: NoSchedule
   - it: topologySpreadConstraints are undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.topologySpreadConstraints
   - it: topologySpreadConstraints are defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.topologySpreadConstraints:
         - topologyKey: kubernetes.io/hostname
@@ -244,7 +244,7 @@ tests:
                   app.kubernetes.io/instance: gitea-unittests
 
   - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - contains:
           path: spec.template.spec.initContainers[1].env
@@ -252,7 +252,7 @@ tests:
             name: TMP_EXISTING_ENVS_FILE
             value: /tmp/existing-envs
   - it: "injects ENV_TO_INI_MOUNT_POINT as environment variable to 'init-app-ini' init container"
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - contains:
           path: spec.template.spec.initContainers[1].env
@@ -260,7 +260,7 @@ tests:
             name: ENV_TO_INI_MOUNT_POINT
             value: /env-to-ini-mounts
   - it: "deployment.gitea.env is injected into all init containers and the gitea container"
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.env:
         - name: VARIABLE
@@ -287,7 +287,7 @@ tests:
             name: VARIABLE
             value: my-value
   - it: CPU resources are defined as well as GOMAXPROCS
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.resources:
         limits:
@@ -315,7 +315,7 @@ tests:
               cpu: 100ms
               memory: 100Mi
   - it: container resources default to an empty map and GOMAXPROCS is omitted
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.containers[0].resources
@@ -329,12 +329,12 @@ tests:
                 divisor: "1"
                 resource: limits.cpu
   - it: pod level resources are undefined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.resources
   - it: pod level resources are defined
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.resources:
         limits:
@@ -354,7 +354,7 @@ tests:
               cpu: 250m
               memory: 256Mi
   - it: Init containers have correct volumeMount path
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       initContainersScriptsVolumeMountPath: "/custom/init/path"
     asserts:
@@ -365,7 +365,7 @@ tests:
           path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="config")].mountPath
           value: "/custom/init/path"
   - it: Init containers have correct volumeMount path if there is no override
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="init")].mountPath

@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: fails with multiple replicas and "GIT_GC_REPOS" enabled
-    template: templates/gitea/secret_config.yaml
+    template: templates/secret_config.yaml
     set:
       deployment:
         replicas: 2
@@ -29,7 +29,7 @@ tests:
       - failedTemplate:
           errorMessage: "Invoking the garbage collector via CRON is not yet supported when running with multiple replicas. Please set 'gitea.config.cron.GIT_GC_REPOS.enabled = false'."
   - it: fails with multiple replicas and RWX file system not set
-    template: templates/gitea/secret_config.yaml
+    template: templates/secret_config.yaml
     set:
       deployment:
         replicas: 2
@@ -37,7 +37,7 @@ tests:
       - failedTemplate:
           errorMessage: "When using multiple replicas, a RWX file system is required and persistence.new.accessModes[0] must be set to ReadWriteMany."
   - it: fails with multiple replicas and bleve issue indexer
-    template: templates/gitea/secret_config.yaml
+    template: templates/secret_config.yaml
     set:
       deployment:
         replicas: 2
@@ -53,7 +53,7 @@ tests:
       - failedTemplate:
           errorMessage: "When using multiple replicas, the issue indexer (gitea.config.indexer.ISSUE_INDEXER_TYPE) must be set to a HA-ready provider such as 'meilisearch', 'elasticsearch' or 'db' (if the DB is HA-ready)."
   - it: fails with multiple replicas and bleve repo indexer
-    template: templates/gitea/secret_config.yaml
+    template: templates/secret_config.yaml
     set:
       deployment:
         replicas: 2

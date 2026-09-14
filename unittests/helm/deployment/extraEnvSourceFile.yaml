@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: uses direct execution when extraEnvSourceFile is not set
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.initContainers[1].command
@@ -26,7 +26,7 @@ tests:
           path: spec.template.spec.initContainers[2].args
 
   - it: sources env file in init-app-ini when extraEnvSourceFile is set
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         extraEnvSourceFile: /vault/secrets/gitea
@@ -42,7 +42,7 @@ tests:
           pattern: config_environment\.sh
 
   - it: sources env file in configure-gitea when extraEnvSourceFile is set
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         extraEnvSourceFile: /vault/secrets/gitea
@@ -58,7 +58,7 @@ tests:
           pattern: configure_gitea\.sh
 
   - it: sources env file in configure-gpg when extraEnvSourceFile is set with signing enabled
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -77,7 +77,7 @@ tests:
           pattern: configure_gpg_environment\.sh
 
   - it: includes file existence check in source command
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       gitea:
         extraEnvSourceFile: /vault/secrets/gitea

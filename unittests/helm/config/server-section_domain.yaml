@@ -4,7 +4,7 @@ release:
   namespace: testing
 tests:
   - it: "[default values] uses ingress host for DOMAIN|SSH_DOMAIN|ROOT_URL"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
@@ -22,7 +22,7 @@ tests:
   ################################################
 
   - it: "[no ingress hosts] uses gitea http service for DOMAIN|SSH_DOMAIN|ROOT_URL"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     set:
       ingress:
         hosts: []
@@ -43,7 +43,7 @@ tests:
   ################################################
 
   - it: "[provided via values] uses that for DOMAIN|SSH_DOMAIN|ROOT_URL"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     set:
       gitea.config.server.DOMAIN: provided.example.com
       ingress:
@@ -69,7 +69,7 @@ tests:
   ################################################
 
   - it: "[route enabled] uses route host for DOMAIN|SSH_DOMAIN|ROOT_URL"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     set:
       route:
         enabled: true
@@ -91,7 +91,7 @@ tests:
   ################################################
 
   - it: "[route tls termination] uses https for ROOT_URL"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     set:
       route:
         enabled: true
@@ -107,7 +107,7 @@ tests:
   ################################################
 
   - it: "[HTTPRoute enabled] uses first hostname for DOMAIN|SSH_DOMAIN|ROOT_URL"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     set:
       ingress:
         hosts: []
@@ -137,7 +137,7 @@ tests:
   ################################################
 
   - it: "[HTTPRoute tls] switches ROOT_URL to https"
-    template: templates/gitea/secret_inlineConfig.yaml
+    template: templates/secret_inlineConfig.yaml
     set:
       ingress:
         hosts: []

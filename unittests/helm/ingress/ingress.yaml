@@ -5,7 +5,7 @@ release:
   namespace: testing
 suite: Test ingress.yaml
 templates:
-  - templates/gitea/ingress.yaml
+  - templates/ingress.yaml
 tests:
   - it: Skip ingress if ingress is disabled
     set:

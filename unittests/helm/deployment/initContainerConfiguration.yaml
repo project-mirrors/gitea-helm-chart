@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: appends the per-container env
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initDirectories.env:
         - name: INIT_DIRECTORIES
@@ -38,7 +38,7 @@ tests:
             value: "1"
 
   - it: renders the per-container envFrom
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initAppIni.envFrom:
         - secretRef:
@@ -53,7 +53,7 @@ tests:
                 name: special-secret
 
   - it: appends the per-container volumeMounts
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initConfigureGitea.volumeMounts:
         - name: my-configmap-volume
@@ -74,7 +74,7 @@ tests:
             readOnly: true
 
   - it: overrides the resources of a single init container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.initDirectories.resources:
         requests:
@@ -94,7 +94,7 @@ tests:
               memory: 128Mi
 
   - it: overrides the security context of a single init container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.securityContext:
         runAsUser: 1000
@@ -109,7 +109,7 @@ tests:
           value: 1000
 
   - it: renders the envFrom of the gitea container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       deployment.gitea.envFrom:
         - configMapRef:
@@ -122,7 +122,7 @@ tests:
                 name: special-config
 
   - it: omits envFrom when unset
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].envFrom

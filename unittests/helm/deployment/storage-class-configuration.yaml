@@ -5,7 +5,7 @@ release:
   namespace: testing
 suite: Storage class configuration tests
 templates:
-  - templates/gitea/persistentVolumeClaim.yaml
+  - templates/persistentVolumeClaim.yaml
 tests:
   - it: Set storageClassName when persistence.new.storageClassName is defined
     set:

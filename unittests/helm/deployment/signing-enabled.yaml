@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: adds gpg init container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -49,7 +49,7 @@ tests:
               mountPath: /raw
               readOnly: true
   - it: adds gpg env in `init-directories` init container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -64,7 +64,7 @@ tests:
                 name: custom-gpg-secret
                 key: gpgHome
   - it: adds gpg env in runtime container
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -79,7 +79,7 @@ tests:
                 name: custom-gpg-secret
                 key: gpgHome
   - it: reads the gpg home from the configured key of an existing secret
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -95,7 +95,7 @@ tests:
                 name: custom-gpg-secret
                 key: custom-gpg-home
   - it: adds gpg volume spec
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.new.privateKey: "gpg-key-placeholder"
@@ -111,7 +111,7 @@ tests:
                   path: private.asc
               defaultMode: 0100
   - it: supports gpg volume spec with external reference
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true

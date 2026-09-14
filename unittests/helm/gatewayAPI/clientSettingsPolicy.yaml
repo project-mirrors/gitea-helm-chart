@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/clientSettingsPolicy.yaml
+  - templates/clientSettingsPolicy.yaml
 tests:
   - it: should not render when gatewayAPI.enabled is false
     set:

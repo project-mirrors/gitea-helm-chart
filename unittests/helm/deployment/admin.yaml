@@ -3,16 +3,16 @@ release:
   name: gitea-unittests
   namespace: testing
 templates:
-  - templates/gitea/deployment.yaml
-  - templates/gitea/secret_admin.yaml
-  - templates/gitea/secret_config.yaml
-  - templates/gitea/secret_gpg.yaml
-  - templates/gitea/secret_init.yaml
-  - templates/gitea/secret_inlineConfig.yaml
-  - templates/gitea/secret_metrics.yaml
+  - templates/deployment.yaml
+  - templates/secret_admin.yaml
+  - templates/secret_config.yaml
+  - templates/secret_gpg.yaml
+  - templates/secret_init.yaml
+  - templates/secret_inlineConfig.yaml
+  - templates/secret_metrics.yaml
 tests:
   - it: reads the admin credentials from the generated secret
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     asserts:
       - contains:
           path: spec.template.spec.initContainers[2].env
@@ -45,7 +45,7 @@ tests:
             value: keepUpdated
 
   - it: reads the admin credentials from the configured keys of an existing secret
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.existingSecret.enabled: true
       secrets.admin.existingSecret.secretName: custom-admin-secret
@@ -79,7 +79,7 @@ tests:
                 name: custom-admin-secret
 
   - it: omits the admin environment when the admin user is disabled
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.enabled: false
     asserts:
@@ -95,7 +95,7 @@ tests:
           any: true
 
   - it: fails on an unsupported password mode
-    template: templates/gitea/deployment.yaml
+    template: templates/deployment.yaml
     set:
       secrets.admin.passwordMode: unsupported
     asserts:
