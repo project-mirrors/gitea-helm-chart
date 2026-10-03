@@ -11,5 +11,15 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData["config_environment.sh"]
+          path: data["config_environment.sh"]
+          decodeBase64: true
           pattern: 'gitea config edit-ini --apply-env --config .+GITEA_APP_INI.+ --out .+GITEA_APP_INI'
+  - it: renders data, not stringData, so removed keys are pruned on upgrade
+    template: templates/secret_config.yaml
+    asserts:
+      - documentIndex: 0
+        notExists:
+          path: stringData
+      - documentIndex: 0
+        exists:
+          path: data["config_environment.sh"]

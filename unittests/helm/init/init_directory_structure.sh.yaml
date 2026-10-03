@@ -15,7 +15,8 @@ tests:
         -----END PGP PRIVATE KEY BLOCK-----
     asserts:
       - equal:
-          path: stringData["configure_gpg_environment.sh"]
+          path: data["configure_gpg_environment.sh"]
+          decodeBase64: true
           value: |
             #!/usr/bin/env bash
             set -eu
@@ -26,7 +27,8 @@ tests:
       deployment.gitea.image.rootless: false
     asserts:
       - equal:
-          path: stringData["init_directory_structure.sh"]
+          path: data["init_directory_structure.sh"]
+          decodeBase64: true
           value: |-
             #!/usr/bin/env bash
 
@@ -50,7 +52,8 @@ tests:
         -----END PGP PRIVATE KEY BLOCK-----
     asserts:
       - equal:
-          path: stringData["init_directory_structure.sh"]
+          path: data["init_directory_structure.sh"]
+          decodeBase64: true
           value: |-
             #!/usr/bin/env bash
 
@@ -70,3 +73,11 @@ tests:
               chmod -v 700 "${GNUPGHOME}"
               chown -v 1000:1000 "${GNUPGHOME}"
             fi
+  - it: renders data, not stringData, so removed keys are pruned on upgrade
+    set:
+      deployment.gitea.image.rootless: false
+    asserts:
+      - notExists:
+          path: stringData
+      - exists:
+          path: data["init_directory_structure.sh"]

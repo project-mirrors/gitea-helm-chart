@@ -39,7 +39,8 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData["configure_gitea.sh"]
+          path: data["configure_gitea.sh"]
+          decodeBase64: true
           pattern: nc -vz -w2 gitea-unittests-valkey.testing.svc.cluster.local 6379
   - it: "[gitea] waits for valkey to be up and running with custom cluster domain"
     set:
@@ -48,5 +49,6 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData["configure_gitea.sh"]
+          path: data["configure_gitea.sh"]
+          decodeBase64: true
           pattern: nc -vz -w2 gitea-unittests-valkey.testing.svc.my-special-cluster.local 6379

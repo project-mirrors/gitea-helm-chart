@@ -14,7 +14,8 @@ tests:
         -----END PGP PRIVATE KEY BLOCK-----
     asserts:
       - equal:
-          path: stringData["configure_gpg_environment.sh"]
+          path: data["configure_gpg_environment.sh"]
+          decodeBase64: true
           value: |
             #!/usr/bin/env bash
             set -eu
@@ -23,7 +24,8 @@ tests:
   - it: skips gpg script block for disabled signing
     asserts:
       - equal:
-          path: stringData["init_directory_structure.sh"]
+          path: data["init_directory_structure.sh"]
+          decodeBase64: true
           value: |-
             #!/usr/bin/env bash
 
@@ -44,7 +46,8 @@ tests:
         -----END PGP PRIVATE KEY BLOCK-----
     asserts:
       - equal:
-          path: stringData["init_directory_structure.sh"]
+          path: data["init_directory_structure.sh"]
+          decodeBase64: true
           value: |-
             #!/usr/bin/env bash
 
@@ -68,7 +71,8 @@ tests:
       deployment.gitea.image.fullOverride: docker.gitea.com/gitea:1.20.5
     asserts:
       - equal:
-          path: stringData["init_directory_structure.sh"]
+          path: data["init_directory_structure.sh"]
+          decodeBase64: true
           value: |-
             #!/usr/bin/env bash
 
@@ -80,3 +84,9 @@ tests:
             # prepare temp directory structure
             mkdir -pv "${GITEA_TEMP}"
             chmod -v ug+rwx "${GITEA_TEMP}"
+  - it: renders data, not stringData, so removed keys are pruned on upgrade
+    asserts:
+      - notExists:
+          path: stringData
+      - exists:
+          path: data["init_directory_structure.sh"]
