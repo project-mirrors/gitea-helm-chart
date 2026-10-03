@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: renders openshift-compatible defaults for chart-managed containers
+  - it: "Render OpenShift compatible defaults for the chart-managed containers"
     template: templates/deployment.yaml
     set:
       openshift.enabled: true
@@ -61,7 +61,7 @@ tests:
             seccompProfile:
               type: RuntimeDefault
 
-  - it: does not force runAsUser 1000 for command init containers on OpenShift
+  - it: "Omit runAsUser 1000 for command init containers on OpenShift"
     template: templates/deployment.yaml
     set:
       openshift.enabled: true
@@ -74,7 +74,7 @@ tests:
       - notExists:
           path: spec.template.spec.initContainers[3].securityContext.runAsUser
 
-  - it: preserves explicit pod and container security context overrides on OpenShift
+  - it: "Preserve explicit pod and container security context overrides on OpenShift"
     template: templates/deployment.yaml
     set:
       openshift:
@@ -102,7 +102,7 @@ tests:
           path: spec.template.spec.containers[0].securityContext.runAsGroup
           value: 1000620000
 
-  - it: renders an explicit hostUsers=false override on OpenShift
+  - it: "Render an explicit hostUsers=false override on OpenShift"
     template: templates/deployment.yaml
     set:
       openshift:

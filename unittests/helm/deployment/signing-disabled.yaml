@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: skips gpg init container
+  - it: "Skip the gpg init container"
     template: templates/deployment.yaml
     asserts:
       - notContains:
@@ -19,7 +19,7 @@ tests:
           any: true
           content:
             name: configure-gpg
-  - it: skips gpg env in `init-directories` init container
+  - it: "Skip the gpg env of the `init-directories` init container"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: false
@@ -28,14 +28,14 @@ tests:
           path: spec.template.spec.initContainers[0].env
           content:
             name: GNUPGHOME
-  - it: skips gpg env in runtime container
+  - it: "Skip the gpg env of the runtime container"
     template: templates/deployment.yaml
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].env
           content:
             name: GNUPGHOME
-  - it: skips gpg volume spec
+  - it: "Skip the gpg volume spec"
     template: templates/deployment.yaml
     asserts:
       - notContains:

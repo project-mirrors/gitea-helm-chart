@@ -25,7 +25,7 @@ set:
     persistence:
       size: 1337Mi
 tests:
-  - it: "[postgresql-ha] DB settings are applied as expected"
+  - it: "[postgresql-ha] Apply the database settings"
     template: charts/postgresql-ha/templates/postgresql/statefulset.yaml
     asserts:
       - documentIndex: 0
@@ -40,7 +40,7 @@ tests:
           content:
             name: POSTGRES_USER
             value: "gitea-username"
-  - it: "[postgresql-ha] DB passwords are applied as expected"
+  - it: "[postgresql-ha] Apply the database passwords"
     template: charts/postgresql-ha/templates/postgresql/secrets.yaml
     asserts:
       - documentIndex: 0
@@ -55,49 +55,35 @@ tests:
         equal:
           path: data["password"]
           value: "Z2l0ZWEtcGFzc3dvcmQ=" # postgresql-ha.postgresql.password is overwritten by postgresql-ha.global.postgresql.password and should not be referenced here
-  - it: "[postgresql-ha] pgpool.adminPassword is applied as expected"
+  - it: "[postgresql-ha] Apply pgpool.adminPassword"
     template: charts/postgresql-ha/templates/pgpool/secrets.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: data["admin-password"]
           value: "Y3VzdG9tLXBhc3N3b3JkLXBncG9vbA=="
-  - it: "[postgresql-ha] pgpool.adminPassword is applied as expected"
-    template: charts/postgresql-ha/templates/pgpool/secrets.yaml
-    asserts:
-      - documentIndex: 0
-        equal:
-          path: data["admin-password"]
-          value: "Y3VzdG9tLXBhc3N3b3JkLXBncG9vbA=="
-  - it: "[postgresql-ha] pgpool.adminPassword is applied as expected"
-    template: charts/postgresql-ha/templates/pgpool/secrets.yaml
-    asserts:
-      - documentIndex: 0
-        equal:
-          path: data["admin-password"]
-          value: "Y3VzdG9tLXBhc3N3b3JkLXBncG9vbA=="
-  - it: "[postgresql-ha] pgpool.srCheckPassword is applied as expected"
+  - it: "[postgresql-ha] Apply pgpool.srCheckPassword"
     template: charts/postgresql-ha/templates/pgpool/secrets.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: data["sr-check-password"]
           value: "Y3VzdG9tLXBhc3N3b3JkLXNyLWNoZWNr"
-  - it: "[postgresql-ha] persistence.size is applied as expected"
+  - it: "[postgresql-ha] Apply persistence.size"
     template: charts/postgresql-ha/templates/postgresql/statefulset.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
           value: "1337Mi"
-  - it: "[postgresql-ha] service.ports.postgresql is applied as expected"
+  - it: "[postgresql-ha] Apply service.ports.postgresql"
     template: charts/postgresql-ha/templates/pgpool/service.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: spec.ports[0].port
           value: 1234
-  - it: "[postgresql-ha] renders the referenced service"
+  - it: "[postgresql-ha] Render the referenced Service"
     template: charts/postgresql-ha/templates/pgpool/service.yaml
     asserts:
       - containsDocument:
@@ -105,7 +91,7 @@ tests:
           apiVersion: v1
           name: gitea-unittests-postgresql-ha-pgpool
           namespace: testing
-  - it: "[gitea] connects to pgpool service"
+  - it: "[gitea] Connect to the pgpool Service"
     template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
@@ -113,7 +99,7 @@ tests:
           path: data.database
           decodeBase64: true
           pattern: HOST=gitea-unittests-postgresql-ha-pgpool.testing.svc.cluster.local:1234
-  - it: "[gitea] connects to pgpool service with custom cluster domain"
+  - it: "[gitea] Connect to the pgpool Service with a custom cluster domain"
     set:
       clusterDomain: my-special-cluster.local
     template: templates/secret_inlineConfig.yaml
@@ -123,7 +109,7 @@ tests:
           path: data.database
           decodeBase64: true
           pattern: HOST=gitea-unittests-postgresql-ha-pgpool.testing.svc.my-special-cluster.local:1234
-  - it: "[gitea] connects to configured database"
+  - it: "[gitea] Connect to the configured database"
     template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0

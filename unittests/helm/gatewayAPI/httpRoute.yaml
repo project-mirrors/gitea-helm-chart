@@ -5,7 +5,7 @@ release:
 templates:
   - templates/httpRoute.yaml
 tests:
-  - it: should not render when gatewayAPI.enabled is false
+  - it: "Skip rendering when gatewayAPI.enabled is false"
     set:
       gatewayAPI:
         enabled: false
@@ -20,7 +20,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should not render when httpRoute.enabled is false
+  - it: "Skip rendering when httpRoute.enabled is false"
     set:
       gatewayAPI:
         enabled: true
@@ -29,7 +29,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should render a single HTTPRoute with default rule
+  - it: "Render a single HTTPRoute with the default rule"
     set:
       gatewayAPI:
         enabled: true
@@ -85,7 +85,7 @@ tests:
           path: spec.rules[0].backendRefs[0].weight
           value: 1
 
-  - it: should fail when parentRefs missing
+  - it: "Fail when the parentRefs are missing"
     set:
       gatewayAPI:
         enabled: true
@@ -98,7 +98,7 @@ tests:
       - failedTemplate:
           errorMessage: gatewayAPI.core.httpRoute.parentRefs is required
 
-  - it: hostname tpl rendering
+  - it: "Render the hostnames via tpl"
     set:
       global:
         giteaHostName: gitea.tpl.example.com

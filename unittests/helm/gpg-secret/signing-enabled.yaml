@@ -5,13 +5,13 @@ release:
 templates:
   - templates/secret_gpg.yaml
 tests:
-  - it: fails rendering when nothing is configured
+  - it: "Fail when no gpg key is configured"
     set:
       secrets.gpg.enabled: true
     asserts:
       - failedTemplate:
           errorMessage: Either specify `secrets.gpg.new.privateKey` or reference an existing Secret via `secrets.gpg.existingSecret`
-  - it: skips rendering using external secret reference
+  - it: "Skip rendering when an existing Secret is referenced"
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -19,7 +19,7 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-  - it: renders secret specification using inline gpg key
+  - it: "Render the Secret with an inline gpg key"
     set:
       secrets.gpg.enabled: true
       secrets.gpg.new.privateKey: "gpg-key-placeholder"

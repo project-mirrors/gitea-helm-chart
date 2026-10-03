@@ -5,11 +5,11 @@ release:
 templates:
   - templates/deprecation.yaml
 tests:
-  - it: renders nothing with the default values
+  - it: "Render nothing with the default values"
     asserts:
       - hasDocuments:
           count: 0
-  - it: fails when the removed `affinity` value is set
+  - it: "Fail when the removed `affinity` value is set"
     set:
       affinity:
         nodeAffinity:
@@ -23,14 +23,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`affinity` does no longer exist. Please refer to the changelog and configure `deployment.affinity` instead."
-  - it: fails when the removed `containerSecurityContext` value is set
+  - it: "Fail when the removed `containerSecurityContext` value is set"
     set:
       containerSecurityContext:
         runAsUser: 1000
     asserts:
       - failedTemplate:
           errorMessage: "`containerSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.gitea.securityContext` instead."
-  - it: fails when the removed `deployment.env` value is set
+  - it: "Fail when the removed `deployment.env` value is set"
     set:
       deployment.env:
         - name: VARIABLE
@@ -38,7 +38,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`deployment.env` does no longer exist. Please refer to the changelog and configure `deployment.gitea.env` instead."
-  - it: fails when the removed `dnsConfig` value is set
+  - it: "Fail when the removed `dnsConfig` value is set"
     set:
       dnsConfig:
         nameservers:
@@ -46,7 +46,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`dnsConfig` does no longer exist. Please refer to the changelog and configure `deployment.dnsConfig` instead."
-  - it: fails when the removed `extraContainerVolumeMounts` value is set
+  - it: "Fail when the removed `extraContainerVolumeMounts` value is set"
     set:
       extraContainerVolumeMounts:
         - name: postgres-ssl-vol
@@ -54,7 +54,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`extraContainerVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` instead."
-  - it: fails when the removed `extraInitVolumeMounts` value is set
+  - it: "Fail when the removed `extraInitVolumeMounts` value is set"
     set:
       extraInitVolumeMounts:
         - name: postgres-ssl-vol
@@ -62,7 +62,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`extraInitVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.<initContainer>.volumeMounts` instead."
-  - it: fails when the removed `extraVolumeMounts` value is set
+  - it: "Fail when the removed `extraVolumeMounts` value is set"
     set:
       extraVolumeMounts:
         - name: postgres-ssl-vol
@@ -70,7 +70,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`extraVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` and `deployment.<initContainer>.volumeMounts` instead."
-  - it: fails when the removed `extraVolumes` value is set
+  - it: "Fail when the removed `extraVolumes` value is set"
     set:
       extraVolumes:
         - name: postgres-ssl-vol
@@ -79,39 +79,39 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`extraVolumes` does no longer exist. Please refer to the changelog and configure `deployment.volumes` instead."
-  - it: fails when the removed `ingress.className` value is set
+  - it: "Fail when the removed `ingress.className` value is set"
     set:
       ingress.className: ""
     asserts:
       - failedTemplate:
           errorMessage: "`ingress.className` does no longer exist. Please refer to the changelog and configure `ingress.ingressClassName` instead."
-  - it: fails when the removed `nodeSelector` value is set
+  - it: "Fail when the removed `nodeSelector` value is set"
     set:
       nodeSelector:
         foo: bar
     asserts:
       - failedTemplate:
           errorMessage: "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead."
-  - it: fails when the removed `openshift.hostUsers` value is set
+  - it: "Fail when the removed `openshift.hostUsers` value is set"
     set:
       openshift.hostUsers: false
     asserts:
       - failedTemplate:
           errorMessage: "`openshift.hostUsers` does no longer exist. Please refer to the changelog and configure `deployment.hostUsers` instead."
-  - it: fails when the removed `priorityClassName` value is set
+  - it: "Fail when the removed `priorityClassName` value is set"
     set:
       priorityClassName: high-priority
     asserts:
       - failedTemplate:
           errorMessage: "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead."
-  - it: fails when the removed `podSecurityContext` value is set
+  - it: "Fail when the removed `podSecurityContext` value is set"
     set:
       podSecurityContext:
         fsGroup: 1000
     asserts:
       - failedTemplate:
           errorMessage: "`podSecurityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` instead."
-  - it: fails when the removed `postExtraInitContainers` value is set
+  - it: "Fail when the removed `postExtraInitContainers` value is set"
     set:
       postExtraInitContainers:
         - name: post-init-container
@@ -119,7 +119,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`postExtraInitContainers` does no longer exist. Please refer to the changelog and append an entry with a `container` key to `deployment.initContainers` instead."
-  - it: fails when the removed `preExtraInitContainers` value is set
+  - it: "Fail when the removed `preExtraInitContainers` value is set"
     set:
       preExtraInitContainers:
         - name: pre-init-container
@@ -127,7 +127,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`preExtraInitContainers` does no longer exist. Please refer to the changelog and prepend an entry with a `container` key to `deployment.initContainers` instead."
-  - it: fails when the removed `resources` value is set
+  - it: "Fail when the removed `resources` value is set"
     set:
       resources:
         limits:
@@ -135,40 +135,40 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`resources` does no longer exist. Please refer to the changelog and configure `deployment.gitea.resources` instead."
-  - it: fails when the removed `replicaCount` value is set
+  - it: "Fail when the removed `replicaCount` value is set"
     set:
       replicaCount: 2
     asserts:
       - failedTemplate:
           errorMessage: "`replicaCount` does no longer exist. Please refer to the changelog and configure `deployment.replicas` instead."
-  - it: fails when the removed `schedulerName` value is set
+  - it: "Fail when the removed `schedulerName` value is set"
     set:
       schedulerName: stork
     asserts:
       - failedTemplate:
           errorMessage: "`schedulerName` does no longer exist. Please refer to the changelog and configure `deployment.schedulerName` instead."
-  - it: fails when the removed `securityContext` value is set
+  - it: "Fail when the removed `securityContext` value is set"
     set:
       securityContext:
         runAsUser: 1000
     asserts:
       - failedTemplate:
           errorMessage: "`securityContext` does no longer exist. Please refer to the changelog and configure `deployment.securityContext` and `deployment.gitea.securityContext` instead."
-  - it: fails when the removed `strategy` value is set
+  - it: "Fail when the removed `strategy` value is set"
     set:
       strategy:
         type: Recreate
     asserts:
       - failedTemplate:
           errorMessage: "`strategy` does no longer exist. Please refer to the changelog and configure `deployment.strategy` instead."
-  - it: fails when the removed `test` value is set
+  - it: "Fail when the removed `test` value is set"
     set:
       test:
         enabled: false
     asserts:
       - failedTemplate:
           errorMessage: "`test` does no longer exist. Please refer to the changelog. The `helm test` connection Pod has been removed without replacement."
-  - it: fails when the removed `tolerations` value is set
+  - it: "Fail when the removed `tolerations` value is set"
     set:
       tolerations:
         - key: database/type
@@ -178,14 +178,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`tolerations` does no longer exist. Please refer to the changelog and configure `deployment.tolerations` instead."
-  - it: fails when the removed `topologySpreadConstraints` value is set
+  - it: "Fail when the removed `topologySpreadConstraints` value is set"
     set:
       topologySpreadConstraints:
         - topologyKey: kubernetes.io/hostname
     asserts:
       - failedTemplate:
           errorMessage: "`topologySpreadConstraints` does no longer exist. Please refer to the changelog and configure `deployment.topologySpreadConstraints` instead."
-  - it: skips the deprecation checks when `checkDeprecation` is disabled
+  - it: "Skip the deprecation checks when `checkDeprecation` is disabled"
     set:
       checkDeprecation: false
       affinity:

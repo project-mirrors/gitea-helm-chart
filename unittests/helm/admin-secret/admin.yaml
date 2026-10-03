@@ -5,14 +5,14 @@ release:
 templates:
   - templates/secret_admin.yaml
 tests:
-  - it: skips rendering when the admin user is disabled
+  - it: "Skip rendering when the admin user is disabled"
     set:
       secrets.admin.enabled: false
     asserts:
       - hasDocuments:
           count: 0
 
-  - it: skips rendering using an existing secret reference
+  - it: "Skip rendering when an existing Secret is referenced"
     set:
       secrets.admin.enabled: true
       secrets.admin.existingSecret.enabled: true
@@ -21,14 +21,14 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: fails rendering without credentials
+  - it: "Fail when no credentials are configured"
     set:
       secrets.admin.new.password: ""
     asserts:
       - failedTemplate:
           errorMessage: Either specify `secrets.admin.new.username` and `secrets.admin.new.password` or reference an existing Secret via `secrets.admin.existingSecret`
 
-  - it: renders the secret specification with the default credentials
+  - it: "Render the Secret with the default credentials"
     asserts:
       - hasDocuments:
           count: 1
@@ -49,7 +49,7 @@ tests:
           path: data.username
           value: "Z2l0ZWFfYWRtaW4="
 
-  - it: supports custom annotations and labels
+  - it: "Render custom annotations and labels"
     set:
       secrets.admin.new.annotations:
         custom-annotation: annotation-value

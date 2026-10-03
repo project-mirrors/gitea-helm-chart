@@ -12,14 +12,14 @@ set:
           permissions: "~* &* +@all"
           password: gitea-password
 tests:
-  - it: "[valkey] valkey.auth.aclUsers.default.password is applied as expected"
+  - it: "[valkey] Apply valkey.auth.aclUsers.default.password"
     template: charts/valkey/templates/secret.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: data.default-password
           value: "Z2l0ZWEtcGFzc3dvcmQ="
-  - it: "[valkey] renders the referenced service"
+  - it: "[valkey] Render the referenced Service"
     template: charts/valkey/templates/service.yaml
     asserts:
       - containsDocument:
@@ -34,7 +34,7 @@ tests:
             port: 6379
             targetPort: tcp
             protocol: TCP
-  - it: "[gitea] waits for valkey to be up and running"
+  - it: "[gitea] Wait for valkey to be up and running"
     template: templates/secret_init.yaml
     asserts:
       - documentIndex: 0
@@ -42,7 +42,7 @@ tests:
           path: data["configure_gitea.sh"]
           decodeBase64: true
           pattern: nc -vz -w2 gitea-unittests-valkey.testing.svc.cluster.local 6379
-  - it: "[gitea] waits for valkey to be up and running with custom cluster domain"
+  - it: "[gitea] Wait for valkey to be up and running with a custom cluster domain"
     set:
       clusterDomain: my-special-cluster.local
     template: templates/secret_init.yaml

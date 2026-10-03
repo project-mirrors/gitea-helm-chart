@@ -5,7 +5,7 @@ release:
 templates:
   - templates/secret_init.yaml
 tests:
-  - it: runs gpg in batch mode
+  - it: "Run gpg in batch mode"
     set:
       deployment.gitea.image.rootless: false
       secrets.gpg.enabled: true
@@ -22,7 +22,7 @@ tests:
             set -eu
 
             gpg --batch --import "$TMP_RAW_GPG_KEY"
-  - it: skips gpg script block for disabled signing
+  - it: "Skip the gpg script block when signing is disabled"
     set:
       deployment.gitea.image.rootless: false
     asserts:
@@ -42,7 +42,7 @@ tests:
             mkdir -pv "${GITEA_TEMP}"
             chown -v 1000:1000 "${GITEA_TEMP}"
             chmod -v ug+rwx "${GITEA_TEMP}"
-  - it: adds gpg script block for enabled signing
+  - it: "Add the gpg script block when signing is enabled"
     set:
       deployment.gitea.image.rootless: false
       secrets.gpg.enabled: true
@@ -73,7 +73,7 @@ tests:
               chmod -v 700 "${GNUPGHOME}"
               chown -v 1000:1000 "${GNUPGHOME}"
             fi
-  - it: renders data, not stringData, so removed keys are pruned on upgrade
+  - it: "Render data instead of stringData so removed keys are pruned on upgrade"
     set:
       deployment.gitea.image.rootless: false
     asserts:

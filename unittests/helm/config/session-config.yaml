@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 tests:
-  - it: "session is configured correctly for valkey"
+  - it: "Configure the session for valkey"
     template: templates/secret_inlineConfig.yaml
     set:
       valkey:
@@ -17,7 +17,7 @@ tests:
             PROVIDER=redis
             PROVIDER_CONFIG=redis://:changeme@gitea-unittests-valkey.testing.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
 
-  - it: "session is configured correctly for 'memory' when valkey is disabled"
+  - it: "Configure the session for 'memory' when valkey is disabled"
     template: templates/secret_inlineConfig.yaml
     set:
       valkey:
@@ -31,7 +31,7 @@ tests:
             PROVIDER=memory
             PROVIDER_CONFIG=
 
-  - it: "session can be customized when valkey is disabled"
+  - it: "Customize the session when valkey is disabled"
     template: templates/secret_inlineConfig.yaml
     set:
       valkey:

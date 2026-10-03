@@ -5,7 +5,7 @@ release:
 templates:
   - templates/serviceMonitor.yaml
 tests:
-  - it: renders unsecure ServiceMonitor if gitea.metrics.token nil
+  - it: "Render an unsecured ServiceMonitor when gitea.metrics.token is nil"
     set:
       gitea.metrics.enabled: true
       gitea.metrics.token:
@@ -24,7 +24,7 @@ tests:
           path: spec.endpoints
           value:
             - port: http
-  - it: renders unsecure ServiceMonitor if gitea.metrics.token empty
+  - it: "Render an unsecured ServiceMonitor when gitea.metrics.token is empty"
     set:
       gitea.metrics.enabled: true
       gitea.metrics.token: ""
@@ -43,7 +43,7 @@ tests:
           path: spec.endpoints
           value:
             - port: http
-  - it: renders secure ServiceMonitor if gitea.metrics.token not empty
+  - it: "Render a secured ServiceMonitor when gitea.metrics.token is not empty"
     set:
       gitea.metrics.enabled: true
       gitea.metrics.token: "test-token"

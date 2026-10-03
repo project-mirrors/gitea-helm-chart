@@ -5,7 +5,7 @@ release:
 templates:
   - templates/backendTLSPolicy.yaml
 tests:
-  - it: should not render when gatewayAPI.enabled is false
+  - it: "Skip rendering when gatewayAPI.enabled is false"
     set:
       gatewayAPI:
         enabled: false
@@ -22,7 +22,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should not render when backendTLSPolicy.enabled is false
+  - it: "Skip rendering when backendTLSPolicy.enabled is false"
     set:
       gatewayAPI:
         enabled: true
@@ -31,7 +31,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should render a BackendTLSPolicy targeting the http Service by default
+  - it: "Render a BackendTLSPolicy targeting the HTTP Service by default"
     set:
       gatewayAPI:
         enabled: true
@@ -65,7 +65,7 @@ tests:
           path: spec.validation.hostname
           value: git.internal
 
-  - it: should fail when validation is missing
+  - it: "Fail when the validation is missing"
     set:
       gatewayAPI:
         enabled: true
@@ -76,7 +76,7 @@ tests:
       - failedTemplate:
           errorMessage: gatewayAPI.core.backendTLSPolicy.validation is required
 
-  - it: should fail when validation is an empty dict
+  - it: "Fail when the validation is an empty dict"
     set:
       gatewayAPI:
         enabled: true

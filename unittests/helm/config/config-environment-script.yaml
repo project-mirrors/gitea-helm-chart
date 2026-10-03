@@ -6,7 +6,7 @@ templates:
   - templates/secret_admin.yaml
   - templates/secret_config.yaml
 tests:
-  - it: uses `gitea config edit-ini` to write app.ini from environment variables
+  - it: "Write app.ini from the environment variables via `gitea config edit-ini`"
     template: templates/secret_config.yaml
     asserts:
       - documentIndex: 0
@@ -14,7 +14,7 @@ tests:
           path: data["config_environment.sh"]
           decodeBase64: true
           pattern: 'gitea config edit-ini --apply-env --config .+GITEA_APP_INI.+ --out .+GITEA_APP_INI'
-  - it: renders data, not stringData, so removed keys are pruned on upgrade
+  - it: "Render data instead of stringData so removed keys are pruned on upgrade"
     template: templates/secret_config.yaml
     asserts:
       - documentIndex: 0

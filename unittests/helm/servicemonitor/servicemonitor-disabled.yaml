@@ -5,7 +5,7 @@ release:
 templates:
   - templates/serviceMonitor.yaml
 tests:
-  - it: renders nothing if gitea.metrics.serviceMonitor disabled and gitea.metrics.token empty
+  - it: "Skip rendering when the ServiceMonitor is disabled and gitea.metrics.token is empty"
     set:
       gitea.metrics.enabled: false
       gitea.metrics.token: ""
@@ -13,7 +13,7 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-  - it: renders nothing if gitea.metrics.serviceMonitor disabled and gitea.metrics.token not empty
+  - it: "Skip rendering when the ServiceMonitor is disabled and gitea.metrics.token is not empty"
     set:
       gitea.metrics.enabled: false
       gitea.metrics.token: "test-token"

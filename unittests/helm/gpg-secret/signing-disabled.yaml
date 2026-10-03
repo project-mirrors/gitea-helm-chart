@@ -5,7 +5,7 @@ release:
 templates:
   - templates/secret_gpg.yaml
 tests:
-  - it: renders nothing
+  - it: "Skip rendering when signing is disabled"
     set:
       secrets.gpg.enabled: false
     asserts:

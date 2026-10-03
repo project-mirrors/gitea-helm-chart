@@ -5,23 +5,23 @@ release:
 templates:
   - templates/serviceMonitor.yaml
 tests:
-  - it: skips rendering by default
+  - it: "Skip rendering by default"
     asserts:
       - hasDocuments:
           count: 0
-  - it: renders default ServiceMonitor object with gitea.metrics.enabled=true
+  - it: "Render the ServiceMonitor when gitea.metrics.enabled is true"
     set:
       gitea.metrics.enabled: true
     asserts:
       - hasDocuments:
           count: 0
-  - it: renders default ServiceMonitor object with gitea.metrics.serviceMonitor.enabled=true
+  - it: "Render the ServiceMonitor when gitea.metrics.serviceMonitor.enabled is true"
     set:
       gitea.metrics.serviceMonitor.enabled: true
     asserts:
       - hasDocuments:
           count: 0
-  - it: renders defaults
+  - it: "Render the default ServiceMonitor spec"
     set:
       gitea.metrics.enabled: true
       gitea.metrics.serviceMonitor.enabled: true
@@ -45,7 +45,7 @@ tests:
           path: spec.endpoints[0].scrapeTimeout
       - notExists:
           path: spec.endpoints[0].tlsConfig
-  - it: renders custom scrape interval
+  - it: "Render a custom scrape interval"
     set:
       gitea.metrics.enabled: true
       gitea.metrics.serviceMonitor.enabled: true
@@ -58,7 +58,7 @@ tests:
       - equal:
           path: spec.endpoints[0].scrapeTimeout
           value: 5s
-  - it: renders custom tls config
+  - it: "Render a custom tls config"
     set:
       gitea.metrics.enabled: true
       gitea.metrics.serviceMonitor.enabled: true

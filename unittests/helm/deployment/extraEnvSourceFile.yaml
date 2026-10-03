@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: uses direct execution when extraEnvSourceFile is not set
+  - it: "Use direct execution when extraEnvSourceFile is not set"
     template: templates/deployment.yaml
     asserts:
       - equal:
@@ -25,7 +25,7 @@ tests:
       - notExists:
           path: spec.template.spec.initContainers[2].args
 
-  - it: sources env file in init-app-ini when extraEnvSourceFile is set
+  - it: "Source the env file in init-app-ini when extraEnvSourceFile is set"
     template: templates/deployment.yaml
     set:
       gitea:
@@ -41,7 +41,7 @@ tests:
           path: spec.template.spec.initContainers[1].args[0]
           pattern: config_environment\.sh
 
-  - it: sources env file in configure-gitea when extraEnvSourceFile is set
+  - it: "Source the env file in configure-gitea when extraEnvSourceFile is set"
     template: templates/deployment.yaml
     set:
       gitea:
@@ -57,7 +57,7 @@ tests:
           path: spec.template.spec.initContainers[2].args[0]
           pattern: configure_gitea\.sh
 
-  - it: sources env file in configure-gpg when extraEnvSourceFile is set with signing enabled
+  - it: "Source the env file in configure-gpg when extraEnvSourceFile is set and signing is enabled"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
@@ -76,7 +76,7 @@ tests:
           path: spec.template.spec.initContainers[2].args[0]
           pattern: configure_gpg_environment\.sh
 
-  - it: includes file existence check in source command
+  - it: "Include a file existence check in the source command"
     template: templates/deployment.yaml
     set:
       gitea:

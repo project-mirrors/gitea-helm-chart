@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: reads the admin credentials from the generated secret
+  - it: "Read the admin credentials from the generated Secret"
     template: templates/deployment.yaml
     asserts:
       - contains:
@@ -44,7 +44,7 @@ tests:
             name: GITEA_ADMIN_PASSWORD_MODE
             value: keepUpdated
 
-  - it: reads the admin credentials from the configured keys of an existing secret
+  - it: "Read the admin credentials from the configured keys of an existing Secret"
     template: templates/deployment.yaml
     set:
       secrets.admin.existingSecret.enabled: true
@@ -78,7 +78,7 @@ tests:
                 key: custom-email
                 name: custom-admin-secret
 
-  - it: omits the admin environment when the admin user is disabled
+  - it: "Omit the admin environment when the admin user is disabled"
     template: templates/deployment.yaml
     set:
       secrets.admin.enabled: false
@@ -94,7 +94,7 @@ tests:
             name: GITEA_ADMIN_PASSWORD_MODE
           any: true
 
-  - it: fails on an unsupported password mode
+  - it: "Fail on an unsupported password mode"
     template: templates/deployment.yaml
     set:
       secrets.admin.passwordMode: unsupported

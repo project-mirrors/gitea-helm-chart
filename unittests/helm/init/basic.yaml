@@ -5,7 +5,7 @@ release:
 templates:
   - templates/secret_init.yaml
 tests:
-  - it: renders a secret
+  - it: "Render the Secret"
     asserts:
       - hasDocuments:
           count: 1

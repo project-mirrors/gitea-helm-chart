@@ -5,7 +5,7 @@ release:
 templates:
   - templates/secret_init.yaml
 tests:
-  - it: runs gpg in batch mode
+  - it: "Run gpg in batch mode"
     set:
       secrets.gpg.enabled: true
       secrets.gpg.new.privateKey: |-
@@ -21,7 +21,7 @@ tests:
             set -eu
 
             gpg --batch --import "$TMP_RAW_GPG_KEY"
-  - it: skips gpg script block for disabled signing
+  - it: "Skip the gpg script block when signing is disabled"
     asserts:
       - equal:
           path: data["init_directory_structure.sh"]
@@ -37,7 +37,7 @@ tests:
             # prepare temp directory structure
             mkdir -pv "${GITEA_TEMP}"
             chmod -v ug+rwx "${GITEA_TEMP}"
-  - it: adds gpg script block for enabled signing
+  - it: "Add the gpg script block when signing is enabled"
     set:
       secrets.gpg.enabled: true
       secrets.gpg.new.privateKey: |-
@@ -65,7 +65,7 @@ tests:
               chmod -v 700 "${GNUPGHOME}"
               chown -v 1000:1000 "${GNUPGHOME}"
             fi
-  - it: it does not chown /data even when image.fullOverride is set
+  - it: "Skip the chown of /data even when image.fullOverride is set"
     template: templates/secret_init.yaml
     set:
       deployment.gitea.image.fullOverride: docker.gitea.com/gitea:1.20.5
@@ -84,7 +84,7 @@ tests:
             # prepare temp directory structure
             mkdir -pv "${GITEA_TEMP}"
             chmod -v ug+rwx "${GITEA_TEMP}"
-  - it: renders data, not stringData, so removed keys are pruned on upgrade
+  - it: "Render data instead of stringData so removed keys are pruned on upgrade"
     asserts:
       - notExists:
           path: stringData

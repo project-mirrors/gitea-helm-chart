@@ -6,7 +6,7 @@ templates:
   - templates/service_ssh.yaml
   - templates/service_http.yaml
 tests:
-  - it: supports adding custom labels to sshService
+  - it: "Add custom labels to the SSH Service"
     template: templates/service_ssh.yaml
     set:
       service:
@@ -18,7 +18,7 @@ tests:
           path: metadata.labels["gitea/testkey"]
           value: "testvalue"
 
-  - it: keeps existing labels (ssh)
+  - it: "Keep the existing labels of the SSH Service"
     template: templates/service_ssh.yaml
     set:
       service:
@@ -28,7 +28,7 @@ tests:
       - exists:
           path: metadata.labels["app"]
 
-  - it: supports adding custom labels to httpService
+  - it: "Add custom labels to the HTTP Service"
     template: templates/service_http.yaml
     set:
       service:
@@ -40,7 +40,7 @@ tests:
           path: metadata.labels["gitea/testkey"]
           value: "testvalue"
 
-  - it: keeps existing labels (http)
+  - it: "Keep the existing labels of the HTTP Service"
     template: templates/service_http.yaml
     set:
       service:
@@ -50,7 +50,7 @@ tests:
       - exists:
           path: metadata.labels["app"]
 
-  - it: render service.ssh.loadBalancerClass if set and type is LoadBalancer
+  - it: "Render service.ssh.loadBalancerClass when the type is LoadBalancer"
     template: templates/service_ssh.yaml
     set:
       service:
@@ -72,7 +72,7 @@ tests:
           path: spec.loadBalancerSourceRanges
           value: ["1.2.3.4/32", "5.6.7.8/32"]
 
-  - it: does not render when loadbalancer properties are set but type is not loadBalancerClass
+  - it: "Skip the loadBalancer properties when the type is not LoadBalancer"
     template: templates/service_http.yaml
     set:
       service:
@@ -91,7 +91,7 @@ tests:
       - notExists:
           path: spec.loadBalancerSourceRanges
 
-  - it: does not render loadBalancerClass by default even when type is LoadBalancer
+  - it: "Skip loadBalancerClass by default even when the type is LoadBalancer"
     template: templates/service_http.yaml
     set:
       service:
@@ -105,7 +105,7 @@ tests:
           path: spec.loadBalancerIP
           value: "1.2.3.4"
 
-  - it: both ssh and http services exist
+  - it: "Render both the SSH and the HTTP Service"
     templates:
       - templates/service_ssh.yaml
       - templates/service_http.yaml

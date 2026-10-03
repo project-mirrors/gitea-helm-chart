@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: appends the per-container env
+  - it: "Append the per-container env"
     template: templates/deployment.yaml
     set:
       deployment.initDirectories.env:
@@ -37,7 +37,7 @@ tests:
             name: INIT_DIRECTORIES
             value: "1"
 
-  - it: renders the per-container envFrom
+  - it: "Render the per-container envFrom"
     template: templates/deployment.yaml
     set:
       deployment.initAppIni.envFrom:
@@ -52,7 +52,7 @@ tests:
             - secretRef:
                 name: special-secret
 
-  - it: appends the per-container volumeMounts
+  - it: "Append the per-container volumeMounts"
     template: templates/deployment.yaml
     set:
       deployment.initConfigureGitea.volumeMounts:
@@ -73,7 +73,7 @@ tests:
             mountPath: /configmap
             readOnly: true
 
-  - it: overrides the resources of a single init container
+  - it: "Override the resources of a single init container"
     template: templates/deployment.yaml
     set:
       deployment.initDirectories.resources:
@@ -93,7 +93,7 @@ tests:
               cpu: 100m
               memory: 128Mi
 
-  - it: overrides the security context of a single init container
+  - it: "Override the security context of a single init container"
     template: templates/deployment.yaml
     set:
       deployment.gitea.securityContext:
@@ -108,7 +108,7 @@ tests:
           path: spec.template.spec.initContainers[1].securityContext.runAsUser
           value: 1000
 
-  - it: renders the envFrom of the gitea container
+  - it: "Render the envFrom of the gitea container"
     template: templates/deployment.yaml
     set:
       deployment.gitea.envFrom:
@@ -121,7 +121,7 @@ tests:
             - configMapRef:
                 name: special-config
 
-  - it: omits envFrom when unset
+  - it: "Omit the envFrom when it is unset"
     template: templates/deployment.yaml
     asserts:
       - notExists:

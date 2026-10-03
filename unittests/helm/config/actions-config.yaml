@@ -5,14 +5,14 @@ release:
 templates:
   - templates/secret_inlineConfig.yaml
 tests:
-  - it: "actions are enabled by default (based on vanilla Gitea behavior)"
+  - it: "Enable actions by default to match vanilla Gitea"
     template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         notExists:
           path: data.actions
 
-  - it: "actions can be disabled via inline config"
+  - it: "Disable actions via the inline config"
     template: templates/secret_inlineConfig.yaml
     set:
       gitea.config.actions.ENABLED: false

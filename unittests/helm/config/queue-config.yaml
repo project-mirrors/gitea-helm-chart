@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 tests:
-  - it: "queue is configured correctly for valkey"
+  - it: "Configure the queue for valkey"
     template: templates/secret_inlineConfig.yaml
     set:
       valkey:
@@ -17,7 +17,7 @@ tests:
             CONN_STR=redis://:changeme@gitea-unittests-valkey.testing.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
             TYPE=redis
 
-  - it: "queue is configured correctly for 'levelDB' when valkey is disabled"
+  - it: "Configure the queue for 'levelDB' when valkey is disabled"
     template: templates/secret_inlineConfig.yaml
     set:
       valkey:
@@ -31,7 +31,7 @@ tests:
             CONN_STR=
             TYPE=level
 
-  - it: "queue can be customized when valkey is disabled"
+  - it: "Customize the queue when valkey is disabled"
     template: templates/secret_inlineConfig.yaml
     set:
       valkey:

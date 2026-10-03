@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: Renders a deployment
+  - it: "Render a Deployment with additionalConfigFromEnvs"
     template: templates/deployment.yaml
     asserts:
       - hasDocuments:
@@ -20,7 +20,7 @@ tests:
           kind: Deployment
           apiVersion: apps/v1
           name: gitea-unittests
-  - it: Deployment with empty additionalConfigFromEnvs
+  - it: "Render the Deployment with empty additionalConfigFromEnvs"
     template: templates/deployment.yaml
     set:
       gitea.additionalConfigFromEnvs: []
@@ -48,7 +48,7 @@ tests:
                 value: /tmp/existing-envs
               - name: ENV_TO_INI_MOUNT_POINT
                 value: /env-to-ini-mounts
-  - it: Deployment with standard additionalConfigFromEnvs
+  - it: "Render the Deployment with standard additionalConfigFromEnvs"
     template: templates/deployment.yaml
     set:
       gitea.additionalConfigFromEnvs: [{name: GITEA_database_HOST, value: my-db:123}, {name: GITEA_database_USER, value: my-user}]
@@ -80,7 +80,7 @@ tests:
                 value: my-db:123
               - name: GITEA_database_USER
                 value: my-user
-  - it: Deployment with templated additionalConfigFromEnvs
+  - it: "Render the Deployment with templated additionalConfigFromEnvs"
     template: templates/deployment.yaml
     set:
       gitea.misc.host: my-db-host:321
@@ -114,7 +114,7 @@ tests:
                 value: my-db-host:321
               - name: GITEA_database_USER
                 value: my-db-user
-  - it: Deployment with additionalConfigFromEnvs templated secret name
+  - it: "Render the Deployment with a templated Secret name in additionalConfigFromEnvs"
     template: templates/deployment.yaml
     set:
       gitea.misc.existingSecret: my-db-secret

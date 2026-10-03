@@ -5,7 +5,7 @@ release:
 templates:
   - templates/clientSettingsPolicy.yaml
 tests:
-  - it: should not render when gatewayAPI.enabled is false
+  - it: "Skip rendering when gatewayAPI.enabled is false"
     set:
       gatewayAPI:
         enabled: false
@@ -18,7 +18,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should not render when clientSettingsPolicies.enabled is false
+  - it: "Skip rendering when clientSettingsPolicies.enabled is false"
     set:
       gatewayAPI:
         enabled: true
@@ -27,7 +27,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should render a ClientSettingsPolicy targeting the HTTPRoute by default
+  - it: "Render a ClientSettingsPolicy targeting the HTTPRoute by default"
     set:
       gatewayAPI:
         enabled: true
@@ -60,7 +60,7 @@ tests:
           path: spec.body.maxSize
           value: 100m
 
-  - it: should honor a custom targetRef
+  - it: "Render a custom targetRef"
     set:
       gatewayAPI:
         enabled: true
@@ -81,7 +81,7 @@ tests:
           path: spec.targetRef.name
           value: shared-gateway
 
-  - it: should fail when body is missing
+  - it: "Fail when the body is missing"
     set:
       gatewayAPI:
         enabled: true
@@ -92,7 +92,7 @@ tests:
       - failedTemplate:
           errorMessage: gatewayAPI.nginx.clientSettingsPolicies.body is required
 
-  - it: should fail when body is an empty dict
+  - it: "Fail when the body is an empty dict"
     set:
       gatewayAPI:
         enabled: true

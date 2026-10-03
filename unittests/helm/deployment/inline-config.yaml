@@ -5,7 +5,7 @@ release:
 templates:
   - templates/secret_inlineConfig.yaml
 tests:
-  - it: inline config data.server using TPL
+  - it: "Render the inline config of data.server via tpl"
     set:
       global.giteaHostName: "gitea.example.com"
       ingress.enabled: true
@@ -34,7 +34,7 @@ tests:
           path: data.server
           decodeBase64: true
           pattern: SSH_DOMAIN=gitea\.example\.com
-  - it: renders data, not stringData, so removed sections are pruned on upgrade
+  - it: "Render data instead of stringData so removed sections are pruned on upgrade"
     asserts:
       - documentIndex: 0
         notExists:

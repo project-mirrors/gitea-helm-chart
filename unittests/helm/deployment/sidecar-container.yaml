@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: supports adding a sidecar container
+  - it: "Render an additional sidecar container"
     template: templates/deployment.yaml
     set:
       extraContainers:

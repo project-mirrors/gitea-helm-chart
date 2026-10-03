@@ -20,7 +20,7 @@ set:
       persistence:
         size: 1337Mi
 tests:
-  - it: "[postgresql] DB settings are applied as expected"
+  - it: "[postgresql] Apply the database settings"
     template: charts/postgresql/templates/primary/statefulset.yaml
     asserts:
       - documentIndex: 0
@@ -35,28 +35,28 @@ tests:
           content:
             name: POSTGRES_USER
             value: "gitea-username"
-  - it: "[postgresql] DB password is applied as expected"
+  - it: "[postgresql] Apply the database password"
     template: charts/postgresql/templates/secrets.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: data["password"]
           value: "Z2l0ZWEtcGFzc3dvcmQ="
-  - it: "[postgresql] primary.persistence.size is applied as expected"
+  - it: "[postgresql] Apply primary.persistence.size"
     template: charts/postgresql/templates/primary/statefulset.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
           value: "1337Mi"
-  - it: "[postgresql] global.postgresql.service.ports.postgresql is applied as expected"
+  - it: "[postgresql] Apply global.postgresql.service.ports.postgresql"
     template: charts/postgresql/templates/primary/svc.yaml
     asserts:
       - documentIndex: 0
         equal:
           path: spec.ports[0].port
           value: 1234
-  - it: "[postgresql] renders the referenced service"
+  - it: "[postgresql] Render the referenced Service"
     template: charts/postgresql/templates/primary/svc.yaml
     asserts:
       - containsDocument:
@@ -64,7 +64,7 @@ tests:
           apiVersion: v1
           name: gitea-unittests-postgresql
           namespace: testing
-  - it: "[gitea] connects to postgresql service"
+  - it: "[gitea] Connect to the postgresql Service"
     template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
@@ -72,7 +72,7 @@ tests:
           path: data.database
           decodeBase64: true
           pattern: HOST=gitea-unittests-postgresql.testing.svc.cluster.local:1234
-  - it: "[gitea] connects to postgresql service with custom cluster domain"
+  - it: "[gitea] Connect to the postgresql Service with a custom cluster domain"
     set:
       clusterDomain: my-special-cluster.local
     template: templates/secret_inlineConfig.yaml
@@ -82,7 +82,7 @@ tests:
           path: data.database
           decodeBase64: true
           pattern: HOST=gitea-unittests-postgresql.testing.svc.my-special-cluster.local:1234
-  - it: "[gitea] connects to configured database"
+  - it: "[gitea] Connect to the configured database"
     template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0

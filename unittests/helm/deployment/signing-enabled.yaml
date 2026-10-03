@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: adds gpg init container
+  - it: "Add the gpg init container"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
@@ -48,7 +48,7 @@ tests:
             - name: gpg-private-key
               mountPath: /raw
               readOnly: true
-  - it: adds gpg env in `init-directories` init container
+  - it: "Add the gpg env to the `init-directories` init container"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
@@ -63,7 +63,7 @@ tests:
               secretKeyRef:
                 name: custom-gpg-secret
                 key: gpgHome
-  - it: adds gpg env in runtime container
+  - it: "Add the gpg env to the runtime container"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
@@ -78,7 +78,7 @@ tests:
               secretKeyRef:
                 name: custom-gpg-secret
                 key: gpgHome
-  - it: reads the gpg home from the configured key of an existing secret
+  - it: "Read the gpg home from the configured key of an existing Secret"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
@@ -94,7 +94,7 @@ tests:
               secretKeyRef:
                 name: custom-gpg-secret
                 key: custom-gpg-home
-  - it: adds gpg volume spec
+  - it: "Add the gpg volume spec"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true
@@ -110,7 +110,7 @@ tests:
                 - key: privateKey
                   path: private.asc
               defaultMode: 0100
-  - it: supports gpg volume spec with external reference
+  - it: "Render the gpg volume spec with an external reference"
     template: templates/deployment.yaml
     set:
       secrets.gpg.enabled: true

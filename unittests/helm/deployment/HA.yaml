@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: fails with multiple replicas and "GIT_GC_REPOS" enabled
+  - it: "Fail with multiple replicas and GIT_GC_REPOS enabled"
     template: templates/secret_config.yaml
     set:
       deployment:
@@ -28,7 +28,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "Invoking the garbage collector via CRON is not yet supported when running with multiple replicas. Please set 'gitea.config.cron.GIT_GC_REPOS.enabled = false'."
-  - it: fails with multiple replicas and RWX file system not set
+  - it: "Fail with multiple replicas and no RWX file system"
     template: templates/secret_config.yaml
     set:
       deployment:
@@ -36,7 +36,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "When using multiple replicas, a RWX file system is required and persistence.new.accessModes[0] must be set to ReadWriteMany."
-  - it: fails with multiple replicas and bleve issue indexer
+  - it: "Fail with multiple replicas and the bleve issue indexer"
     template: templates/secret_config.yaml
     set:
       deployment:
@@ -52,7 +52,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "When using multiple replicas, the issue indexer (gitea.config.indexer.ISSUE_INDEXER_TYPE) must be set to a HA-ready provider such as 'meilisearch', 'elasticsearch' or 'db' (if the DB is HA-ready)."
-  - it: fails with multiple replicas and bleve repo indexer
+  - it: "Fail with multiple replicas and the bleve repo indexer"
     template: templates/secret_config.yaml
     set:
       deployment:

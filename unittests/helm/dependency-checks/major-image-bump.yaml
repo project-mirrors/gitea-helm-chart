@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 tests:
-  - it: "[postgresql-ha] ensures we detect major image version upgrades"
+  - it: "[postgresql-ha] Detect major image version upgrades"
     template: charts/postgresql-ha/templates/postgresql/statefulset.yaml
     set:
       postgresql:
@@ -16,7 +16,7 @@ tests:
           path: spec.template.spec.containers[0].image
           # IN CASE OF AN INTENTIONAL MAJOR BUMP, ADJUST THIS TEST
           pattern: bitnamilegacy/postgresql-repmgr:17.+$
-  - it: "[postgresql] ensures we detect major image version upgrades"
+  - it: "[postgresql] Detect major image version upgrades"
     template: charts/postgresql/templates/primary/statefulset.yaml
     set:
       postgresql:
@@ -29,7 +29,7 @@ tests:
           path: spec.template.spec.containers[0].image
           # IN CASE OF AN INTENTIONAL MAJOR BUMP, ADJUST THIS TEST
           pattern: bitnamilegacy/postgresql:17.+$
-  - it: "[valkey] ensures we detect major image version upgrades"
+  - it: "[valkey] Detect major image version upgrades"
     template: charts/valkey/templates/deploy_valkey.yaml
     set:
       valkey:

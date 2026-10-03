@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: Render the deployment (default)
+  - it: "Render the Deployment with the default init containers"
     asserts:
       - hasDocuments:
           count: 1
@@ -21,7 +21,7 @@ tests:
           count: 3
         template: templates/deployment.yaml
 
-  - it: Render the deployment (signing)
+  - it: "Render the Deployment with the signing init container"
     set:
       secrets.gpg.enabled: true
       secrets.gpg.existingSecret.enabled: true
@@ -35,7 +35,7 @@ tests:
           count: 4
         template: templates/deployment.yaml
 
-  - it: Render the deployment (extraInitContainers)
+  - it: "Render the Deployment with extraInitContainers"
     set:
       deployment.initContainers:
         - container:
@@ -68,7 +68,7 @@ tests:
           value: foo
         template: templates/deployment.yaml
 
-  - it: renders the chart-managed init containers in the configured order
+  - it: "Render the chart-managed init containers in the configured order"
     template: templates/deployment.yaml
     set:
       deployment.initContainers:
@@ -82,7 +82,7 @@ tests:
           path: spec.template.spec.initContainers[1].name
           value: init-directories
 
-  - it: fails when an init container entry sets both container and link
+  - it: "Fail when an init container entry sets both container and link"
     template: templates/deployment.yaml
     set:
       deployment.initContainers:
@@ -94,7 +94,7 @@ tests:
       - failedTemplate:
           errorMessage: "deployment.initContainers[0]: `container` and `link` are mutually exclusive"
 
-  - it: fails when an init container entry sets neither container nor link
+  - it: "Fail when an init container entry sets neither container nor link"
     template: templates/deployment.yaml
     set:
       deployment.initContainers:
@@ -103,7 +103,7 @@ tests:
       - failedTemplate:
           errorMessage: "deployment.initContainers[0]: either `container` or `link` must be set"
 
-  - it: fails when an init container links to an unknown configuration
+  - it: "Fail when an init container links to an unknown configuration"
     template: templates/deployment.yaml
     set:
       deployment.initContainers:

@@ -3,7 +3,7 @@ release:
   name: gitea-unittests
   namespace: testing
 tests:
-  - it: metrics token is set
+  - it: "Configure the metrics token when it is set"
     template: templates/secret_inlineConfig.yaml
     set:
       gitea:
@@ -18,7 +18,7 @@ tests:
           value: |-
             ENABLED=true
             TOKEN=somepassword
-  - it: metrics token is empty
+  - it: "Omit the metrics token when it is empty"
     template: templates/secret_inlineConfig.yaml
     set:
       gitea:
@@ -32,7 +32,7 @@ tests:
           decodeBase64: true
           value: |-
             ENABLED=true
-  - it: metrics token is nil
+  - it: "Omit the metrics token when it is nil"
     template: templates/secret_inlineConfig.yaml
     set:
       gitea:
@@ -46,7 +46,7 @@ tests:
           decodeBase64: true
           value: |-
             ENABLED=true
-  - it: does not configures a token if metrics are disabled
+  - it: "Omit the metrics token when metrics are disabled"
     template: templates/secret_inlineConfig.yaml
     set:
       gitea:

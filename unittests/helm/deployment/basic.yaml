@@ -11,7 +11,7 @@ templates:
   - templates/secret_inlineConfig.yaml
   - templates/secret_metrics.yaml
 tests:
-  - it: renders a deployment
+  - it: "Render a Deployment"
     template: templates/deployment.yaml
     asserts:
       - hasDocuments:
@@ -20,14 +20,14 @@ tests:
           kind: Deployment
           apiVersion: apps/v1
           name: gitea-unittests
-  - it: renders no deployment when disabled
+  - it: "Skip rendering when the Deployment is disabled"
     template: templates/deployment.yaml
     set:
       deployment.enabled: false
     asserts:
       - hasDocuments:
           count: 0
-  - it: deployment labels are set
+  - it: "Render the configured Deployment labels"
     template: templates/deployment.yaml
     set:
       deployment.labels:
@@ -45,7 +45,7 @@ tests:
           path: spec.selector.matchLabels
           content:
             hello: world
-  - it: deployment labels are not in selector matchLabels
+  - it: "Omit the Deployment labels from the selector matchLabels"
     template: templates/deployment.yaml
     set:
       deployment.labels:
@@ -57,7 +57,7 @@ tests:
           value:
             app.kubernetes.io/name: gitea
             app.kubernetes.io/instance: gitea-unittests
-  - it: deployment labels are always rendered
+  - it: "Render the Deployment labels even when none are configured"
     template: templates/deployment.yaml
     asserts:
       - isSubset:
@@ -67,12 +67,12 @@ tests:
             app.kubernetes.io/name: gitea
             app.kubernetes.io/instance: gitea-unittests
             app.kubernetes.io/managed-by: Helm
-  - it: deployment annotations are undefined
+  - it: "Omit the Deployment annotations when none are configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: metadata.annotations
-  - it: deployment annotations are set
+  - it: "Render the configured Deployment annotations"
     template: templates/deployment.yaml
     set:
       deployment.annotations:
@@ -82,12 +82,12 @@ tests:
           path: metadata.annotations
           value:
             hello: world
-  - it: nodeSelector is undefined
+  - it: "Omit the nodeSelector when none is configured"
     asserts:
       - notExists:
           path: spec.template.spec.nodeSelector
         template: templates/deployment.yaml
-  - it: nodeSelector is defined
+  - it: "Render the configured nodeSelector"
     set:
       deployment.nodeSelector:
         foo: bar
@@ -99,12 +99,12 @@ tests:
             foo: bar
             bar: foo
         template: templates/deployment.yaml
-  - it: affinity is undefined
+  - it: "Omit the affinity when none is configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.affinity
-  - it: affinity is defined
+  - it: "Render the configured affinity"
     template: templates/deployment.yaml
     set:
       deployment.affinity:
@@ -128,12 +128,12 @@ tests:
                         operator: In
                         values:
                           - linux
-  - it: dnsConfig is undefined
+  - it: "Omit the dnsConfig when none is configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.dnsConfig
-  - it: dnsConfig is defined
+  - it: "Render the configured dnsConfig"
     template: templates/deployment.yaml
     set:
       deployment.dnsConfig:
@@ -151,12 +151,12 @@ tests:
             options:
               - name: ndots
                 value: "2"
-  - it: priorityClassName is undefined
+  - it: "Omit the priorityClassName when none is configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.priorityClassName
-  - it: priorityClassName is defined
+  - it: "Render the configured priorityClassName"
     template: templates/deployment.yaml
     set:
       deployment.priorityClassName: high-priority
@@ -164,12 +164,12 @@ tests:
       - equal:
           path: spec.template.spec.priorityClassName
           value: high-priority
-  - it: schedulerName is undefined
+  - it: "Omit the schedulerName when none is configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.schedulerName
-  - it: schedulerName is defined
+  - it: "Render the configured schedulerName"
     template: templates/deployment.yaml
     set:
       deployment.schedulerName: stork
@@ -177,7 +177,7 @@ tests:
       - equal:
           path: spec.template.spec.schedulerName
           value: stork
-  - it: strategy defaults to a rolling update
+  - it: "Default the strategy to a rolling update"
     template: templates/deployment.yaml
     asserts:
       - equal:
@@ -187,7 +187,7 @@ tests:
             rollingUpdate:
               maxUnavailable: 0
               maxSurge: 100%
-  - it: strategy omits rollingUpdate for other strategy types
+  - it: "Omit rollingUpdate for other strategy types"
     template: templates/deployment.yaml
     set:
       deployment.strategy.type: Recreate
@@ -196,12 +196,12 @@ tests:
           path: spec.strategy
           value:
             type: Recreate
-  - it: tolerations are undefined
+  - it: "Omit the tolerations when none are configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.tolerations
-  - it: tolerations are defined
+  - it: "Render the configured tolerations"
     template: templates/deployment.yaml
     set:
       deployment.tolerations:
@@ -217,12 +217,12 @@ tests:
               operator: Equal
               value: postgres
               effect: NoSchedule
-  - it: topologySpreadConstraints are undefined
+  - it: "Omit the topologySpreadConstraints when none are configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.topologySpreadConstraints
-  - it: topologySpreadConstraints are defined
+  - it: "Render the configured topologySpreadConstraints"
     template: templates/deployment.yaml
     set:
       deployment.topologySpreadConstraints:
@@ -243,7 +243,7 @@ tests:
                 matchLabels:
                   app.kubernetes.io/instance: gitea-unittests
 
-  - it: "injects TMP_EXISTING_ENVS_FILE as environment variable to 'init-app-ini' init container"
+  - it: "Inject TMP_EXISTING_ENVS_FILE into the 'init-app-ini' init container"
     template: templates/deployment.yaml
     asserts:
       - contains:
@@ -251,7 +251,7 @@ tests:
           content:
             name: TMP_EXISTING_ENVS_FILE
             value: /tmp/existing-envs
-  - it: "injects ENV_TO_INI_MOUNT_POINT as environment variable to 'init-app-ini' init container"
+  - it: "Inject ENV_TO_INI_MOUNT_POINT into the 'init-app-ini' init container"
     template: templates/deployment.yaml
     asserts:
       - contains:
@@ -259,7 +259,7 @@ tests:
           content:
             name: ENV_TO_INI_MOUNT_POINT
             value: /env-to-ini-mounts
-  - it: "deployment.gitea.env is injected into all init containers and the gitea container"
+  - it: "Inject deployment.gitea.env into all init containers and the gitea container"
     template: templates/deployment.yaml
     set:
       deployment.gitea.env:
@@ -286,7 +286,7 @@ tests:
           content:
             name: VARIABLE
             value: my-value
-  - it: CPU resources are defined as well as GOMAXPROCS
+  - it: "Render GOMAXPROCS when the CPU resources are defined"
     template: templates/deployment.yaml
     set:
       deployment.gitea.resources:
@@ -314,7 +314,7 @@ tests:
             requests:
               cpu: 100ms
               memory: 100Mi
-  - it: container resources default to an empty map and GOMAXPROCS is omitted
+  - it: "Default the container resources to an empty map and omit GOMAXPROCS"
     template: templates/deployment.yaml
     asserts:
       - equal:
@@ -328,12 +328,12 @@ tests:
               resourceFieldRef:
                 divisor: "1"
                 resource: limits.cpu
-  - it: pod level resources are undefined
+  - it: "Omit the pod level resources when none are configured"
     template: templates/deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.resources
-  - it: pod level resources are defined
+  - it: "Render the configured pod level resources"
     template: templates/deployment.yaml
     set:
       deployment.resources:
@@ -353,7 +353,7 @@ tests:
             requests:
               cpu: 250m
               memory: 256Mi
-  - it: Init containers have correct volumeMount path
+  - it: "Render the configured volumeMount path of the init containers"
     template: templates/deployment.yaml
     set:
       initContainersScriptsVolumeMountPath: "/custom/init/path"
@@ -364,7 +364,7 @@ tests:
       - equal:
           path: spec.template.spec.initContainers[*].volumeMounts[?(@.name=="config")].mountPath
           value: "/custom/init/path"
-  - it: Init containers have correct volumeMount path if there is no override
+  - it: "Render the default volumeMount path of the init containers"
     template: templates/deployment.yaml
     asserts:
       - equal:

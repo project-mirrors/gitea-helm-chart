@@ -5,7 +5,7 @@ release:
 templates:
   - templates/tcpRoute.yaml
 tests:
-  - it: should not render when gatewayAPI.enabled is false
+  - it: "Skip rendering when gatewayAPI.enabled is false"
     set:
       gatewayAPI:
         enabled: false
@@ -18,7 +18,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should not render when tcpRoute.enabled is false
+  - it: "Skip rendering when tcpRoute.enabled is false"
     set:
       gatewayAPI:
         enabled: true
@@ -27,7 +27,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: should render a TCPRoute defaulting to the SSH service
+  - it: "Render a TCPRoute defaulting to the SSH Service"
     set:
       gatewayAPI:
         enabled: true
@@ -67,7 +67,7 @@ tests:
           path: spec.rules[0].backendRefs[0].weight
           value: 1
 
-  - it: should fail when parentRefs missing
+  - it: "Fail when the parentRefs are missing"
     set:
       gatewayAPI:
         enabled: true

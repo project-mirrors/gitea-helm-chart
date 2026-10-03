@@ -5,7 +5,7 @@ release:
 templates:
   - templates/route.yaml
 tests:
-  - it: should create route when route.enabled is true
+  - it: "Render the Route when route.enabled is true"
     set:
       route:
         enabled: true
@@ -50,7 +50,7 @@ tests:
           path: spec.tls.insecureEdgeTerminationPolicy
           value: Redirect
 
-  - it: should not create route when route.enabled is false
+  - it: "Skip rendering when route.enabled is false"
     set:
       route.enabled: false
     asserts:
