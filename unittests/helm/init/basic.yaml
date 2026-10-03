@@ -1,4 +1,4 @@
-suite: Init template (basic)
+suite: Test init secret basics
 release:
   name: gitea-unittests
   namespace: testing

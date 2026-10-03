@@ -1,4 +1,4 @@
-suite: config template
+suite: Test deployment inline config
 release:
   name: gitea-unittests
   namespace: testing

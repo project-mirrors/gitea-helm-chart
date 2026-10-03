@@ -1,4 +1,4 @@
-suite: deployment template (checksum annotations)
+suite: Test deployment checksum annotations
 release:
   name: gitea-unittests
   namespace: testing

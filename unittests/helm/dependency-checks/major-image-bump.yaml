@@ -1,4 +1,4 @@
-suite: Dependency checks | Major image bumps
+suite: Test dependency major image bumps
 release:
   name: gitea-unittests
   namespace: testing

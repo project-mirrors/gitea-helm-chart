@@ -1,4 +1,4 @@
-suite: Admin secret template
+suite: Test admin secret
 release:
   name: gitea-unittests
   namespace: testing

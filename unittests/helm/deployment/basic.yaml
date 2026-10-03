@@ -1,4 +1,4 @@
-suite: deployment template (basic)
+suite: Test deployment basics
 release:
   name: gitea-unittests
   namespace: testing

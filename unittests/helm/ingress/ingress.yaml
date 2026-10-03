@@ -3,7 +3,7 @@ chart:
 release:
   name: gitea-unittests
   namespace: testing
-suite: Test ingress.yaml
+suite: Test ingress
 templates:
   - templates/ingress.yaml
 tests:

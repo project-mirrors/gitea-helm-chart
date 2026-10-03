@@ -1,4 +1,4 @@
-suite: config template | cache config
+suite: Test config cache
 release:
   name: gitea-unittests
   namespace: testing

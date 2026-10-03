@@ -1,4 +1,4 @@
-suite: config template | actions config
+suite: Test config actions
 release:
   name: gitea-unittests
   namespace: testing

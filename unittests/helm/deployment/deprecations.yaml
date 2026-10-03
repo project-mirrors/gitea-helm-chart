@@ -1,4 +1,4 @@
-suite: deprecation template (deployment)
+suite: Test deployment deprecations
 release:
   name: gitea-unittests
   namespace: testing

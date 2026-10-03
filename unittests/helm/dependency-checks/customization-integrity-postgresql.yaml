@@ -1,4 +1,4 @@
-suite: Dependency checks | Customization integrity | postgresql
+suite: Test dependency customization integrity of postgresql
 release:
   name: gitea-unittests
   namespace: testing

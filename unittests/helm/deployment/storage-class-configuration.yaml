@@ -3,7 +3,7 @@ chart:
 release:
   name: gitea-unittests
   namespace: testing
-suite: Storage class configuration tests
+suite: Test deployment storage class configuration
 templates:
   - templates/persistentVolumeClaim.yaml
 tests:

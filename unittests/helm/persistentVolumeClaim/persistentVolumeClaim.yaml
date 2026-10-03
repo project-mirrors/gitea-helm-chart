@@ -3,7 +3,7 @@ chart:
 release:
   name: gitea-unittests
   namespace: testing
-suite: PVC template
+suite: Test persistentVolumeClaim
 templates:
   - templates/persistentVolumeClaim.yaml
 tests:

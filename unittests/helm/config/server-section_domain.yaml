@@ -1,4 +1,4 @@
-suite: config template | server section (domain related)
+suite: Test config server domain
 release:
   name: gitea-unittests
   namespace: testing

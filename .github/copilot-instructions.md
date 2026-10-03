@@ -57,6 +57,7 @@ data:
 - Each test must set all required values explicitly — do not rely on cross-test state.
 - The `values.yaml` file must pass `yamllint`. The configuration is in `.yamllint.yaml`. Use `make yamllint` to run the linter.
 - The title of the unit test should clearly describe the scenario being tested. As title must be use a short sentence starting with a capital letter and ending without a period.
+- The `suite` title follows the pattern `Test <subject> <scenario>` (e.g. `Test deployment probes`). It must be unique across all suites, because `helm unittest` identifies a failing suite by this title.
 - Each unit test must explicitly set a custom namespace and release name, rather than relying on defaults.
 - Assert `Secret` content via `data.*` with `decodeBase64: true` and add a `notExists` assertion for `stringData`.
 

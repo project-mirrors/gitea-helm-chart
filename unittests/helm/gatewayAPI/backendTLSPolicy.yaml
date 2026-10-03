@@ -1,4 +1,4 @@
-suite: Test Gateway API backendTLSPolicy.yaml
+suite: Test gateway API backendTLSPolicy
 release:
   name: gitea-unittests
   namespace: testing

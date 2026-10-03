@@ -1,4 +1,4 @@
-suite: GPG secret template (signing enabled)
+suite: Test gpg secret with signing enabled
 release:
   name: gitea-unittests
   namespace: testing

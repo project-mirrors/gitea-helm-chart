@@ -1,4 +1,4 @@
-suite: Init template
+suite: Test init directory structure script for the rootless image
 release:
   name: gitea-unittests
   namespace: testing

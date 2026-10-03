@@ -1,4 +1,4 @@
-suite: Test Gateway API clientSettingsPolicy.yaml
+suite: Test gateway API clientSettingsPolicy
 release:
   name: gitea-unittests
   namespace: testing

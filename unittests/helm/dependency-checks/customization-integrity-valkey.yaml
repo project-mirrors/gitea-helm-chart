@@ -1,4 +1,4 @@
-suite: Dependency checks | Customization integrity | valkey
+suite: Test dependency customization integrity of valkey
 release:
   name: gitea-unittests
   namespace: testing

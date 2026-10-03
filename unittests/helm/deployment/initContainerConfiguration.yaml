@@ -1,4 +1,4 @@
-suite: deployment template (init container configuration)
+suite: Test deployment init container configuration
 release:
   name: gitea-unittests
   namespace: testing

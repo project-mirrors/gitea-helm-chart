@@ -1,4 +1,4 @@
-suite: deployment template (admin user)
+suite: Test deployment admin user
 release:
   name: gitea-unittests
   namespace: testing

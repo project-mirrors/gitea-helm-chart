@@ -1,4 +1,4 @@
-suite: config template | session config
+suite: Test config session
 release:
   name: gitea-unittests
   namespace: testing

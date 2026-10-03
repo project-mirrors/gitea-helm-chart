@@ -1,4 +1,4 @@
-suite: ServiceMonitor template (monitoring enabled)
+suite: Test serviceMonitor with monitoring enabled
 release:
   name: gitea-unittests
   namespace: testing

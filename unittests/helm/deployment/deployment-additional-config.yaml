@@ -1,4 +1,4 @@
-suite: deployment template
+suite: Test deployment additional config
 release:
   name: gitea-unittests
   namespace: testing

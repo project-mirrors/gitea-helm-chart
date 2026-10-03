@@ -1,4 +1,4 @@
-suite: sidecar container
+suite: Test deployment sidecar container
 release:
   name: gitea-unittests
   namespace: testing

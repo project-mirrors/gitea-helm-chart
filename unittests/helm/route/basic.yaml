@@ -1,4 +1,4 @@
-suite: Test route.yaml
+suite: Test route
 release:
   name: gitea-unittests
   namespace: testing
