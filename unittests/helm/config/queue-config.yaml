@@ -11,7 +11,8 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.queue
+          path: data.queue
+          decodeBase64: true
           value: |-
             CONN_STR=redis://:changeme@gitea-unittests-valkey.testing.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
             TYPE=redis
@@ -24,7 +25,8 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.queue
+          path: data.queue
+          decodeBase64: true
           value: |-
             CONN_STR=
             TYPE=level
@@ -39,7 +41,8 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.queue
+          path: data.queue
+          decodeBase64: true
           value: |-
             CONN_STR=custom-connection-string
             TYPE=custom-type

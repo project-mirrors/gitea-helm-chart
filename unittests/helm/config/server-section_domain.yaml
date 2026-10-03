@@ -8,15 +8,18 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nDOMAIN=git.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nSSH_DOMAIN=git.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=http://git.example.com
 
   ################################################
@@ -29,15 +32,18 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nDOMAIN=gitea-unittests-http.testing.svc.cluster.local
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nSSH_DOMAIN=gitea-unittests-http.testing.svc.cluster.local
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=http://gitea-unittests-http.testing.svc.cluster.local
 
   ################################################
@@ -55,15 +61,18 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nDOMAIN=provided.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nSSH_DOMAIN=provided.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=http://provided.example.com
 
   ################################################
@@ -77,15 +86,18 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nDOMAIN=route.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nSSH_DOMAIN=route.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=http://route.example.com
 
   ################################################
@@ -101,7 +113,8 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=https://route.example.com
 
   ################################################
@@ -123,15 +136,18 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nDOMAIN=gw.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nSSH_DOMAIN=gw.example.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=http://gw.example.com
 
   ################################################
@@ -154,5 +170,6 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: \nROOT_URL=https://gw.example.com

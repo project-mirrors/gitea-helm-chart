@@ -11,7 +11,8 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.session
+          path: data.session
+          decodeBase64: true
           value: |-
             PROVIDER=redis
             PROVIDER_CONFIG=redis://:changeme@gitea-unittests-valkey.testing.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
@@ -24,7 +25,8 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.session
+          path: data.session
+          decodeBase64: true
           value: |-
             PROVIDER=memory
             PROVIDER_CONFIG=
@@ -39,7 +41,8 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.session
+          path: data.session
+          decodeBase64: true
           value: |-
             PROVIDER=custom-provider
             PROVIDER_CONFIG=custom-provider-config

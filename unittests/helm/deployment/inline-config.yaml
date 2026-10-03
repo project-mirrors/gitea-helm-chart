@@ -5,7 +5,7 @@ release:
 templates:
   - templates/secret_inlineConfig.yaml
 tests:
-  - it: inline config stringData.server using TPL
+  - it: inline config data.server using TPL
     set:
       global.giteaHostName: "gitea.example.com"
       ingress.enabled: true
@@ -21,13 +21,24 @@ tests:
           pattern: .*-inline-config$
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: DOMAIN=gitea\.example\.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: ROOT_URL=https://gitea\.example\.com
       - documentIndex: 0
         matchRegex:
-          path: stringData.server
+          path: data.server
+          decodeBase64: true
           pattern: SSH_DOMAIN=gitea\.example\.com
+  - it: renders data, not stringData, so removed sections are pruned on upgrade
+    asserts:
+      - documentIndex: 0
+        notExists:
+          path: stringData
+      - documentIndex: 0
+        exists:
+          path: data.server

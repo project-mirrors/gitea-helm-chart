@@ -69,7 +69,8 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.database
+          path: data.database
+          decodeBase64: true
           pattern: HOST=gitea-unittests-postgresql.testing.svc.cluster.local:1234
   - it: "[gitea] connects to postgresql service with custom cluster domain"
     set:
@@ -78,20 +79,24 @@ tests:
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.database
+          path: data.database
+          decodeBase64: true
           pattern: HOST=gitea-unittests-postgresql.testing.svc.my-special-cluster.local:1234
   - it: "[gitea] connects to configured database"
     template: templates/secret_inlineConfig.yaml
     asserts:
       - documentIndex: 0
         matchRegex:
-          path: stringData.database
+          path: data.database
+          decodeBase64: true
           pattern: NAME=gitea-database
       - documentIndex: 0
         matchRegex:
-          path: stringData.database
+          path: data.database
+          decodeBase64: true
           pattern: USER=gitea-username
       - documentIndex: 0
         matchRegex:
-          path: stringData.database
+          path: data.database
+          decodeBase64: true
           pattern: PASSWD=gitea-password

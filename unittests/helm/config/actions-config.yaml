@@ -10,7 +10,7 @@ tests:
     asserts:
       - documentIndex: 0
         notExists:
-          path: stringData.actions
+          path: data.actions
 
   - it: "actions can be disabled via inline config"
     template: templates/secret_inlineConfig.yaml
@@ -19,6 +19,7 @@ tests:
     asserts:
       - documentIndex: 0
         equal:
-          path: stringData.actions
+          path: data.actions
+          decodeBase64: true
           value: |-
             ENABLED=false
