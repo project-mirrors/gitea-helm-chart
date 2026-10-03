@@ -924,10 +924,6 @@ extraContainers: []
 #    image: busybox
 #    command: [/bin/sh, -c, 'echo "Hello world"']
 
-## @deprecated The preExtraInitContainers and postExtraInitContainers variables have been replaced by
-## deployment.initContainers. Add an entry with a `container` key before or after the linked
-## chart-managed init containers to achieve the same result.
-
 ## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
 extraInitVolumeMounts: []
 
