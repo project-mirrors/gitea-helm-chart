@@ -476,20 +476,14 @@ https
 {{- end -}}
 
 {{- define "gitea.init-additional-mounts" -}}
-  {{- /* Honor the deprecated extraVolumeMounts variable when defined */ -}}
   {{- if gt (len .Values.extraInitVolumeMounts) 0 -}}
     {{- toYaml .Values.extraInitVolumeMounts -}}
-  {{- else if gt (len .Values.extraVolumeMounts) 0 -}}
-    {{- toYaml .Values.extraVolumeMounts -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "gitea.container-additional-mounts" -}}
-  {{- /* Honor the deprecated extraVolumeMounts variable when defined */ -}}
   {{- if gt (len .Values.deployment.gitea.volumeMounts) 0 -}}
     {{- toYaml .Values.deployment.gitea.volumeMounts -}}
-  {{- else if gt (len .Values.extraVolumeMounts) 0 -}}
-    {{- toYaml .Values.extraVolumeMounts -}}
   {{- end -}}
 {{- end -}}
 

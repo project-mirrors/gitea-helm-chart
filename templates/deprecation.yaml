@@ -65,6 +65,11 @@
     {{- fail "`extraContainerVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` instead." -}}
   {{- end -}}
 
+  {{/* EXTRA VOLUME MOUNTS */}}
+  {{- if .Values.extraVolumeMounts -}}
+    {{- fail "`extraVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` and `extraInitVolumeMounts` instead." -}}
+  {{- end -}}
+
   {{/* EXTRA VOLUMES */}}
   {{- if .Values.extraVolumes -}}
     {{- fail "`extraVolumes` does no longer exist. Please refer to the changelog and configure `deployment.volumes` instead." -}}

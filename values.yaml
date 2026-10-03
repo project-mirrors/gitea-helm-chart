@@ -926,13 +926,6 @@ extraContainers: []
 
 ## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
 extraInitVolumeMounts: []
-
-## @deprecated The extraVolumeMounts variable has been split two:
-## - deployment.gitea.volumeMounts
-## - extraInitVolumeMounts
-## As an example, can be used to mount a client cert when connecting to an external Postgres server.
-## @param extraVolumeMounts **DEPRECATED** Additional volume mounts for init containers and the Gitea main container.
-extraVolumeMounts: []
 # - name: postgres-ssl-vol
 #   readOnly: true
 #   mountPath: "/pg-ssl"

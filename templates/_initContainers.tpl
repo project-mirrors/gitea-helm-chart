@@ -174,9 +174,7 @@
     - name: gpg-private-key
       mountPath: /raw
       readOnly: true
-    {{- if .Values.extraVolumeMounts }}
-    {{- toYaml .Values.extraVolumeMounts | nindent 4 }}
-    {{- end }}
+    {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

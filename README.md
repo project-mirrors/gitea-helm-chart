@@ -1301,7 +1301,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `persistence.new.subPath`                                             | Subdirectory of the volume to mount at for the new persistent volume claim.                        | `""`                |
 | `extraContainers`                                                     | Additional sidecar containers to run in the pod.                                                   | `[]`                |
 | `extraInitVolumeMounts`                                               | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration. | `[]`                |
-| `extraVolumeMounts`                                                   | **DEPRECATED** Additional volume mounts for init containers and the Gitea main container.          | `[]`                |
 
 ### Init
 
@@ -1511,6 +1510,12 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 - `ingress.className` has been renamed to `ingress.ingressClassName` to match the name of the `spec.ingressClassName`
   field of the Ingress resource it populates. The chart fails to render if `ingress.className` is still set, even when
   it is set to an empty string.
+
+- `extraVolumeMounts` has been removed. Deprecated since 6.0.0, it mounted the same volumes into the init containers
+  and into the Gitea container, and it was silently ignored as soon as `extraInitVolumeMounts` or
+  `deployment.gitea.volumeMounts` contained a single entry. Split the mounts explicitly: use `extraInitVolumeMounts`
+  for the init containers and `deployment.gitea.volumeMounts` for the Gitea container. Volumes that are needed in both
+  places have to be listed in both settings.
 
 </details>
 
