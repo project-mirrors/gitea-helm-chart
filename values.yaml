@@ -1251,57 +1251,6 @@ valkey:
         tag: ""
 
 
-## @section PostgreSQL
-postgresql:
-  ## @param postgresql.enabled Enable PostgreSQL.
-  enabled: false
-
-  ## @param postgresql.global.postgresql.auth.password Password for the `gitea` user (overrides `auth.password`).
-  ## @param postgresql.global.postgresql.auth.database Name for a custom database to create (overrides `auth.database`).
-  ## @param postgresql.global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`).
-  ## @param postgresql.global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`).
-  global:
-    postgresql:
-      auth:
-        password: gitea
-        database: gitea
-        username: gitea
-      service:
-        ports:
-          postgresql: 5432
-
-  ## @param postgresql.image.repository Image repository, eg. `bitnamilegacy/postgresql`.
-  image:
-    repository: bitnamilegacy/postgresql
-
-  primary:
-    ## @param postgresql.primary.persistence.enabled Enable persistence.
-    ## @param postgresql.primary.persistence.storageClass Persistent Volume storage class.
-    ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume.
-    persistence:
-      enabled: true
-      storageClass: ""
-      size: 10Gi
-
-  readReplicas:
-    ## @param postgresql.readReplicas.persistence.enabled Enable PostgreSQL read only data persistence using PVC.
-    ## @param postgresql.readReplicas.persistence.storageClass Persistent Volume storage class.
-    ## @param postgresql.readReplicas.persistence.size PVC Storage Request for PostgreSQL volume.
-    persistence:
-      enabled: true
-      storageClass: ""
-      size: ""
-
-  ## @param postgresql.metrics.image.repository Image repository, eg. `bitnamilegacy/postgres-exporter`.
-  metrics:
-    image:
-      repository: bitnamilegacy/postgres-exporter
-
-  ## @param postgresql.volumePermissions.image.repository Image repository, eg. `bitnamilegacy/os-shell`.
-  volumePermissions:
-    image:
-      repository: bitnamilegacy/os-shell
-
 # By default, removed or moved settings that still remain in a user defined values.yaml will cause Helm to fail running the install/update.
 # Set it to false to skip this basic validation check.
 ## @section Advanced

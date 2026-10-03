@@ -4,7 +4,6 @@
 - [Update and versioning policy](#update-and-versioning-policy)
 - [Dependencies](#dependencies)
   - [HA Dependencies](#ha-dependencies)
-  - [Non-HA Dependencies](#non-ha-dependencies)
   - [Dependency Versioning](#dependency-versioning)
 - [Installing](#installing)
 - [High Availability](#high-availability)
@@ -59,7 +58,6 @@
   - [StartupProbe](#startupprobe)
   - [valkey](#valkey)
   - [CloudNativePG](#cloudnativepg)
-  - [PostgreSQL](#postgresql)
   - [Advanced](#advanced)
 - [Contributing](#contributing)
 - [Upgrading](#upgrading)
@@ -103,21 +101,15 @@ Users can also configure their own external providers via the configuration.
 CloudNativePG is **not** bundled as a sub-chart.
 Only the `Cluster` resource is rendered by this chart, the [CloudNativePG operator](https://cloudnative-pg.io/documentation/current/installation_upgrade/) must already be installed cluster-wide.
 Because that operator cannot be assumed to be present, `cloudnativePG.enabled` defaults to `false`.
-Set it to `true` once the operator is installed, or use either the `postgresql` sub-chart or an external database instead.
-
-### Non-HA Dependencies
-
-Alternatively, the following non-HA replacements are available:
-
-- PostgreSQL ([Bitnami PostgreSQL](https://github.com/bitnami/charts/blob/main/bitnami/postgresql/Chart.yaml))
+Set it to `true` once the operator is installed, or use an external database instead.
 
 ### Dependency Versioning
 
 Updates of sub-charts will be incorporated into the Gitea chart as they are released.
 The reasoning behind this is that new users of the chart will start with the most recent sub-chart dependency versions.
 
-**Note** If you want to stay on an older appVersion of a sub-chart dependency (e.g. PostgreSQL), you need to override the image tag in your `values.yaml` file.
-In fact, we recommend to do so right from the start to be independent of major sub-chart dependency changes as they are released.
+**Note** If you want to stay on an older appVersion of a dependency (e.g. PostgreSQL), you need to override the image tag in your `values.yaml` file.
+In fact, we recommend to do so right from the start to be independent of major dependency changes as they are released.
 There is no need to update to every new PostgreSQL major version - you can happily skip some and do larger updates when you are ready for them.
 
 We recommend to use a rolling tag like `:<majorVersion>-debian-<debian major version>` to incorporate minor and patch updates for the respective major version as they are released.
@@ -126,7 +118,6 @@ Alternatively you can also use a versioning helper tool like [renovate](https://
 Please double-check the image repository and available tags in the sub-chart:
 
 - [CloudNativePG](https://github.com/cloudnative-pg/postgres-containers/pkgs/container/postgresql)
-- [PostgreSQL](https://hub.docker.com/r/bitnami/postgresql/tags)
 - [Valkey](https://hub.docker.com/r/valkey/valkey/tags)
 
 and look up the image tag which fits your needs on Dockerhub.
@@ -341,7 +332,7 @@ External tools such as `valkey` or `memcached` handle these workloads much bette
 
 If HA is not needed/desired, the following configurations can be used to deploy a single-pod Gitea instance.
 
-1. For a production-ready single-pod Gitea instance without external dependencies (using the chart dependency `postgresql` and `valkey`):
+1. For a production-ready single-pod Gitea instance (using the chart dependency `valkey` and a single-instance CloudNativePG `Cluster`):
 
    <details>
 
@@ -350,10 +341,9 @@ If HA is not needed/desired, the following configurations can be used to deploy 
    ```yaml
    valkey:
      enabled: true
-   postgresql:
-     enabled: true
    cloudnativePG:
-     enabled: false
+     enabled: true
+     instances: 1
 
    persistence:
      enabled: true
@@ -380,8 +370,6 @@ If HA is not needed/desired, the following configurations can be used to deploy 
 
    ```yaml
    valkey:
-     enabled: false
-   postgresql:
      enabled: false
    cloudnativePG:
      enabled: false
@@ -495,7 +483,7 @@ Priority (highest to lowest) for defining app.ini variables:
 Any external database listed in [https://docs.gitea.com/installation/database-prep/](https://docs.gitea.com/installation/database-prep/) can be used instead of the built-in PostgreSQL.
 In fact, it is **highly recommended** to use an external database to ensure a stable Gitea installation longterm.
 
-If an external database is used, no matter which type, make sure to set `postgresql.enabled` and `cloudnativePG.enabled` to `false` to disable the use of the built-in PostgreSQL.
+If an external database is used, no matter which type, make sure to set `cloudnativePG.enabled` to `false` to disable the use of the built-in PostgreSQL.
 
 ```yaml
 gitea:
@@ -507,9 +495,6 @@ gitea:
       USER: root
       PASSWD: gitea
       SCHEMA: gitea
-
-postgresql:
-  enabled: false
 
 cloudnativePG:
   enabled: false
@@ -614,14 +599,14 @@ persistence:
 
 In case that persistence has been disabled it will simply use an empty dir volume.
 
-PostgreSQL handles the persistence in the exact same way.
-You can interact with the postgres settings as displayed in the following example:
+The CloudNativePG `Cluster` handles the persistence on its own.
+You can interact with its storage settings as displayed in the following example:
 
 ```yaml
-postgresql:
-  persistence:
-    enabled: true
-    existingClaim: MyAwesomeGiteaPostgresClaim
+cloudnativePG:
+  storage:
+    size: 20Gi
+    storageClass: myOwnStorageClass
 ```
 
 ### Admin User
@@ -1431,25 +1416,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `valkey.metrics.exporter.image.repository` | Image repository.                                  | `oliver006/redis_exporter` |
 | `valkey.metrics.exporter.image.tag`        | Image tag.                                         | `""`                       |
 
-### PostgreSQL
-
-| Name                                                    | Description                                                       | Value                             |
-| ------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------- |
-| `postgresql.enabled`                                    | Enable PostgreSQL.                                                | `false`                           |
-| `postgresql.global.postgresql.auth.password`            | Password for the `gitea` user (overrides `auth.password`).        | `gitea`                           |
-| `postgresql.global.postgresql.auth.database`            | Name for a custom database to create (overrides `auth.database`). | `gitea`                           |
-| `postgresql.global.postgresql.auth.username`            | Name for a custom user to create (overrides `auth.username`).     | `gitea`                           |
-| `postgresql.global.postgresql.service.ports.postgresql` | PostgreSQL service port (overrides `service.ports.postgresql`).   | `5432`                            |
-| `postgresql.image.repository`                           | Image repository, eg. `bitnamilegacy/postgresql`.                 | `bitnamilegacy/postgresql`        |
-| `postgresql.primary.persistence.enabled`                | Enable persistence.                                               | `true`                            |
-| `postgresql.primary.persistence.storageClass`           | Persistent Volume storage class.                                  | `""`                              |
-| `postgresql.primary.persistence.size`                   | PVC Storage Request for PostgreSQL volume.                        | `10Gi`                            |
-| `postgresql.readReplicas.persistence.enabled`           | Enable PostgreSQL read only data persistence using PVC.           | `true`                            |
-| `postgresql.readReplicas.persistence.storageClass`      | Persistent Volume storage class.                                  | `""`                              |
-| `postgresql.readReplicas.persistence.size`              | PVC Storage Request for PostgreSQL volume.                        | `""`                              |
-| `postgresql.metrics.image.repository`                   | Image repository, eg. `bitnamilegacy/postgres-exporter`.          | `bitnamilegacy/postgres-exporter` |
-| `postgresql.volumePermissions.image.repository`         | Image repository, eg. `bitnamilegacy/os-shell`.                   | `bitnamilegacy/os-shell`          |
-
 ### Advanced
 
 | Name               | Description                                          | Value  |
@@ -1697,27 +1663,17 @@ If you want to switch to a RWX volume and go for HA, you need to
 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable-next-line -->
-**Transitioning from Postgres to Postgres HA**
+**Transitioning from Postgres or Postgres HA to CloudNativePG**
 <!-- prettier-ignore-end -->
 
-If you are running with a non-HA PG DB from a previous chart release, you need to set
-
-- `cloudnativePG.enabled=false`
-- `postgresql.enabled=true`
-
-This is needed to stay with your existing single-instance DB (as the HA-variant is the new default).
-
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable-next-line -->
-**Transitioning from Postgres HA to CloudNativePG**
-<!-- prettier-ignore-end -->
-
-The `postgresql-ha` sub-chart has been replaced by a [CloudNativePG](https://cloudnative-pg.io/) `Cluster` resource, configured via `cloudnativePG`.
+The `postgresql` and `postgresql-ha` sub-charts have been replaced by a [CloudNativePG](https://cloudnative-pg.io/) `Cluster` resource, configured via `cloudnativePG`.
 The CloudNativePG operator is not bundled with this chart and has to be installed cluster-wide beforehand.
 
-There is no in-place migration path between the two: dump the database of the old `postgresql-ha` deployment with `pg_dump`, remove the `postgresql-ha` values and deploy the chart with `cloudnativePG.enabled=true`.
+There is no in-place migration path: dump the database of the old deployment with `pg_dump`, remove the `postgresql` or `postgresql-ha` values and deploy the chart with `cloudnativePG.enabled=true`.
 Afterwards restore the dump into the new cluster.
 Alternatively, point the new `Cluster` at the existing data via one of the [CloudNativePG bootstrap methods](https://cloudnative-pg.io/documentation/current/bootstrap/).
+
+For a single-instance database, set `cloudnativePG.instances=1`.
 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable-next-line -->

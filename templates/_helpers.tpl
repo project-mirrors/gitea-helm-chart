@@ -180,12 +180,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 {{- end -}}
 
-{{- define "postgresql.dns" -}}
-{{- if (index .Values "postgresql").enabled -}}
-{{- printf "%s-postgresql.%s.svc.%s:%g" .Release.Name .Release.Namespace .Values.clusterDomain .Values.postgresql.global.postgresql.service.ports.postgresql -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "valkey.dns" -}}
 {{- if (index .Values "valkey").enabled -}}
 {{- printf "redis://:%s@%s-valkey.%s.svc.%s:%g/0?pool_size=100&idle_timeout=180s&" (index (index .Values "valkey").auth.aclUsers "default").password .Release.Name .Release.Namespace .Values.clusterDomain (index .Values "valkey").service.port -}}
@@ -449,15 +443,6 @@ https
     {{- end -}}
     {{- $_ := set .Values.gitea.config.database "NAME"      .Values.cloudnativePG.credentials.database -}}
     {{- $_ := set .Values.gitea.config.database "USER"      .Values.cloudnativePG.credentials.username -}}
-  {{- end -}}
-  {{- if (index .Values "postgresql" "enabled") -}}
-    {{- $_ := set .Values.gitea.config.database "DB_TYPE"   "postgres" -}}
-    {{- if not (.Values.gitea.config.database.HOST) -}}
-      {{- $_ := set .Values.gitea.config.database "HOST"      (include "postgresql.dns" .) -}}
-    {{- end -}}
-    {{- $_ := set .Values.gitea.config.database "NAME"      .Values.postgresql.global.postgresql.auth.database -}}
-    {{- $_ := set .Values.gitea.config.database "USER"      .Values.postgresql.global.postgresql.auth.username -}}
-    {{- $_ := set .Values.gitea.config.database "PASSWD"    .Values.postgresql.global.postgresql.auth.password -}}
   {{- end -}}
 {{- end -}}
 

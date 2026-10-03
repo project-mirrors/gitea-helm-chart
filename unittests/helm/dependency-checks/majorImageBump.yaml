@@ -3,19 +3,6 @@ release:
   name: gitea-unittests
   namespace: testing
 tests:
-  - it: "[postgresql] Detect major image version upgrades"
-    template: charts/postgresql/templates/primary/statefulset.yaml
-    set:
-      postgresql:
-        enabled: true
-      cloudnativePG:
-        enabled: false
-    asserts:
-      - documentIndex: 0
-        matchRegex:
-          path: spec.template.spec.containers[0].image
-          # IN CASE OF AN INTENTIONAL MAJOR BUMP, ADJUST THIS TEST
-          pattern: bitnamilegacy/postgresql:17.+$
   - it: "[valkey] Detect major image version upgrades"
     template: charts/valkey/templates/deploy_valkey.yaml
     set:

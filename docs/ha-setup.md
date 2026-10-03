@@ -28,8 +28,8 @@ In addition, the following components are required for full HA-readiness:
 - A HA-ready cache (`valkey-cluster`)
 - A HA-ready DB
 
-`postgresql.enabled`, which defaults to `false`, must stay disabled for a HA setup.
-The `postgresql` chart dependency is not HA-ready, use the `cloudnativePG` option instead.
+`cloudnativePG.enabled`, which defaults to `false`, must be enabled for a HA setup.
+It requires the CloudNativePG operator to be installed cluster-wide beforehand.
 
 The following sections discuss each of the components in more detail.
 Note that for each component discussed, the shown configurations only provides a (working) starting point, not necessarily the most optimal setup.
@@ -171,12 +171,10 @@ cloudnativePG:
 ```
 
 If you do not want to run the operator, using a managed database service in the cloud might be the easiest and most robust solution.
-Remember: keep `cloudnativePG` and `postgresql` disabled and configure the database connection manually via `gitea.config.database`:
+Remember: keep `cloudnativePG` disabled and configure the database connection manually via `gitea.config.database`:
 
 ```yml
 cloudnativePG:
-  enabled: false
-postgresql:
   enabled: false
 
 gitea:

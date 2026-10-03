@@ -46,14 +46,3 @@ tests:
             HOST=gitea-unittests-postgresql-rw.testing.svc.cluster.local:5432
             NAME=gitea-database
             USER=gitea-username
-
-  - it: "Fail when postgresql and cloudnativePG are enabled at the same time"
-    template: templates/secret_config.yaml
-    set:
-      postgresql:
-        enabled: true
-      cloudnativePG:
-        enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "Only one of postgresql or cloudnativePG can be enabled at the same time."

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Kubernetes Helm chart for deploying [Gitea](https://gitea.com). Uses Go/Helm templating (`templates/`), YAML values (`values.yaml`), and includes sub-charts for PostgreSQL, Valkey, and Valkey-cluster. The HA-ready database is provisioned as a CloudNativePG `Cluster` resource, the operator itself is not part of the chart.
+Kubernetes Helm chart for deploying [Gitea](https://gitea.com). Uses Go/Helm templating (`templates/`), YAML values (`values.yaml`), and includes a sub-chart for Valkey. The database is provisioned as a CloudNativePG `Cluster` resource, the operator itself is not part of the chart.
 
 ## Build & Test
 
