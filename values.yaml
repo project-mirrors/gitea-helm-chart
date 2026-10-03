@@ -587,7 +587,7 @@ gatewayAPI:
 ## @param ingress.enabled Enable ingress.
 ## @param ingress.annotations Additional annotations.
 ## @param ingress.labels Additional labels.
-## @param ingress.className DEPRECATED: Ingress class name.
+## @param ingress.ingressClassName Name of the IngressClass which backs the Ingress.
 ## @param ingress.pathType Ingress Path Type.
 ## @param ingress.hosts[0].host Default Ingress host.
 ## @param ingress.hosts[0].paths[0].path Default Ingress path.
@@ -596,7 +596,7 @@ ingress:
   enabled: false
   annotations: {}
   labels: {}
-  className: "nginx"
+  ingressClassName: "nginx"
   pathType: Prefix
   hosts:
     - host: git.example.com

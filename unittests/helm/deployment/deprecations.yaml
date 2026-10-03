@@ -63,6 +63,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`extraVolumes` does no longer exist. Please refer to the changelog and configure `deployment.volumes` instead."
+  - it: fails when the removed `ingress.className` value is set
+    set:
+      ingress.className: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: "`ingress.className` does no longer exist. Please refer to the changelog and configure `ingress.ingressClassName` instead."
   - it: fails when the removed `nodeSelector` value is set
     set:
       nodeSelector:

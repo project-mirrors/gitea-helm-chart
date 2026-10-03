@@ -1034,8 +1034,8 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.labels`                                | Labels for the deployment.                                                                                                                                                                     | `{}`               |
 | `deployment.affinity`                              | Affinity for the deployment.                                                                                                                                                                   | `{}`               |
 | `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                                                                                             | `{}`               |
-| `deployment.gitea.env`                             | Additional environment variables to pass to the Gitea container.                                                                                                                               | `[]`               |
-| `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the Gitea container.                                                                                                      | `[]`               |
+| `deployment.gitea.env`                             | Additional environment variables to pass to the gitea container.                                                                                                                               | `[]`               |
+| `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the gitea container.                                                                                                      | `[]`               |
 | `deployment.gitea.image.registry`                  | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
 | `deployment.gitea.image.repository`                | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.gitea.image.tag`                       | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
@@ -1121,7 +1121,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gatewayAPI.core.backendTLSPolicy.targetRefs`                   | Target references for the BackendTLSPolicy. Defaults to the HTTP service.                                                                                                  | `[]`    |
 | `gatewayAPI.core.backendTLSPolicy.validation`                   | Validation configuration (required when enabled). See `docs/gateway-api.md`.                                                                                               | `{}`    |
 | `gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs` | CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.                                                                                  |         |
-| `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the Gitea server certificate. See `docs/gateway-api.md`. |         |
+| `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`. |         |
 | `gatewayAPI.core.httpRoute.enabled`                             | Render an HTTPRoute resource.                                                                                                                                              | `false` |
 | `gatewayAPI.core.httpRoute.annotations`                         | Annotations applied to the HTTPRoute.                                                                                                                                      | `{}`    |
 | `gatewayAPI.core.httpRoute.labels`                              | Additional labels applied to the HTTPRoute.                                                                                                                                | `{}`    |
@@ -1147,12 +1147,12 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `ingress.enabled`                | Enable ingress.                                                                                 | `false`           |
 | `ingress.annotations`            | Additional annotations.                                                                         | `{}`              |
 | `ingress.labels`                 | Additional labels.                                                                              | `{}`              |
-| `ingress.className`              | DEPRECATED: Ingress class name.                                                                 | `nginx`           |
+| `ingress.ingressClassName`       | Name of the IngressClass which backs the Ingress.                                               | `nginx`           |
 | `ingress.pathType`               | Ingress Path Type.                                                                              | `Prefix`          |
 | `ingress.hosts[0].host`          | Default Ingress host.                                                                           | `git.example.com` |
 | `ingress.hosts[0].paths[0].path` | Default Ingress path.                                                                           | `/`               |
 | `ingress.tls`                    | Ingress tls settings.                                                                           | `[]`              |
-| `namespace`                      | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified. | `""`              |
+| `namespace`                      | An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified. | `""`              |
 
 ### Network
 
@@ -1212,7 +1212,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret.                                                                                                                                                               | `""`                 |
 | `secrets.config.new.annotations`                 | Annotations for the config Secret.                                                                                                                                                                        | `{}`                 |
 | `secrets.config.new.labels`                      | Labels for the config Secret.                                                                                                                                                                             | `{}`                 |
-| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign Git commits.                                                                                                                                                         | `false`              |
+| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign git commits.                                                                                                                                                         | `false`              |
 | `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).              | `false`              |
 | `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret.                                                                                                                                    | `false`              |
 | `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret.                                                                                                                                                              | `""`                 |
@@ -1507,6 +1507,10 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 - Renamed the generated Secrets to make their purpose obvious:
   the config Secret changed from `<fullname>` to `<fullname>-config` and the metrics Secret from
   `<fullname>-metrics-secret` to `<fullname>-metrics`.
+
+- `ingress.className` has been renamed to `ingress.ingressClassName` to match the name of the `spec.ingressClassName`
+  field of the Ingress resource it populates. The chart fails to render if `ingress.className` is still set, even when
+  it is set to an empty string.
 
 </details>
 

@@ -14,7 +14,7 @@ metadata:
   name: {{ include "gitea.ingress.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  ingressClassName: {{ tpl .Values.ingress.className . }}
+  ingressClassName: {{ tpl .Values.ingress.ingressClassName . }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ tpl .host $ | quote }}

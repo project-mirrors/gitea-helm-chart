@@ -70,6 +70,11 @@
     {{- fail "`extraVolumes` does no longer exist. Please refer to the changelog and configure `deployment.volumes` instead." -}}
   {{- end -}}
 
+  {{/* INGRESS CLASS NAME */}}
+  {{- if hasKey .Values.ingress "className" -}}
+    {{- fail "`ingress.className` does no longer exist. Please refer to the changelog and configure `ingress.ingressClassName` instead." -}}
+  {{- end -}}
+
   {{/* NODE SELECTOR */}}
   {{- if .Values.nodeSelector -}}
     {{- fail "`nodeSelector` does no longer exist. Please refer to the changelog and configure `deployment.nodeSelector` instead." -}}

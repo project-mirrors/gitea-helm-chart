@@ -90,6 +90,18 @@ tests:
               - git.example.com
             secretName: tls-secret
 
+  - it: Render ingress with a custom ingressClassName
+    set:
+      ingress.enabled: true
+      ingress.ingressClassName: traefik
+      service.http.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.ingressClassName
+          value: traefik
+
   - it: Render ingress with custom HTTP service spec
     set:
       ingress.enabled: true
