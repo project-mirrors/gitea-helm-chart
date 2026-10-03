@@ -97,12 +97,12 @@ deployment:
     #   - name: ""
     #     request: ""
     # limits:
-    #   ephemeral: 100Mi
     #   cpu: 100m
+    #   ephemeral: 100Mi
     #   memory: 128Mi
     # requests:
-    #   ephemeral: 100Mi
     #   cpu: 100m
+    #   ephemeral: 100m
     #   memory: 128Mi
 
     ## @param deployment.gitea.securityContext Security context of the Gitea container. Used as fallback for the chart-managed init containers.
