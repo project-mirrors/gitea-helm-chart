@@ -12,8 +12,10 @@ metadata:
   name: {{ include "gitea.cluster.cloudnativePG.name" . }}
   namespace: {{ .Values.namespace | default .Release.Namespace }}
 spec:
+  {{- with .Values.cloudnativePG.affinity }}
   affinity:
-    {{- toYaml .Values.cloudnativePG.affinity | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   bootstrap:
     initdb:
       database: {{ .Values.cloudnativePG.credentials.database | quote }}
@@ -35,6 +37,10 @@ spec:
     {{- with .Values.cloudnativePG.storage.storageClass }}
     storageClass: {{ . | quote }}
     {{- end }}
+  {{- with .Values.cloudnativePG.topologySpreadConstraints }}
+  topologySpreadConstraints:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.cloudnativePG.walStorage.enabled }}
   walStorage:
     size: {{ .Values.cloudnativePG.walStorage.size | quote }}

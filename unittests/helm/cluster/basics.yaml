@@ -45,6 +45,10 @@ tests:
           path: spec.storage.storageClass
       - notExists:
           path: spec.walStorage
+      - notExists:
+          path: spec.affinity
+      - notExists:
+          path: spec.topologySpreadConstraints
 
   - it: "Render the credential Secret with the default values"
     template: templates/secret_cloudnativePG.yaml
@@ -129,3 +133,50 @@ tests:
           value:
             size: "42Mi"
             storageClass: "my-wal-storage-class"
+
+  - it: "Apply the scheduling customizations"
+    template: templates/cluster.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        affinity:
+          nodeSelector:
+            disktype: ssd
+          podAntiAffinityType: required
+          tolerations:
+            - key: my-key
+              operator: Equal
+              value: my-value
+              effect: NoSchedule
+        priorityClassName: my-priority-class
+        topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: topology.kubernetes.io/zone
+            whenUnsatisfiable: DoNotSchedule
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: gitea
+    asserts:
+      - equal:
+          path: spec.affinity
+          value:
+            nodeSelector:
+              disktype: ssd
+            podAntiAffinityType: required
+            tolerations:
+              - key: my-key
+                operator: Equal
+                value: my-value
+                effect: NoSchedule
+      - equal:
+          path: spec.priorityClassName
+          value: my-priority-class
+      - equal:
+          path: spec.topologySpreadConstraints
+          value:
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: gitea

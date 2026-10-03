@@ -1178,18 +1178,21 @@ cloudnativePG:
     size: 2Gi
     storageClass: ""
 
-  ## @param cloudnativePG.monitoring.enablePodMonitor Create a `PodMonitor` for the CloudNativePG `Cluster`.
-  monitoring:
-    enablePodMonitor: false
-
-  ## @param cloudnativePG.affinity Affinity for the PostgreSQL pods.
+  ## @param cloudnativePG.affinity Affinity for the PostgreSQL pods. CloudNativePG nests `nodeSelector` and `tolerations` below this key as well.
   affinity: {}
 
   ## @param cloudnativePG.priorityClassName Priority class name for the PostgreSQL pods.
   priorityClassName: ""
 
+  ## @param cloudnativePG.monitoring.enablePodMonitor Create a `PodMonitor` for the CloudNativePG `Cluster`.
+  monitoring:
+    enablePodMonitor: false
+
   ## @param cloudnativePG.resources Kubernetes resources for the PostgreSQL containers.
   resources: {}
+
+  ## @param cloudnativePG.topologySpreadConstraints Topology spread constraints for the PostgreSQL pods.
+  topologySpreadConstraints: []
 
 
 ## @section valkey
