@@ -39,7 +39,7 @@ helm/dependency-update:
 # ==============================================================================
 PHONY+=helm/unittest
 helm/unittest:
-	helm unittest --strict --file 'unittests/helm/**/*.yaml' --file 'unittests/helm/values-conflicting-checks.yaml' ./
+	helm unittest --strict --file 'unittests/helm/**/*.yaml' ./
 
 # BASH PREPARE
 # ==============================================================================

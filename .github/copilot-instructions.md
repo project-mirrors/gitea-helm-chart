@@ -52,8 +52,9 @@ data:
 
 ### Unit Tests
 
-- Helm unit tests live in `unittests/helm/` mirroring the template structure.
+- Helm unit tests live in `unittests/helm/` mirroring the template structure. A suite belongs into the directory of the template it asserts on, never into the directory of a template it only renders as a side effect.
 - Test files are YAML using the [helm-unittest](https://github.com/helm-unittest/helm-unittest) format.
+- Name test files in camelCase after the scenario they cover (e.g. `signingEnabled.yaml`), use `basics.yaml` for the default scenario and do not repeat the directory name in the file name. The `make helm/unittest` glob only matches one directory level, so every suite must live in a subdirectory.
 - Each test must set all required values explicitly — do not rely on cross-test state.
 - The `values.yaml` file must pass `yamllint`. The configuration is in `.yamllint.yaml`. Use `make yamllint` to run the linter.
 - The title of the unit test should clearly describe the scenario being tested. As title must be use a short sentence starting with a capital letter and ending without a period.
