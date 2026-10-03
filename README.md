@@ -19,7 +19,7 @@
     - [Gateway API](#gateway-api)
     - [Session, Cache and Queue](#session-cache-and-queue)
   - [Single-Pod Configurations](#single-pod-configurations)
-  - [Additional _app.ini_ settings](#additional-appini-settings)
+  - [Additional app.ini settings](#additional-appini-settings)
     - [User defined environment variables in app.ini](#user-defined-environment-variables-in-appini)
   - [External Database](#external-database)
   - [Ports and external url](#ports-and-external-url)
@@ -397,7 +397,7 @@ If HA is not needed/desired, the following configurations can be used to deploy 
 
    </details>
 
-### Additional _app.ini_ settings
+### Additional app.ini settings
 
 > **The [generic](https://docs.gitea.com/administration/config-cheat-sheet#overall-default)
 > section cannot be defined that way.**
