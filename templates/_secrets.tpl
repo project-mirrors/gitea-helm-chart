@@ -8,6 +8,12 @@
 {{- end }}
 {{- end }}
 
+{{- define "gitea.secret.cloudnativePG.annotations" -}}
+{{- with .Values.cloudnativePG.credentials.new.annotations }}
+{{- toYaml . -}}
+{{- end }}
+{{- end }}
+
 {{- define "gitea.secret.config.annotations" -}}
 {{- with .Values.secrets.config.new.annotations }}
 {{- toYaml . -}}
@@ -49,7 +55,11 @@ Arguments: (list $root $key)
 {{- define "gitea.secret.checksum" -}}
 {{- $root := index . 0 -}}
 {{- $key := index . 1 -}}
-{{- if (index $root.Values.secrets $key).existingSecret.enabled -}}
+{{- $config := index $root.Values.secrets $key -}}
+{{- if eq $key "cloudnativePG" -}}
+{{- $config = $root.Values.cloudnativePG.credentials -}}
+{{- end -}}
+{{- if $config.existingSecret.enabled -}}
 {{- $namespace := $root.Values.namespace | default $root.Release.Namespace -}}
 {{- $name := include (printf "gitea.secret.%s.name" $key) $root -}}
 {{- lookup "v1" "Secret" $namespace $name | toYaml | sha256sum -}}
@@ -64,6 +74,13 @@ Arguments: (list $root $key)
 {{- define "gitea.secret.admin.labels" -}}
 {{ include "gitea.labels" . }}
 {{- with .Values.secrets.admin.new.labels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{- define "gitea.secret.cloudnativePG.labels" -}}
+{{ include "gitea.labels" . }}
+{{- with .Values.cloudnativePG.credentials.new.labels }}
 {{ toYaml . }}
 {{- end }}
 {{- end }}
@@ -110,6 +127,14 @@ Arguments: (list $root $key)
 {{ required "`secrets.admin.existingSecret.secretName` must be set when `secrets.admin.existingSecret.enabled` is enabled" .Values.secrets.admin.existingSecret.secretName }}
 {{- else -}}
 {{ include "gitea.fullname" . }}-admin
+{{- end -}}
+{{- end }}
+
+{{- define "gitea.secret.cloudnativePG.name" -}}
+{{- if .Values.cloudnativePG.credentials.existingSecret.enabled -}}
+{{ required "`cloudnativePG.credentials.existingSecret.secretName` must be set when `cloudnativePG.credentials.existingSecret.enabled` is enabled" .Values.cloudnativePG.credentials.existingSecret.secretName }}
+{{- else -}}
+{{ include "gitea.cluster.cloudnativePG.name" . }}-app
 {{- end -}}
 {{- end }}
 
@@ -176,6 +201,14 @@ password
 {{ .Values.secrets.admin.existingSecret.usernameKey }}
 {{- else -}}
 username
+{{- end -}}
+{{- end }}
+
+{{- define "gitea.secret.cloudnativePG.passwordKey" -}}
+{{- if .Values.cloudnativePG.credentials.existingSecret.enabled -}}
+{{ .Values.cloudnativePG.credentials.existingSecret.passwordKey }}
+{{- else -}}
+password
 {{- end -}}
 {{- end }}
 

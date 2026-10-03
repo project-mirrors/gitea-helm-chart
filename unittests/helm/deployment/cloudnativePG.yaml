@@ -1,0 +1,67 @@
+suite: Test deployment cloudnativePG credentials
+release:
+  name: gitea-unittests
+  namespace: testing
+templates:
+  - templates/deployment.yaml
+  - templates/secret_cloudnativePG.yaml
+tests:
+  - it: "Inject no database password when cloudnativePG is disabled"
+    template: templates/deployment.yaml
+    set:
+      cloudnativePG:
+        enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.initContainers[1].env
+          content:
+            name: GITEA__database__PASSWD
+          any: true
+
+  - it: "Inject the database password from the rendered Secret"
+    template: templates/deployment.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[1].env
+          content:
+            name: GITEA__database__PASSWD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: gitea-unittests-postgresql-app
+
+  - it: "Inject the database password from an existing Secret"
+    template: templates/deployment.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        credentials:
+          existingSecret:
+            enabled: true
+            secretName: my-credentials
+            passwordKey: my-password-key
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[1].env
+          content:
+            name: GITEA__database__PASSWD
+            valueFrom:
+              secretKeyRef:
+                key: my-password-key
+                name: my-credentials
+
+  - it: "Fail when an existing Secret is used without a name"
+    template: templates/deployment.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        credentials:
+          existingSecret:
+            enabled: true
+            secretName: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: "`cloudnativePG.credentials.existingSecret.secretName` must be set when `cloudnativePG.credentials.existingSecret.enabled` is enabled"

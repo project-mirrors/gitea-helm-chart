@@ -5,6 +5,7 @@ release:
 templates:
   - templates/deployment.yaml
   - templates/secret_admin.yaml
+  - templates/secret_cloudnativePG.yaml
   - templates/secret_config.yaml
   - templates/secret_gpg.yaml
   - templates/secret_init.yaml
@@ -14,6 +15,8 @@ tests:
   - it: "Omit the checksum annotations by default"
     template: templates/deployment.yaml
     set:
+      cloudnativePG.enabled: true
+
       secrets.admin.enabled: true
       secrets.config.enabled: true
       secrets.gpg.enabled: true
@@ -26,6 +29,8 @@ tests:
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/admin"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/cloudnativePG"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/config"]
       - notExists:
@@ -40,6 +45,9 @@ tests:
   - it: "Add a checksum annotation for every Secret when addSHASumAnnotation is enabled"
     template: templates/deployment.yaml
     set:
+      cloudnativePG.credentials.addSHASumAnnotation: true
+      cloudnativePG.enabled: true
+
       secrets.admin.addSHASumAnnotation: true
       secrets.admin.enabled: true
 
@@ -63,6 +71,8 @@ tests:
     asserts:
       - exists:
           path: spec.template.metadata.annotations["checksum/admin"]
+      - exists:
+          path: spec.template.metadata.annotations["checksum/cloudnativePG"]
       - exists:
           path: spec.template.metadata.annotations["checksum/config"]
       - exists:

@@ -1,0 +1,131 @@
+suite: Test cluster basics
+release:
+  name: gitea-unittests
+  namespace: testing
+tests:
+  - it: "Render nothing when cloudnativePG is disabled"
+    templates:
+      - templates/cluster.yaml
+      - templates/secret_cloudnativePG.yaml
+    set:
+      cloudnativePG:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: "Render the Cluster with the default values"
+    template: templates/cluster.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+    asserts:
+      - containsDocument:
+          kind: Cluster
+          apiVersion: postgresql.cnpg.io/v1
+          name: gitea-unittests-postgresql
+          namespace: testing
+      - equal:
+          path: spec.instances
+          value: 3
+      - equal:
+          path: spec.imageName
+          value: "ghcr.io/cloudnative-pg/postgresql:18.0"
+      - equal:
+          path: spec.bootstrap.initdb
+          value:
+            database: "gitea"
+            owner: "gitea"
+            secret:
+              name: gitea-unittests-postgresql-app
+      - equal:
+          path: spec.storage.size
+          value: "10Gi"
+      - notExists:
+          path: spec.storage.storageClass
+      - notExists:
+          path: spec.walStorage
+
+  - it: "Render the credential Secret with the default values"
+    template: templates/secret_cloudnativePG.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+    asserts:
+      - containsDocument:
+          kind: Secret
+          apiVersion: v1
+          name: gitea-unittests-postgresql-app
+          namespace: testing
+      - equal:
+          path: type
+          value: kubernetes.io/basic-auth
+      - equal:
+          path: data.password
+          decodeBase64: true
+          value: "gitea"
+      - equal:
+          path: data.username
+          decodeBase64: true
+          value: "gitea"
+      - notExists:
+          path: data.database
+      - notExists:
+          path: stringData
+
+  - it: "Render no credential Secret when an existing Secret is used"
+    template: templates/secret_cloudnativePG.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        credentials:
+          existingSecret:
+            enabled: true
+            secretName: my-credentials
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: "Reference the existing Secret in the Cluster"
+    template: templates/cluster.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        credentials:
+          existingSecret:
+            enabled: true
+            secretName: my-credentials
+          database: my-database
+          username: my-username
+    asserts:
+      - equal:
+          path: spec.bootstrap.initdb
+          value:
+            database: "my-database"
+            owner: "my-username"
+            secret:
+              name: my-credentials
+
+  - it: "Apply the storage and walStorage customizations"
+    template: templates/cluster.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        storage:
+          size: 1337Mi
+          storageClass: my-storage-class
+        walStorage:
+          enabled: true
+          size: 42Mi
+          storageClass: my-wal-storage-class
+    asserts:
+      - equal:
+          path: spec.storage
+          value:
+            size: "1337Mi"
+            storageClass: "my-storage-class"
+      - equal:
+          path: spec.walStorage
+          value:
+            size: "42Mi"
+            storageClass: "my-wal-storage-class"

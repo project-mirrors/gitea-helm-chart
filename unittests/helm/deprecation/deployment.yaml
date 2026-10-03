@@ -98,6 +98,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`openshift.hostUsers` does no longer exist. Please refer to the changelog and configure `deployment.hostUsers` instead."
+  - it: "Fail when the removed `postgresql-ha` value is set"
+    set:
+      postgresql-ha:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "`postgresql-ha` does no longer exist. Please refer to the changelog and configure `cloudnativePG` instead, which requires the CloudNativePG operator to be installed in the cluster."
   - it: "Fail when the removed `priorityClassName` value is set"
     set:
       priorityClassName: high-priority

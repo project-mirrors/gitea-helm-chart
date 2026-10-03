@@ -1,0 +1,59 @@
+suite: Test config database
+release:
+  name: gitea-unittests
+  namespace: testing
+tests:
+  - it: "Connect to the read-write Service of the CloudNativePG Cluster"
+    template: templates/secret_inlineConfig.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+    asserts:
+      - documentIndex: 0
+        matchRegex:
+          path: data.database
+          decodeBase64: true
+          pattern: HOST=gitea-unittests-postgresql-rw.testing.svc.cluster.local:5432
+
+  - it: "Connect to the read-write Service of the CloudNativePG Cluster with a custom cluster domain"
+    template: templates/secret_inlineConfig.yaml
+    set:
+      clusterDomain: my-special-cluster.local
+      cloudnativePG:
+        enabled: true
+    asserts:
+      - documentIndex: 0
+        matchRegex:
+          path: data.database
+          decodeBase64: true
+          pattern: HOST=gitea-unittests-postgresql-rw.testing.svc.my-special-cluster.local:5432
+
+  - it: "Connect to the configured CloudNativePG database"
+    template: templates/secret_inlineConfig.yaml
+    set:
+      cloudnativePG:
+        enabled: true
+        credentials:
+          database: gitea-database
+          username: gitea-username
+    asserts:
+      - documentIndex: 0
+        equal:
+          path: data.database
+          decodeBase64: true
+          value: |-
+            DB_TYPE=postgres
+            HOST=gitea-unittests-postgresql-rw.testing.svc.cluster.local:5432
+            NAME=gitea-database
+            USER=gitea-username
+
+  - it: "Fail when postgresql and cloudnativePG are enabled at the same time"
+    template: templates/secret_config.yaml
+    set:
+      postgresql:
+        enabled: true
+      cloudnativePG:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "Only one of postgresql or cloudnativePG can be enabled at the same time."

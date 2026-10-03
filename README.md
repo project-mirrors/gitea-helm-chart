@@ -58,7 +58,7 @@
   - [ReadinessProbe](#readinessprobe)
   - [StartupProbe](#startupprobe)
   - [valkey](#valkey)
-  - [PostgreSQL HA](#postgresql-ha)
+  - [CloudNativePG](#cloudnativepg)
   - [PostgreSQL](#postgresql)
   - [Advanced](#advanced)
 - [Contributing](#contributing)
@@ -97,10 +97,13 @@ Users can also configure their own external providers via the configuration.
 
 ### HA Dependencies
 
-These dependencies are enabled by default:
+- PostgreSQL ([CloudNativePG](https://cloudnative-pg.io/)), disabled by default
+- Valkey ([Official Valkey Helm Chart](https://github.com/valkey-io/valkey-helm)), enabled by default
 
-- PostgreSQL HA ([Bitnami PostgreSQL-HA](https://github.com/bitnami/charts/blob/main/bitnami/postgresql-ha/Chart.yaml))
-- Valkey ([Official Valkey Helm Chart](https://github.com/valkey-io/valkey-helm))
+CloudNativePG is **not** bundled as a sub-chart.
+Only the `Cluster` resource is rendered by this chart, the [CloudNativePG operator](https://cloudnative-pg.io/documentation/current/installation_upgrade/) must already be installed cluster-wide.
+Because that operator cannot be assumed to be present, `cloudnativePG.enabled` defaults to `false`.
+Set it to `true` once the operator is installed, or use either the `postgresql` sub-chart or an external database instead.
 
 ### Non-HA Dependencies
 
@@ -122,7 +125,7 @@ Alternatively you can also use a versioning helper tool like [renovate](https://
 
 Please double-check the image repository and available tags in the sub-chart:
 
-- [PostgreSQL-HA](https://hub.docker.com/r/bitnami/postgresql-repmgr/tags)
+- [CloudNativePG](https://github.com/cloudnative-pg/postgres-containers/pkgs/container/postgresql)
 - [PostgreSQL](https://hub.docker.com/r/bitnami/postgresql/tags)
 - [Valkey](https://hub.docker.com/r/valkey/valkey/tags)
 
@@ -223,16 +226,19 @@ _All default settings are made directly in the generated `app.ini`, not in the V
 #### Database defaults
 
 If a builtIn database is enabled the database configuration is set automatically.
-For example, PostgreSQL builtIn will appear in the `app.ini` as:
+For example, the CloudNativePG `Cluster` will appear in the `app.ini` as:
 
 ```ini
 [database]
 DB_TYPE = postgres
-HOST = RELEASE-NAME-postgresql.default.svc.cluster.local:5432
+HOST = RELEASE-NAME-postgresql-rw.default.svc.cluster.local:5432
 NAME = gitea
-PASSWD = gitea
 USER = gitea
 ```
+
+`PASSWD` is not part of the generated `app.ini`.
+It is injected into the `init-app-ini` init container as the `GITEA__database__PASSWD` environment variable, sourced
+from the credentials Secret referenced by `cloudnativePG.credentials`, and merged into the `app.ini` at startup.
 
 #### Server defaults
 
@@ -346,7 +352,7 @@ If HA is not needed/desired, the following configurations can be used to deploy 
      enabled: true
    postgresql:
      enabled: true
-   postgresql-ha:
+   cloudnativePG:
      enabled: false
 
    persistence:
@@ -377,7 +383,7 @@ If HA is not needed/desired, the following configurations can be used to deploy 
      enabled: false
    postgresql:
      enabled: false
-   postgresql-ha:
+   cloudnativePG:
      enabled: false
 
    persistence:
@@ -489,7 +495,7 @@ Priority (highest to lowest) for defining app.ini variables:
 Any external database listed in [https://docs.gitea.com/installation/database-prep/](https://docs.gitea.com/installation/database-prep/) can be used instead of the built-in PostgreSQL.
 In fact, it is **highly recommended** to use an external database to ensure a stable Gitea installation longterm.
 
-If an external database is used, no matter which type, make sure to set `postgresql.enabled` to `false` to disable the use of the built-in PostgreSQL.
+If an external database is used, no matter which type, make sure to set `postgresql.enabled` and `cloudnativePG.enabled` to `false` to disable the use of the built-in PostgreSQL.
 
 ```yaml
 gitea:
@@ -505,7 +511,7 @@ gitea:
 postgresql:
   enabled: false
 
-postgresql-ha:
+cloudnativePG:
   enabled: false
 ```
 
@@ -1035,8 +1041,8 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `deployment.labels`                                | Labels for the deployment.                                                                                                                                                                     | `{}`               |
 | `deployment.affinity`                              | Affinity for the deployment.                                                                                                                                                                   | `{}`               |
 | `deployment.dnsConfig`                             | dnsConfig of the Gitea deployment.                                                                                                                                                             | `{}`               |
-| `deployment.gitea.env`                             | Additional environment variables to pass to the gitea container.                                                                                                                               | `[]`               |
-| `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the gitea container.                                                                                                      | `[]`               |
+| `deployment.gitea.env`                             | Additional environment variables to pass to the Gitea container.                                                                                                                               | `[]`               |
+| `deployment.gitea.envFrom`                         | List of environment variables mounted from configMaps or secrets for the Gitea container.                                                                                                      | `[]`               |
 | `deployment.gitea.image.registry`                  | image registry, e.g. gcr.io,docker.io.                                                                                                                                                         | `docker.gitea.com` |
 | `deployment.gitea.image.repository`                | Image to start for this pod.                                                                                                                                                                   | `gitea`            |
 | `deployment.gitea.image.tag`                       | Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.                                                        | `""`               |
@@ -1122,7 +1128,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gatewayAPI.core.backendTLSPolicy.targetRefs`                   | Target references for the BackendTLSPolicy. Defaults to the HTTP service.                                                                                                  | `[]`    |
 | `gatewayAPI.core.backendTLSPolicy.validation`                   | Validation configuration (required when enabled). See `docs/gateway-api.md`.                                                                                               | `{}`    |
 | `gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs` | CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.                                                                                  |         |
-| `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`. |         |
+| `gatewayAPI.core.backendTLSPolicy.validation.hostname`          | Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the Gitea server certificate. See `docs/gateway-api.md`. |         |
 | `gatewayAPI.core.httpRoute.enabled`                             | Render an HTTPRoute resource.                                                                                                                                              | `false` |
 | `gatewayAPI.core.httpRoute.annotations`                         | Annotations applied to the HTTPRoute.                                                                                                                                      | `{}`    |
 | `gatewayAPI.core.httpRoute.labels`                              | Additional labels applied to the HTTPRoute.                                                                                                                                | `{}`    |
@@ -1153,7 +1159,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `ingress.hosts[0].host`          | Default Ingress host.                                                                           | `git.example.com` |
 | `ingress.hosts[0].paths[0].path` | Default Ingress path.                                                                           | `/`               |
 | `ingress.tls`                    | Ingress tls settings.                                                                           | `[]`              |
-| `namespace`                      | An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified. | `""`              |
+| `namespace`                      | An explicit namespace to deploy Gitea into. Defaults to the release namespace if not specified. | `""`              |
 
 ### Network
 
@@ -1213,7 +1219,7 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `secrets.config.existingSecret.secretName`       | Name of the already existing config Secret.                                                                                                                                                               | `""`                 |
 | `secrets.config.new.annotations`                 | Annotations for the config Secret.                                                                                                                                                                        | `{}`                 |
 | `secrets.config.new.labels`                      | Labels for the config Secret.                                                                                                                                                                             | `{}`                 |
-| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign git commits.                                                                                                                                                         | `false`              |
+| `secrets.gpg.enabled`                            | Enable mounting of a GPG key to sign Git commits.                                                                                                                                                         | `false`              |
 | `secrets.gpg.addSHASumAnnotation`                | Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).              | `false`              |
 | `secrets.gpg.existingSecret.enabled`             | Use an already existing Secret instead of creating the GPG key Secret.                                                                                                                                    | `false`              |
 | `secrets.gpg.existingSecret.secretName`          | Name of the already existing GPG key Secret.                                                                                                                                                              | `""`                 |
@@ -1370,6 +1376,37 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `gitea.startupProbe.successThreshold`    | Success threshold for startup probe.             | `1`     |
 | `gitea.startupProbe.failureThreshold`    | Failure threshold for startup probe.             | `10`    |
 
+### CloudNativePG
+
+| Name                                                   | Description                                                                                                                                                                                      | Value                       |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
+| `cloudnativePG.enabled`                                | Provision a CloudNativePG `Cluster` for Gitea. Requires the CloudNativePG operator to be installed in the cluster.                                                                               | `false`                     |
+| `cloudnativePG.annotations`                            | Annotations for the CloudNativePG `Cluster`.                                                                                                                                                     | `{}`                        |
+| `cloudnativePG.labels`                                 | Additional labels for the CloudNativePG `Cluster`.                                                                                                                                               | `{}`                        |
+| `cloudnativePG.image.registry`                         | Image registry.                                                                                                                                                                                  | `ghcr.io`                   |
+| `cloudnativePG.image.repository`                       | Image repository.                                                                                                                                                                                | `cloudnative-pg/postgresql` |
+| `cloudnativePG.image.tag`                              | Image tag.                                                                                                                                                                                       | `18.0`                      |
+| `cloudnativePG.instances`                              | Number of PostgreSQL instances. Values greater than `1` provision a HA-ready cluster with streaming replication.                                                                                 | `3`                         |
+| `cloudnativePG.credentials.addSHASumAnnotation`        | Add a pod annotation with the SHA sum of the credentials Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation). | `false`                     |
+| `cloudnativePG.credentials.database`                   | Name of the database to create. CloudNativePG requires it as a literal in the `Cluster`, hence it cannot be sourced from a Secret.                                                               | `gitea`                     |
+| `cloudnativePG.credentials.username`                   | Name of the database owner to create. CloudNativePG requires it as a literal in the `Cluster`, hence it cannot be sourced from a Secret.                                                         | `gitea`                     |
+| `cloudnativePG.credentials.existingSecret.enabled`     | Use an already existing Secret instead of creating the credentials Secret.                                                                                                                       | `false`                     |
+| `cloudnativePG.credentials.existingSecret.secretName`  | Name of the already existing credentials Secret. Must be of type `kubernetes.io/basic-auth` and its `username` must match `cloudnativePG.credentials.username`.                                  | `""`                        |
+| `cloudnativePG.credentials.existingSecret.passwordKey` | Key of the password in the existing credentials Secret.                                                                                                                                          | `password`                  |
+| `cloudnativePG.credentials.new.annotations`            | Annotations for the credentials Secret.                                                                                                                                                          | `{}`                        |
+| `cloudnativePG.credentials.new.labels`                 | Labels for the credentials Secret.                                                                                                                                                               | `{}`                        |
+| `cloudnativePG.credentials.new.password`               | Password of the database owner.                                                                                                                                                                  | `gitea`                     |
+| `cloudnativePG.postgresql.parameters`                  | Custom PostgreSQL configuration parameters.                                                                                                                                                      | `{}`                        |
+| `cloudnativePG.storage.size`                           | Size of the data volume.                                                                                                                                                                         | `10Gi`                      |
+| `cloudnativePG.storage.storageClass`                   | Storage class of the data volume. Defaults to the cluster's default storage class.                                                                                                               | `""`                        |
+| `cloudnativePG.walStorage.enabled`                     | Store the write-ahead log on a dedicated volume.                                                                                                                                                 | `false`                     |
+| `cloudnativePG.walStorage.size`                        | Size of the write-ahead log volume.                                                                                                                                                              | `2Gi`                       |
+| `cloudnativePG.walStorage.storageClass`                | Storage class of the write-ahead log volume. Defaults to the cluster's default storage class.                                                                                                    | `""`                        |
+| `cloudnativePG.monitoring.enablePodMonitor`            | Create a `PodMonitor` for the CloudNativePG `Cluster`.                                                                                                                                           | `false`                     |
+| `cloudnativePG.affinity`                               | Affinity for the PostgreSQL pods.                                                                                                                                                                | `{}`                        |
+| `cloudnativePG.priorityClassName`                      | Priority class name for the PostgreSQL pods.                                                                                                                                                     | `""`                        |
+| `cloudnativePG.resources`                              | Kubernetes resources for the PostgreSQL containers.                                                                                                                                              | `{}`                        |
+
 ### valkey
 
 | Name                                       | Description                                        | Value                      |
@@ -1393,28 +1430,6 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 | `valkey.metrics.exporter.image.registry`   | Image registry.                                    | `ghcr.io`                  |
 | `valkey.metrics.exporter.image.repository` | Image repository.                                  | `oliver006/redis_exporter` |
 | `valkey.metrics.exporter.image.tag`        | Image tag.                                         | `""`                       |
-
-### PostgreSQL HA
-
-| Name                                               | Description                                                       | Value                             |
-| -------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------- |
-| `postgresql-ha.enabled`                            | Enable PostgreSQL HA.                                             | `true`                            |
-| `postgresql-ha.global.postgresql.database`         | Name for a custom database to create (overrides `auth.database`). | `gitea`                           |
-| `postgresql-ha.global.postgresql.username`         | Name for a custom user to create (overrides `auth.username`).     | `gitea`                           |
-| `postgresql-ha.global.postgresql.password`         | Name for a custom password to create (overrides `auth.password`). | `gitea`                           |
-| `postgresql-ha.metrics.image.repository`           | Image repository, eg. `bitnamilegacy/postgres-exporter`.          | `bitnamilegacy/postgres-exporter` |
-| `postgresql-ha.postgresql.image.repository`        | Image repository, eg. `bitnamilegacy/postgresql-repmgr`.          | `bitnamilegacy/postgresql-repmgr` |
-| `postgresql-ha.postgresql.repmgrPassword`          | Repmgr Password.                                                  | `changeme2`                       |
-| `postgresql-ha.postgresql.postgresPassword`        | postgres Password.                                                | `changeme1`                       |
-| `postgresql-ha.postgresql.password`                | Password for the `gitea` user (overrides `auth.password`).        | `changeme4`                       |
-| `postgresql-ha.pgpool.adminPassword`               | pgpool adminPassword.                                             | `changeme3`                       |
-| `postgresql-ha.pgpool.image.repository`            | Image repository, eg. `bitnamilegacy/pgpool`.                     | `bitnamilegacy/pgpool`            |
-| `postgresql-ha.pgpool.srCheckPassword`             | pgpool srCheckPassword.                                           | `changeme4`                       |
-| `postgresql-ha.service.ports.postgresql`           | PostgreSQL service port (overrides `service.ports.postgresql`).   | `5432`                            |
-| `postgresql-ha.persistence.enabled`                | Enable persistence.                                               | `true`                            |
-| `postgresql-ha.persistence.storageClass`           | Persistent Volume Storage Class.                                  | `""`                              |
-| `postgresql-ha.persistence.size`                   | PVC Storage Request for PostgreSQL HA volume.                     | `10Gi`                            |
-| `postgresql-ha.volumePermissions.image.repository` | Image repository, eg. `bitnamilegacy/os-shell`.                   | `bitnamilegacy/os-shell`          |
 
 ### PostgreSQL
 
@@ -1466,7 +1481,7 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 - All Secrets created by this chart are now configured through the new `secrets` section.
   It exposes `annotations`, `labels`, a checksum-annotation toggle and an `existingSecret` reference for each of the
   `admin`, `config`, `gpg`, `init`, `inlineConfig` and `metrics` Secrets.
-  
+
 - The `gitea.admin` object has been replaced by `secrets.admin`.
   The chart fails to render if `gitea.admin` is still set.
   Migrate as follows:
@@ -1687,10 +1702,22 @@ If you want to switch to a RWX volume and go for HA, you need to
 
 If you are running with a non-HA PG DB from a previous chart release, you need to set
 
-- `postgresql-ha.enabled=false`
+- `cloudnativePG.enabled=false`
 - `postgresql.enabled=true`
 
 This is needed to stay with your existing single-instance DB (as the HA-variant is the new default).
+
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable-next-line -->
+**Transitioning from Postgres HA to CloudNativePG**
+<!-- prettier-ignore-end -->
+
+The `postgresql-ha` sub-chart has been replaced by a [CloudNativePG](https://cloudnative-pg.io/) `Cluster` resource, configured via `cloudnativePG`.
+The CloudNativePG operator is not bundled with this chart and has to be installed cluster-wide beforehand.
+
+There is no in-place migration path between the two: dump the database of the old `postgresql-ha` deployment with `pg_dump`, remove the `postgresql-ha` values and deploy the chart with `cloudnativePG.enabled=true`.
+Afterwards restore the dump into the new cluster.
+Alternatively, point the new `Cluster` at the existing data via one of the [CloudNativePG bootstrap methods](https://cloudnative-pg.io/documentation/current/bootstrap/).
 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable-next-line -->

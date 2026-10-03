@@ -174,9 +174,9 @@ app.kubernetes.io/name: {{ include "gitea.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{- define "postgresql-ha.dns" -}}
-{{- if (index .Values "postgresql-ha").enabled -}}
-{{- printf "%s-postgresql-ha-pgpool.%s.svc.%s:%g" .Release.Name .Release.Namespace .Values.clusterDomain (index .Values "postgresql-ha" "service" "ports" "postgresql") -}}
+{{- define "cloudnativePG.dns" -}}
+{{- if .Values.cloudnativePG.enabled -}}
+{{- printf "%s-rw.%s.svc.%s:5432" (include "gitea.cluster.cloudnativePG.name" .) (.Values.namespace | default .Release.Namespace) .Values.clusterDomain -}}
 {{- end -}}
 {{- end -}}
 
@@ -441,14 +441,14 @@ https
 {{- end -}}
 
 {{- define "gitea.inline_configuration.defaults.database" -}}
-  {{- if (index .Values "postgresql-ha" "enabled") -}}
+  {{- if .Values.cloudnativePG.enabled -}}
+    {{/* PASSWD is injected as an env-to-ini variable from the credentials Secret. */}}
     {{- $_ := set .Values.gitea.config.database "DB_TYPE"   "postgres" -}}
     {{- if not (.Values.gitea.config.database.HOST) -}}
-      {{- $_ := set .Values.gitea.config.database "HOST"      (include "postgresql-ha.dns" .) -}}
+      {{- $_ := set .Values.gitea.config.database "HOST"      (include "cloudnativePG.dns" .) -}}
     {{- end -}}
-    {{- $_ := set .Values.gitea.config.database "NAME"      (index .Values "postgresql-ha" "global" "postgresql" "database") -}}
-    {{- $_ := set .Values.gitea.config.database "USER"      (index .Values "postgresql-ha" "global" "postgresql" "username") -}}
-    {{- $_ := set .Values.gitea.config.database "PASSWD"    (index .Values "postgresql-ha" "global" "postgresql" "password") -}}
+    {{- $_ := set .Values.gitea.config.database "NAME"      .Values.cloudnativePG.credentials.database -}}
+    {{- $_ := set .Values.gitea.config.database "USER"      .Values.cloudnativePG.credentials.username -}}
   {{- end -}}
   {{- if (index .Values "postgresql" "enabled") -}}
     {{- $_ := set .Values.gitea.config.database "DB_TYPE"   "postgres" -}}

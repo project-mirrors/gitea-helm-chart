@@ -95,6 +95,11 @@
     {{- fail "`openshift.hostUsers` does no longer exist. Please refer to the changelog and configure `deployment.hostUsers` instead." -}}
   {{- end -}}
 
+  {{/* POSTGRESQL HA */}}
+  {{- if index .Values "postgresql-ha" -}}
+    {{- fail "`postgresql-ha` does no longer exist. Please refer to the changelog and configure `cloudnativePG` instead, which requires the CloudNativePG operator to be installed in the cluster." -}}
+  {{- end -}}
+
   {{/* PRIORITY CLASS NAME */}}
   {{- if .Values.priorityClassName -}}
     {{- fail "`priorityClassName` does no longer exist. Please refer to the changelog and configure `deployment.priorityClassName` instead." -}}

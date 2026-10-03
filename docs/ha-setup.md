@@ -28,8 +28,8 @@ In addition, the following components are required for full HA-readiness:
 - A HA-ready cache (`valkey-cluster`)
 - A HA-ready DB
 
-`postgres.enabled`, which default to `true`, must be set to `false` for a HA setup.
-The default `postgres` chart dependency is not HA-ready (there's a dedicated `postgres-ha` chart).
+`postgresql.enabled`, which defaults to `false`, must stay disabled for a HA setup.
+The `postgresql` chart dependency is not HA-ready, use the `cloudnativePG` option instead.
 
 The following sections discuss each of the components in more detail.
 Note that for each component discussed, the shown configurations only provides a (working) starting point, not necessarily the most optimal setup.
@@ -153,15 +153,33 @@ persistence:
 
 ## Database
 
-If you do not have an HA-ready DB, using a managed database service in the cloud might be the easiest and most robust solution.
-Remember: disable the built-in `postgres` dependency and configure the database connection manually via `gitea.config.database`:
+By enabling `cloudnativePG`, the chart renders a [CloudNativePG](https://cloudnative-pg.io/) `Cluster`, which provides a HA-ready PostgreSQL via streaming replication.
+The CloudNativePG operator itself is not part of this chart and has to be [installed cluster-wide](https://cloudnative-pg.io/documentation/current/installation_upgrade/) beforehand.
+For that reason the option is disabled by default.
 
 ```yml
+cloudnativePG:
+  enabled: true
+  instances: 3
+  storage:
+    size: 10Gi
+    storageClass: <storage class>
+  walStorage:
+    enabled: true
+    size: 2Gi
+    storageClass: <storage class>
+```
+
+If you do not want to run the operator, using a managed database service in the cloud might be the easiest and most robust solution.
+Remember: keep `cloudnativePG` and `postgresql` disabled and configure the database connection manually via `gitea.config.database`:
+
+```yml
+cloudnativePG:
+  enabled: false
+postgresql:
+  enabled: false
+
 gitea:
-  database:
-    builtIn:
-      postgresql:
-        enabled: false
   config:
     database:
       DB_TYPE: postgres

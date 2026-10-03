@@ -1112,6 +1112,86 @@ gitea:
     successThreshold: 1
     failureThreshold: 10
 
+## @section CloudNativePG
+# The CloudNativePG operator itself is not part of this chart. It must be installed cluster-wide beforehand:
+# https://cloudnative-pg.io/documentation/current/installation_upgrade/
+cloudnativePG:
+  ## @param cloudnativePG.enabled Provision a CloudNativePG `Cluster` for Gitea. Requires the CloudNativePG operator to be installed in the cluster.
+  enabled: false
+
+  ## @param cloudnativePG.annotations Annotations for the CloudNativePG `Cluster`.
+  ## @param cloudnativePG.labels Additional labels for the CloudNativePG `Cluster`.
+  annotations: {}
+  labels: {}
+
+  ## @param cloudnativePG.image.registry Image registry.
+  ## @param cloudnativePG.image.repository Image repository.
+  ## @param cloudnativePG.image.tag Image tag.
+  image:
+    registry: ghcr.io
+    repository: cloudnative-pg/postgresql
+    tag: "18.0"
+
+  ## @param cloudnativePG.instances Number of PostgreSQL instances. Values greater than `1` provision a HA-ready cluster with streaming replication.
+  instances: 3
+
+  credentials:
+    ## @param cloudnativePG.credentials.addSHASumAnnotation Add a pod annotation with the SHA sum of the credentials Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
+    addSHASumAnnotation: false
+
+    ## @param cloudnativePG.credentials.database Name of the database to create. CloudNativePG requires it as a literal in the `Cluster`, hence it cannot be sourced from a Secret.
+    ## @param cloudnativePG.credentials.username Name of the database owner to create. CloudNativePG requires it as a literal in the `Cluster`, hence it cannot be sourced from a Secret.
+    database: gitea
+    username: gitea
+
+    ## @param cloudnativePG.credentials.existingSecret.enabled Use an already existing Secret instead of creating the credentials Secret.
+    ## @param cloudnativePG.credentials.existingSecret.secretName Name of the already existing credentials Secret. Must be of type `kubernetes.io/basic-auth` and its `username` must match `cloudnativePG.credentials.username`.
+    ## @param cloudnativePG.credentials.existingSecret.passwordKey Key of the password in the existing credentials Secret.
+    existingSecret:
+      enabled: false
+      secretName: ""
+      passwordKey: password
+
+    ## @param cloudnativePG.credentials.new.annotations Annotations for the credentials Secret.
+    ## @param cloudnativePG.credentials.new.labels Labels for the credentials Secret.
+    ## @param cloudnativePG.credentials.new.password Password of the database owner.
+    new:
+      annotations: {}
+      labels: {}
+      password: gitea
+
+  ## @param cloudnativePG.postgresql.parameters Custom PostgreSQL configuration parameters.
+  postgresql:
+    parameters: {}
+
+  ## @param cloudnativePG.storage.size Size of the data volume.
+  ## @param cloudnativePG.storage.storageClass Storage class of the data volume. Defaults to the cluster's default storage class.
+  storage:
+    size: 10Gi
+    storageClass: ""
+
+  ## @param cloudnativePG.walStorage.enabled Store the write-ahead log on a dedicated volume.
+  ## @param cloudnativePG.walStorage.size Size of the write-ahead log volume.
+  ## @param cloudnativePG.walStorage.storageClass Storage class of the write-ahead log volume. Defaults to the cluster's default storage class.
+  walStorage:
+    enabled: false
+    size: 2Gi
+    storageClass: ""
+
+  ## @param cloudnativePG.monitoring.enablePodMonitor Create a `PodMonitor` for the CloudNativePG `Cluster`.
+  monitoring:
+    enablePodMonitor: false
+
+  ## @param cloudnativePG.affinity Affinity for the PostgreSQL pods.
+  affinity: {}
+
+  ## @param cloudnativePG.priorityClassName Priority class name for the PostgreSQL pods.
+  priorityClassName: ""
+
+  ## @param cloudnativePG.resources Kubernetes resources for the PostgreSQL containers.
+  resources: {}
+
+
 ## @section valkey
 valkey:
   ## @param valkey.enabled Enable valkey standalone or replicated.
@@ -1170,62 +1250,6 @@ valkey:
         repository: oliver006/redis_exporter
         tag: ""
 
-## @section PostgreSQL HA
-postgresql-ha:
-  ## @param postgresql-ha.enabled Enable PostgreSQL HA.
-  enabled: true
-
-  ## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`).
-  ## @param postgresql-ha.global.postgresql.username Name for a custom user to create (overrides `auth.username`).
-  ## @param postgresql-ha.global.postgresql.password Name for a custom password to create (overrides `auth.password`).
-  global:
-    postgresql:
-      database: gitea
-      password: gitea
-      username: gitea
-
-  ## @param postgresql-ha.metrics.image.repository Image repository, eg. `bitnamilegacy/postgres-exporter`.
-  metrics:
-    image:
-      repository: bitnamilegacy/postgres-exporter
-
-  ## @param postgresql-ha.postgresql.image.repository Image repository, eg. `bitnamilegacy/postgresql-repmgr`.
-  ## @param postgresql-ha.postgresql.repmgrPassword Repmgr Password.
-  ## @param postgresql-ha.postgresql.postgresPassword postgres Password.
-  ## @param postgresql-ha.postgresql.password Password for the `gitea` user (overrides `auth.password`).
-  postgresql:
-    image:
-      repository: bitnamilegacy/postgresql-repmgr
-    repmgrPassword: changeme2
-    postgresPassword: changeme1
-    password: changeme4
-
-  ## @param postgresql-ha.pgpool.adminPassword pgpool adminPassword.
-  ## @param postgresql-ha.pgpool.image.repository Image repository, eg. `bitnamilegacy/pgpool`.
-  ## @param postgresql-ha.pgpool.srCheckPassword pgpool srCheckPassword.
-  pgpool:
-    adminPassword: changeme3
-    image:
-      repository: bitnamilegacy/pgpool
-    srCheckPassword: changeme4
-
-  ## @param postgresql-ha.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`).
-  service:
-    ports:
-      postgresql: 5432
-
-  ## @param postgresql-ha.persistence.enabled Enable persistence.
-  ## @param postgresql-ha.persistence.storageClass Persistent Volume Storage Class.
-  ## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume.
-  persistence:
-    enabled: true
-    storageClass: ""
-    size: 10Gi
-
-  ## @param postgresql-ha.volumePermissions.image.repository Image repository, eg. `bitnamilegacy/os-shell`.
-  volumePermissions:
-    image:
-      repository: bitnamilegacy/os-shell
 
 ## @section PostgreSQL
 postgresql:

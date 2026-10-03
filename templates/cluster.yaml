@@ -1,0 +1,45 @@
+{{- if .Values.cloudnativePG.enabled -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.cloudnativePG.image.registry -}}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  {{- with (include "gitea.cluster.cloudnativePG.annotations" .) }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "gitea.cluster.cloudnativePG.labels" . | nindent 4 }}
+  name: {{ include "gitea.cluster.cloudnativePG.name" . }}
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
+spec:
+  affinity:
+    {{- toYaml .Values.cloudnativePG.affinity | nindent 4 }}
+  bootstrap:
+    initdb:
+      database: {{ .Values.cloudnativePG.credentials.database | quote }}
+      owner: {{ .Values.cloudnativePG.credentials.username | quote }}
+      secret:
+        name: {{ include "gitea.secret.cloudnativePG.name" . }}
+  imageName: {{ printf "%s/%s:%s" $registry .Values.cloudnativePG.image.repository (.Values.cloudnativePG.image.tag | toString) | quote }}
+  instances: {{ .Values.cloudnativePG.instances }}
+  monitoring:
+    enablePodMonitor: {{ .Values.cloudnativePG.monitoring.enablePodMonitor }}
+  postgresql:
+    parameters:
+      {{- toYaml .Values.cloudnativePG.postgresql.parameters | nindent 6 }}
+  priorityClassName: {{ .Values.cloudnativePG.priorityClassName | quote }}
+  resources:
+    {{- toYaml .Values.cloudnativePG.resources | nindent 4 }}
+  storage:
+    size: {{ .Values.cloudnativePG.storage.size | quote }}
+    {{- with .Values.cloudnativePG.storage.storageClass }}
+    storageClass: {{ . | quote }}
+    {{- end }}
+  {{- if .Values.cloudnativePG.walStorage.enabled }}
+  walStorage:
+    size: {{ .Values.cloudnativePG.walStorage.size | quote }}
+    {{- with .Values.cloudnativePG.walStorage.storageClass }}
+    storageClass: {{ . | quote }}
+    {{- end }}
+  {{- end }}
+{{- end -}}

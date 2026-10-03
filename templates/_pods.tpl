@@ -9,6 +9,11 @@
 checksum/admin: {{ include "gitea.secret.checksum" (list . "admin") }}
 {{- end }}
 
+{{/* secret - cloudnativePG */}}
+{{- if and .Values.cloudnativePG.enabled .Values.cloudnativePG.credentials.addSHASumAnnotation }}
+checksum/cloudnativePG: {{ include "gitea.secret.checksum" (list . "cloudnativePG") }}
+{{- end }}
+
 {{/* secret - config */}}
 {{- if and .Values.secrets.config.enabled .Values.secrets.config.addSHASumAnnotation }}
 checksum/config: {{ include "gitea.secret.checksum" (list . "config") }}

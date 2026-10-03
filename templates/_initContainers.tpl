@@ -84,6 +84,13 @@
       value: /tmp/existing-envs
     - name: ENV_TO_INI_MOUNT_POINT
       value: /env-to-ini-mounts
+    {{- if .Values.cloudnativePG.enabled }}
+    - name: GITEA__database__PASSWD
+      valueFrom:
+        secretKeyRef:
+          key: {{ include "gitea.secret.cloudnativePG.passwordKey" . }}
+          name: {{ include "gitea.secret.cloudnativePG.name" . }}
+    {{- end }}
     {{- if .Values.deployment.gitea.env }}
     {{- toYaml .Values.deployment.gitea.env | nindent 4 }}
     {{- end }}
