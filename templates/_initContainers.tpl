@@ -43,7 +43,6 @@
       {{- if .Values.persistence.new.subPath }}
       subPath: {{ .Values.persistence.new.subPath }}
       {{- end }}
-    {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -114,7 +113,6 @@
     - name: additional-config-sources-{{ $idx }}
       mountPath: "/env-to-ini-mounts/additionals/{{ $idx }}/"
     {{- end }}
-    {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -174,7 +172,6 @@
     - name: gpg-private-key
       mountPath: /raw
       readOnly: true
-    {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -293,7 +290,6 @@
       {{- if .Values.persistence.new.subPath }}
       subPath: {{ .Values.persistence.new.subPath }}
       {{- end }}
-    {{- include "gitea.init-additional-mounts" . | nindent 4 }}
     {{- with $config.volumeMounts }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

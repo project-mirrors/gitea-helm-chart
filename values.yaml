@@ -924,12 +924,6 @@ extraContainers: []
 #    image: busybox
 #    command: [/bin/sh, -c, 'echo "Hello world"']
 
-## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
-extraInitVolumeMounts: []
-# - name: postgres-ssl-vol
-#   readOnly: true
-#   mountPath: "/pg-ssl"
-
 ## @section Init
 ## @param initPreScript Bash shell script copied verbatim to the start of the init-container.
 initPreScript: ""

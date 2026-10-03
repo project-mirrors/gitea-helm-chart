@@ -475,12 +475,6 @@ https
   {{- end -}}
 {{- end -}}
 
-{{- define "gitea.init-additional-mounts" -}}
-  {{- if gt (len .Values.extraInitVolumeMounts) 0 -}}
-    {{- toYaml .Values.extraInitVolumeMounts -}}
-  {{- end -}}
-{{- end -}}
-
 {{- define "gitea.container-additional-mounts" -}}
   {{- if gt (len .Values.deployment.gitea.volumeMounts) 0 -}}
     {{- toYaml .Values.deployment.gitea.volumeMounts -}}

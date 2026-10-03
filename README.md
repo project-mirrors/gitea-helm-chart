@@ -19,6 +19,7 @@
     - [Gateway API](#gateway-api)
     - [Session, Cache and Queue](#session-cache-and-queue)
   - [Single-Pod Configurations](#single-pod-configurations)
+  - [Additional _app.ini_ settings](#additional-appini-settings)
     - [User defined environment variables in app.ini](#user-defined-environment-variables-in-appini)
   - [External Database](#external-database)
   - [Ports and external url](#ports-and-external-url)
@@ -1287,20 +1288,19 @@ To comply with the Gitea helm chart definition of the digest parameter, a "custo
 
 ### Persistence
 
-| Name                                                                  | Description                                                                                        | Value               |
-| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------- |
-| `persistence.enabled`                                                 | Enable persistent storage.                                                                         | `false`             |
-| `persistence.existingPersistentVolumeClaim.enabled`                   | Enable using an existing persistent volume claim.                                                  | `false`             |
-| `persistence.existingPersistentVolumeClaim.persistentVolumeClaimName` | Name of the existing persistent volume claim to use.                                               | `""`                |
-| `persistence.new.annotations.helm.sh/resource-policy`                 | Resource policy for the new persistent volume claim.                                               | `keep`              |
-| `persistence.new.labels`                                              | Labels for the new persistent volume claim.                                                        | `{}`                |
-| `persistence.new.accessModes`                                         | AccessMode for the new persistent volume claim.                                                    | `["ReadWriteOnce"]` |
-| `persistence.new.persistentVolumeName`                                | Name of the persistent volume for the new persistent volume claim.                                 | `""`                |
-| `persistence.new.size`                                                | Size for the new persistent volume claim.                                                          | `10Gi`              |
-| `persistence.new.storageClassName`                                    | Name of the storage class to use for the new persistent volume claim.                              | `""`                |
-| `persistence.new.subPath`                                             | Subdirectory of the volume to mount at for the new persistent volume claim.                        | `""`                |
-| `extraContainers`                                                     | Additional sidecar containers to run in the pod.                                                   | `[]`                |
-| `extraInitVolumeMounts`                                               | Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration. | `[]`                |
+| Name                                                                  | Description                                                                 | Value               |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------- |
+| `persistence.enabled`                                                 | Enable persistent storage.                                                  | `false`             |
+| `persistence.existingPersistentVolumeClaim.enabled`                   | Enable using an existing persistent volume claim.                           | `false`             |
+| `persistence.existingPersistentVolumeClaim.persistentVolumeClaimName` | Name of the existing persistent volume claim to use.                        | `""`                |
+| `persistence.new.annotations.helm.sh/resource-policy`                 | Resource policy for the new persistent volume claim.                        | `keep`              |
+| `persistence.new.labels`                                              | Labels for the new persistent volume claim.                                 | `{}`                |
+| `persistence.new.accessModes`                                         | AccessMode for the new persistent volume claim.                             | `["ReadWriteOnce"]` |
+| `persistence.new.persistentVolumeName`                                | Name of the persistent volume for the new persistent volume claim.          | `""`                |
+| `persistence.new.size`                                                | Size for the new persistent volume claim.                                   | `10Gi`              |
+| `persistence.new.storageClassName`                                    | Name of the storage class to use for the new persistent volume claim.       | `""`                |
+| `persistence.new.subPath`                                             | Subdirectory of the volume to mount at for the new persistent volume claim. | `""`                |
+| `extraContainers`                                                     | Additional sidecar containers to run in the pod.                            | `[]`                |
 
 ### Init
 
@@ -1466,6 +1466,7 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 - All Secrets created by this chart are now configured through the new `secrets` section.
   It exposes `annotations`, `labels`, a checksum-annotation toggle and an `existingSecret` reference for each of the
   `admin`, `config`, `gpg`, `init`, `inlineConfig` and `metrics` Secrets.
+  
 - The `gitea.admin` object has been replaced by `secrets.admin`.
   The chart fails to render if `gitea.admin` is still set.
   Migrate as follows:
@@ -1486,6 +1487,7 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 
   Admin user handling was previously skipped implicitly when neither an existing Secret nor a username and password were
   set. It is now controlled explicitly via `secrets.admin.enabled`.
+
 - The top-level `signing` object has been replaced by `secrets.gpg`.
   The chart fails to render if `signing` is still set.
   Migrate as follows:
@@ -1513,9 +1515,15 @@ If you miss this, blindly upgrading may delete your Postgres instance and you ma
 
 - `extraVolumeMounts` has been removed. Deprecated since 6.0.0, it mounted the same volumes into the init containers
   and into the Gitea container, and it was silently ignored as soon as `extraInitVolumeMounts` or
-  `deployment.gitea.volumeMounts` contained a single entry. Split the mounts explicitly: use `extraInitVolumeMounts`
-  for the init containers and `deployment.gitea.volumeMounts` for the Gitea container. Volumes that are needed in both
-  places have to be listed in both settings.
+  `deployment.gitea.volumeMounts` contained a single entry. Split the mounts explicitly: use
+  `deployment.<initContainer>.volumeMounts` for the init containers and `deployment.gitea.volumeMounts` for the Gitea
+  container. Volumes that are needed in both places have to be listed in both settings.
+
+- `extraInitVolumeMounts` has been removed. It fanned a mount out to the four chart-managed init containers, but never
+  reached init containers added through `deployment.initContainers[].container`, despite its name. Configure the mount
+  on the init containers that actually need it: `deployment.initDirectories.volumeMounts`,
+  `deployment.initAppIni.volumeMounts`, `deployment.initConfigureGPG.volumeMounts` or
+  `deployment.initConfigureGitea.volumeMounts`.
 
 </details>
 

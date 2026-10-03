@@ -54,6 +54,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "`extraContainerVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` instead."
+  - it: fails when the removed `extraInitVolumeMounts` value is set
+    set:
+      extraInitVolumeMounts:
+        - name: postgres-ssl-vol
+          mountPath: /pg-ssl
+    asserts:
+      - failedTemplate:
+          errorMessage: "`extraInitVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.<initContainer>.volumeMounts` instead."
   - it: fails when the removed `extraVolumeMounts` value is set
     set:
       extraVolumeMounts:
@@ -61,7 +69,7 @@ tests:
           mountPath: /pg-ssl
     asserts:
       - failedTemplate:
-          errorMessage: "`extraVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` and `extraInitVolumeMounts` instead."
+          errorMessage: "`extraVolumeMounts` does no longer exist. Please refer to the changelog and configure `deployment.gitea.volumeMounts` and `deployment.<initContainer>.volumeMounts` instead."
   - it: fails when the removed `extraVolumes` value is set
     set:
       extraVolumes:
@@ -191,6 +199,9 @@ tests:
         nameservers:
           - 192.0.2.1
       extraContainerVolumeMounts:
+        - name: postgres-ssl-vol
+          mountPath: /pg-ssl
+      extraInitVolumeMounts:
         - name: postgres-ssl-vol
           mountPath: /pg-ssl
       extraVolumeMounts:
