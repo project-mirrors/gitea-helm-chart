@@ -125,6 +125,11 @@
     {{- fail "`strategy` does no longer exist. Please refer to the changelog and configure `deployment.strategy` instead." -}}
   {{- end -}}
 
+  {{/* TEST */}}
+  {{- if .Values.test -}}
+    {{- fail "`test` does no longer exist. Please refer to the changelog. The `helm test` connection Pod has been removed without replacement." -}}
+  {{- end -}}
+
   {{/* TOLERATIONS */}}
   {{- if .Values.tolerations -}}
     {{- fail "`tolerations` does no longer exist. Please refer to the changelog and configure `deployment.tolerations` instead." -}}
