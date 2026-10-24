@@ -9,7 +9,7 @@ jobs:
   generate-chart-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -50,7 +50,7 @@ jobs:
           fingerprint: CC64B1DB67ABBEECAB24B6455FC346329753F4B0
 
       - name: Add Artifacthub.io annotations
-        uses: volker-raschek/ah-annotations@v0.2.0
+        uses: volker-raschek/ah-annotations@5b4361f7865c1e71a9ce2263df1c780871e0fee8 # v0.2.4
 
       # Using helm gpg plugin as 'helm package --sign' has issues with gpg2: https://github.com/helm/helm/issues/2843
       - name: package chart
@@ -87,7 +87,7 @@ jobs:
       - name: install tools
         run: |
           apk add -q --update --no-cache nodejs
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-tags: true
           fetch-depth: 0
